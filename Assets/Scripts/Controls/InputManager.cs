@@ -44,6 +44,16 @@ public class InputManager : MonoBehaviour
         groundMovement.Crouch.canceled += _ =>
             playerController.Character.DoCrouchUp();
 
+        groundMovement.Walk.performed += _ =>
+            playerController.Character.SetIsWalking(true);
+        groundMovement.Walk.canceled += _ =>
+            playerController.Character.SetIsWalking(false);
+
+        groundMovement.Sprint.performed += _ =>
+            playerController.Character.SetIsSprinting(true);
+        groundMovement.Sprint.canceled += _ =>
+            playerController.Character.SetIsSprinting(false);
+
     }
 
     private void Update()

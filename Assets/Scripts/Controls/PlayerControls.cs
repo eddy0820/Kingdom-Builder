@@ -73,6 +73,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Walk"",
+                    ""type"": ""Button"",
+                    ""id"": ""d6b30bc4-39b4-4edd-88f4-74b9cc85cf5d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""dd9ff5b2-d21a-4092-944b-7a63cae316e2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -196,6 +212,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b613de7-eeac-44e2-98a5-3554138ad582"",
+                    ""path"": ""<Keyboard>/capsLock"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""Walk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""07576527-c763-47d7-93d6-53e9efe7a3fd"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -228,6 +266,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_GroundMovement_CameraSwitch = m_GroundMovement.FindAction("CameraSwitch", throwIfNotFound: true);
         m_GroundMovement_Jump = m_GroundMovement.FindAction("Jump", throwIfNotFound: true);
         m_GroundMovement_Crouch = m_GroundMovement.FindAction("Crouch", throwIfNotFound: true);
+        m_GroundMovement_Walk = m_GroundMovement.FindAction("Walk", throwIfNotFound: true);
+        m_GroundMovement_Sprint = m_GroundMovement.FindAction("Sprint", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -284,6 +324,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_GroundMovement_CameraSwitch;
     private readonly InputAction m_GroundMovement_Jump;
     private readonly InputAction m_GroundMovement_Crouch;
+    private readonly InputAction m_GroundMovement_Walk;
+    private readonly InputAction m_GroundMovement_Sprint;
     public struct GroundMovementActions
     {
         private @PlayerControls m_Wrapper;
@@ -295,6 +337,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @CameraSwitch => m_Wrapper.m_GroundMovement_CameraSwitch;
         public InputAction @Jump => m_Wrapper.m_GroundMovement_Jump;
         public InputAction @Crouch => m_Wrapper.m_GroundMovement_Crouch;
+        public InputAction @Walk => m_Wrapper.m_GroundMovement_Walk;
+        public InputAction @Sprint => m_Wrapper.m_GroundMovement_Sprint;
         public InputActionMap Get() { return m_Wrapper.m_GroundMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -325,6 +369,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Crouch.started -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnCrouch;
                 @Crouch.performed -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnCrouch;
                 @Crouch.canceled -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnCrouch;
+                @Walk.started -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnWalk;
+                @Walk.performed -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnWalk;
+                @Walk.canceled -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnWalk;
+                @Sprint.started -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnSprint;
+                @Sprint.performed -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnSprint;
+                @Sprint.canceled -= m_Wrapper.m_GroundMovementActionsCallbackInterface.OnSprint;
             }
             m_Wrapper.m_GroundMovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -350,6 +400,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Crouch.started += instance.OnCrouch;
                 @Crouch.performed += instance.OnCrouch;
                 @Crouch.canceled += instance.OnCrouch;
+                @Walk.started += instance.OnWalk;
+                @Walk.performed += instance.OnWalk;
+                @Walk.canceled += instance.OnWalk;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
             }
         }
     }
@@ -372,5 +428,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnCameraSwitch(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnWalk(InputAction.CallbackContext context);
+        void OnSprint(InputAction.CallbackContext context);
     }
 }

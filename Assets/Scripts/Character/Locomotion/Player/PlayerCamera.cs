@@ -46,6 +46,10 @@ public class PlayerCamera : MonoBehaviour
     public float ObstructionSharpness = 10000f;
     public List<Collider> IgnoredColliders = new List<Collider>();
 
+    [Header("Camera Switch")]
+
+    [ReadOnly] public bool inFirstPerson;
+
     public Transform Transform { get; private set; }
     public Transform FollowTransform { get; private set; }
 

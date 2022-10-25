@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
         //if(Input.GetMouseButtonDown(0)) Cursor.lockState = CursorLockMode.Locked;
 
         HandleCharacterInput();
+
+        CheckIfFirstPerson();
     }
 
     private void LateUpdate()
@@ -93,6 +95,27 @@ public class PlayerController : MonoBehaviour
 
     public void DoCameraSwitch()
     {
-        CharacterCamera.TargetDistance = (CharacterCamera.TargetDistance == 0f) ? CharacterCamera.DefaultDistance : 0f;
+        if(CharacterCamera.TargetDistance == 0f)
+        {
+            CharacterCamera.TargetDistance = CharacterCamera.DefaultDistance;
+        }
+        else
+        {
+            CharacterCamera.TargetDistance = 0f;
+        }
+    }
+
+    private void CheckIfFirstPerson()
+    {
+        if(CharacterCamera.TargetDistance == 0f)
+        {
+            CharacterCamera.inFirstPerson = true;
+            Character.OrientationMethod = OrientationMethod.TowardsCamera;
+        }
+        else
+        {
+            CharacterCamera.inFirstPerson = false;
+            Character.OrientationMethod = OrientationMethod.TowardsMovement;
+        }
     }
 }
