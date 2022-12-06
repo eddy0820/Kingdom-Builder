@@ -111,11 +111,13 @@ public class PlayerController : MonoBehaviour
         {
             CharacterCamera.inFirstPerson = true;
             Character.OrientationMethod = OrientationMethod.TowardsCamera;
+            Character.MeshRoot.gameObject.SetActive(false);
         }
         else
         {
             CharacterCamera.inFirstPerson = false;
             Character.OrientationMethod = OrientationMethod.TowardsMovement;
+            Character.MeshRoot.gameObject.SetActive(true);
         }
     }
 }

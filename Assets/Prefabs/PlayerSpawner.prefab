@@ -46,6 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerScene: PlayerCharacter
   spawnPoint: {fileID: 5665706731287517939}
+  maleModel: {fileID: 3976981228251372159, guid: b5b702c6776fce44ba077f5c8febdaff, type: 3}
+  femaleModel: {fileID: 1206158840235493254, guid: 712c9bd7b28b1ed408b01c134b8eeb07, type: 3}
+  avatar: {fileID: 9000000, guid: 038320a534bd8b444b43734860d1a211, type: 3}
+  characterMaterial: {fileID: 2100000, guid: 95f5746a6b382db46af1cc3e96a5e008, type: 2}
 --- !u!1 &5665706731287517932
 GameObject:
   m_ObjectHideFlags: 0
