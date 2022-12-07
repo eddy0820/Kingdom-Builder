@@ -7,7 +7,7 @@ public class GridBuildingCell
     GridXZ<GridBuildingCell> grid;
     int x;
     int z;
-    PlacedObject placedObject;
+    GridObject gridObject;
 
     public GridBuildingCell(GridXZ<GridBuildingCell> _grid, int _x, int _z)
     {
@@ -16,30 +16,30 @@ public class GridBuildingCell
         z = _z;
     }
 
-    public void SetPlacedObject(PlacedObject _placedObject)
+    public void SetGridObject(GridObject _gridObject)
     {
-        placedObject = _placedObject;
+        gridObject = _gridObject;
         grid.TriggerGridObjectChanged(x, z);
     }
 
-    public PlacedObject GetPlacedObject()
+    public GridObject GetGridObject()
     {
-        return placedObject;
+        return gridObject;
     }
 
-    public void ClearPlacedObject()
+    public void ClearGridObject()
     {
-        placedObject = null;
+        gridObject = null;
         grid.TriggerGridObjectChanged(x, z);
     }
 
     public bool CanBuild()
     {
-        return placedObject == null;
+        return gridObject == null;
     }
 
     public override string ToString()
     {
-        return x + ", " + z + "\n" + placedObject;
+        return x + ", " + z + "\n" + gridObject;
     }
 }

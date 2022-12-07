@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Placed Object Type", menuName = "Placed Object Type")]
-public class PlacedObjectTypeSO : ScriptableObject {
+[CreateAssetMenu(fileName = "New Grid Object Type", menuName = "Building System/Grid Object Type")]
+public class GridObjectSO : ScriptableObject {
 
     public static Dir GetNextDir(Dir dir) {
         switch (dir) {

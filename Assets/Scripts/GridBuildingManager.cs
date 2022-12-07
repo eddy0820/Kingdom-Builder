@@ -6,7 +6,8 @@ using UnityEngine;
 public class GridBuildingManager : MonoBehaviour
 {
     public static GridBuildingManager Instance { get; private set; }
-    [SerializeField] List<PlacedObjectTypeSO> placedObjectSOList;
+    [SerializeField] List<GridObjectSO> gridObjectSOList;
+    [SerializeField] List<EdgeObjectSO> edgeObjectSOList;
 
     [Space(15)]
     [SerializeField] int gridWidth = 10;
@@ -16,10 +17,12 @@ public class GridBuildingManager : MonoBehaviour
     [Space(15)]
     [SerializeField] bool debug;
     [SerializeField] int debugFontSize = 100;
-    [ReadOnly, SerializeField] PlacedObjectTypeSO.Dir currentDirection = PlacedObjectTypeSO.Dir.Down;
+    [ReadOnly, SerializeField] GridObjectSO.Dir currentDirection = GridObjectSO.Dir.Down;
+    [ReadOnly, SerializeField] PlacedObjectType placedObjectType = PlacedObjectType.GridObject;
 
     GridXZ<GridBuildingCell> grid;
-    PlacedObjectTypeSO currentPlacedObjectSO;
+    GridObjectSO currentGridObjectSO;
+    EdgeObjectSO currentEdgeObjectSO;
 
     public event EventHandler OnSelectedChanged;
 
@@ -32,8 +35,8 @@ public class GridBuildingManager : MonoBehaviour
 
         grid = new GridXZ<GridBuildingCell>(gridWidth, gridHeight, cellSize, Vector3.zero, (GridXZ<GridBuildingCell> g, int x, int z) => new GridBuildingCell(g, x, z), debug, debugFontSize);
         
-        currentPlacedObjectSO = placedObjectSOList[0];
-        RefreshSelectedObjectType();
+        SelectGridObjectSO(gridObjectSOList[0]);
+        SelectEdgeObjectSO(edgeObjectSOList[0]);
     }
 
     private void Update()
@@ -50,44 +53,42 @@ public class GridBuildingManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.R))
         {
-            currentDirection = PlacedObjectTypeSO.GetNextDir(currentDirection);
+            currentDirection = GridObjectSO.GetNextDir(currentDirection);
             Debug.Log("Direction: " + currentDirection);
         }
 
-        if(Input.GetKeyDown(KeyCode.Alpha1)) {currentPlacedObjectSO = placedObjectSOList[0]; RefreshSelectedObjectType();}
-        if(Input.GetKeyDown(KeyCode.Alpha2)) {currentPlacedObjectSO = placedObjectSOList[1]; RefreshSelectedObjectType();}
-        if(Input.GetKeyDown(KeyCode.Alpha3)) {currentPlacedObjectSO = placedObjectSOList[2]; RefreshSelectedObjectType();}
+        if(Input.GetKeyDown(KeyCode.Alpha1)) {SelectGridObjectSO(gridObjectSOList[0]);}
+        if(Input.GetKeyDown(KeyCode.Alpha2)) {SelectGridObjectSO(gridObjectSOList[1]);}
+        if(Input.GetKeyDown(KeyCode.Alpha3)) {SelectGridObjectSO(gridObjectSOList[2]);}
     }
 
     private void Place()
     {
         grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
 
-        List<Vector2Int> placedObjectPositionList = currentPlacedObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
+        List<Vector2Int> gridObjectPositionList = currentGridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
         
         bool canBuild = true;
 
-        foreach(Vector2Int placedObjectPosition in placedObjectPositionList)
+        foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
         {
-            if(!grid.GetGridObject(placedObjectPosition.x, placedObjectPosition.y).CanBuild())
+            if(!grid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
             {
                 canBuild = false; 
                 break;
             }
         }
-
-        GridBuildingCell gridCell = grid.GetGridObject(x, z);
         
         if(canBuild)
         {
-            Vector2Int rotationOffset = currentPlacedObjectSO.GetRotationOffset(currentDirection);
-            Vector3 placeObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+            Vector2Int rotationOffset = currentGridObjectSO.GetRotationOffset(currentDirection);
+            Vector3 gridObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
 
-            PlacedObject placedObject = PlacedObject.Create(placeObjectWorldPosition, new Vector2Int(x, z), currentDirection, currentPlacedObjectSO);
+            GridObject gridObject = GridObject.Create(gridObjectWorldPosition, new Vector2Int(x, z), currentDirection, currentGridObjectSO);
             
-            foreach(Vector2Int placedObjectPosition in placedObjectPositionList)
+            foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
             {
-                grid.GetGridObject(placedObjectPosition.x, placedObjectPosition.y).SetPlacedObject(placedObject);
+                grid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).SetGridObject(gridObject);
             }
         }
         else
@@ -99,19 +100,33 @@ public class GridBuildingManager : MonoBehaviour
     private void DestroyPlacedObject()
     {
         GridBuildingCell gridBuildingCell = grid.GetGridObject(Mouse3D.GetMouseWorldPosition());
-        PlacedObject placedObject = gridBuildingCell.GetPlacedObject();
+        GridObject gridObject = gridBuildingCell.GetGridObject();
 
-        if(placedObject != null)
+        if(gridObject != null)
         {
-            placedObject.DestroySelf(); 
+            gridObject.DestroySelf(); 
 
-            List<Vector2Int> placedObjectPositionList = placedObject.GetGridPositionList();
+            List<Vector2Int> gridObjectPositionList = gridObject.GetGridPositionList();
         
-            foreach(Vector2Int placedObjectPosition in placedObjectPositionList)
+            foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
             {
-                grid.GetGridObject(placedObjectPosition.x, placedObjectPosition.y).ClearPlacedObject();
+                grid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).ClearGridObject();
             }
         }
+    }
+
+    public void SelectGridObjectSO(GridObjectSO gridObjectSO) 
+    {
+        placedObjectType = PlacedObjectType.GridObject;
+        currentGridObjectSO = gridObjectSO;
+        RefreshSelectedObjectType();
+    }
+
+    public void SelectEdgeObjectSO(EdgeObjectSO edgeObjectSO) 
+    {
+        placedObjectType = PlacedObjectType.EdgeObject;
+        currentEdgeObjectSO = edgeObjectSO;
+        RefreshSelectedObjectType();
     }
 
     private void RefreshSelectedObjectType()
@@ -124,11 +139,11 @@ public class GridBuildingManager : MonoBehaviour
         Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
         grid.GetXZ(mousePosition, out int x, out int z);
 
-        if (currentPlacedObjectSO != null) 
+        if (currentGridObjectSO != null) 
         {
-            Vector2Int rotationOffset = currentPlacedObjectSO.GetRotationOffset(currentDirection);
-            Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
-            return placedObjectWorldPosition;
+            Vector2Int rotationOffset = currentGridObjectSO.GetRotationOffset(currentDirection);
+            Vector3 gridObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+            return gridObjectWorldPosition;
         } 
         else 
         {
@@ -136,11 +151,11 @@ public class GridBuildingManager : MonoBehaviour
         }
     }
 
-    public Quaternion GetPlacedObjectRotation() 
+    public Quaternion GetGridObjectRotation() 
     {
-        if (currentPlacedObjectSO != null) 
+        if (currentGridObjectSO != null) 
         {
-            return Quaternion.Euler(0, currentPlacedObjectSO.GetRotationAngle(currentDirection), 0);
+            return Quaternion.Euler(0, currentGridObjectSO.GetRotationAngle(currentDirection), 0);
         } 
         else 
         {
@@ -148,8 +163,16 @@ public class GridBuildingManager : MonoBehaviour
         }
     }
 
-    public PlacedObjectTypeSO GetPlacedObjectTypeSO() 
+    public GridObjectSO GetGridObjectType() 
     {
-        return currentPlacedObjectSO;
+        return currentGridObjectSO;
+    }
+
+    [System.Serializable]
+    public enum PlacedObjectType 
+    {
+        GridObject,
+        EdgeObject,
+        LooseObject,
     }
 }
