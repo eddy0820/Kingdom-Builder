@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db2378dd6849334fbcade98fec7773d, type: 3}
+  m_Name: TestBuilding3
+  m_EditorClassIdentifier: 
+  nameString: Test Building 3
+  prefab: {fileID: 6383514454782304838, guid: 5426aa73459652a44919b4cd349dbc6d, type: 3}
+  visual: {fileID: 5020633306022492942, guid: 7c63ce7adcacf554fa3525645c61ccb3, type: 3}
+  width: 2
+  height: 1

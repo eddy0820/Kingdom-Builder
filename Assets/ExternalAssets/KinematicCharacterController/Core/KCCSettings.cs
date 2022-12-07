@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KinematicCharacterController
 {
-    [CreateAssetMenu]
+    [CreateAssetMenu(fileName = "New KCC Settings", menuName = "KinematicCharacterController/KCC Settings")]
     public class KCCSettings : ScriptableObject
     {
         /// <summary>

@@ -2,7 +2,7 @@
 using static BattleDrakeStudios.ModularCharacters.ModularCharacterStatics;
 
 namespace BattleDrakeStudios.ModularCharacters {
-    [CreateAssetMenu(fileName = "NewItem", menuName = "Items/Bruh")]
+    [CreateAssetMenu(fileName = "New Modular Armor", menuName = "BattleDrakeStudios/ModularArmor")]
     public class ModularArmor : ScriptableObject {
         public ModularArmorType armorType;
         public ColorPropertyLinker[] armorColors = { new ColorPropertyLinker(COLOR_PRIMARY), new ColorPropertyLinker(COLOR_SECONDARY), new ColorPropertyLinker(COLOR_LEATHER_PRIMARY),
