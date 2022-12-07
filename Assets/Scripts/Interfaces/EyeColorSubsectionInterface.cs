@@ -7,7 +7,7 @@ public class EyeColorSubsectionInterface : MonoBehaviour
     [SerializeField] FlexibleColorPicker colorPicker;
     [SerializeField] Color defaultColor;
 
-    private void Start()
+    private void Awake()
     {
         colorPicker.startingColor = defaultColor;
         colorPicker.SetColor(defaultColor);

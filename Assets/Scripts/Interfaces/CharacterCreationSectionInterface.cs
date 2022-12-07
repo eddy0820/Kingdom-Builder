@@ -21,6 +21,15 @@ public class CharacterCreationSectionInterface : ButtonInterface<CharacterCreati
         foreach(SelectionButtonEntry buttonEntry in Buttons)
         {
             buttonEntry.Button.GetComponent<Image>().color = defaultButtonColor;
+            buttonEntry.Screen.SetActive(true);
+        }
+    }
+
+    private void Start()
+    {
+        foreach(SelectionButtonEntry buttonEntry in Buttons)
+        {
+            buttonEntry.Screen.SetActive(false);
         }
 
         foreach(SelectionButtonEntry buttonEntry in Buttons)

@@ -10,7 +10,7 @@ public class HairSubsectionInterface : MonoBehaviour
     [SerializeField] int defaultMaleHair;
     [SerializeField] int defaultFemaleHair;
 
-    private void Start()
+    private void Awake()
     {
         CharacterCreationManager.Instance.MaleModel.ActivatePart(ModularBodyPart.Hair, defaultMaleHair);
         CharacterCreationManager.Instance.FemaleModel.ActivatePart(ModularBodyPart.Hair, defaultFemaleHair);
