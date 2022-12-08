@@ -69,6 +69,7 @@ public class PlayerSpawner : MonoBehaviour
                     gridBuildingInfo.GridVerticalCount,
                     gridBuildingInfo.MaxBuildDistance,
                     gridBuildingInfo.EdgeColliderLayerMask,
+                    gridBuildingInfo.PlaceableObjectsColliderLayerMask,
                     gridBuildingInfo.Debug,
                     gridBuildingInfo.DebugFontSize
                 );

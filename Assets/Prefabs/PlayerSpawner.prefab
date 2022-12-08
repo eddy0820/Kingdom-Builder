@@ -80,6 +80,9 @@ MonoBehaviour:
   edgeColliderLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  placeableObjectsColliderLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
   debug: 0
   debugFontSize: 100
 --- !u!1 &5665706731287517932

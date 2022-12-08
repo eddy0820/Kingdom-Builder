@@ -27,6 +27,7 @@ public class GridBuildingManager : MonoBehaviour
     [Space(15)]
 
     [ReadOnly, SerializeField] LayerMask edgeColliderLayerMask;
+    [ReadOnly, SerializeField] LayerMask placeableObjectsColliderLayerMask;
 
     [Space(15)]
 
@@ -56,7 +57,7 @@ public class GridBuildingManager : MonoBehaviour
         buildingGhost = GetComponent<BuildingGhost>();
     }
 
-    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, bool _debug, int _debugFontSize)
+    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize)
     {
         placeableObjectSOList = _placeableObjectSOList;
         gridWidth = _gridWidth;
@@ -66,6 +67,7 @@ public class GridBuildingManager : MonoBehaviour
         gridVerticalCount = _gridVerticalCount;
         maxBuildDistance = _maxBuildDistance;
         edgeColliderLayerMask = _edgeColliderLayerMask;
+        placeableObjectsColliderLayerMask = _placeableObjectsColliderLayerMask;
         debug = _debug;
         debugFontSize = _debugFontSize;
     }
@@ -150,6 +152,8 @@ public class GridBuildingManager : MonoBehaviour
 
     public bool CanPlaceObject()
     {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
         switch(currentPlaceableObjectSO.ObjectType)
         {
             case PlaceableObjectTypes.GridObject:
@@ -174,7 +178,7 @@ public class GridBuildingManager : MonoBehaviour
 
                 EdgeObjectSO edgeObjectSO = (EdgeObjectSO) currentPlaceableObjectSO;
 
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                
 
                 if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, edgeColliderLayerMask)) 
                 {
@@ -198,25 +202,20 @@ public class GridBuildingManager : MonoBehaviour
                 return false;
 
             case PlaceableObjectTypes.LooseObject:
-                //Not In Yet
-                return true;
+                
+                if(Physics.Raycast(ray, out RaycastHit raycastHit2, 999f, Mouse3D.Instance.MouseColliderLayerMask)) 
+                {
+                    if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit2.distance + 0.2f, placeableObjectsColliderLayerMask))
+                    {
+                        return true;
+                    }  
+                }
+
+                return false;
 
             default:
                 return true;
         }
-    }
-
-    private bool CanPlaceGridObject(List<Vector2Int> gridObjectPositionList)
-    {
-        foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
-        {
-            if(!selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private void PlaceGridObject()
@@ -227,7 +226,18 @@ public class GridBuildingManager : MonoBehaviour
 
         List<Vector2Int> gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
         
-        if(CanPlaceGridObject(gridObjectPositionList))
+        bool canPlace = true;
+
+        foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+        {
+            if(!selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
+            {
+                canPlace = false;
+                break;
+            }
+        }
+
+        if(canPlace)
         {
             Vector2Int rotationOffset = gridObjectSO.GetRotationOffset(currentDirection);
             Vector3 gridObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
@@ -279,9 +289,12 @@ public class GridBuildingManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit raycastHit)) 
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMask)) 
         {
-            Transform looseObjectTransform = Instantiate(currentPlaceableObjectSO.Prefab, raycastHit.point, Quaternion.Euler(0, looseObjectEulerY, 0));
+            if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit.distance + 0.2f, placeableObjectsColliderLayerMask))
+            {
+                Transform looseObjectTransform = Instantiate(currentPlaceableObjectSO.Prefab, raycastHit.point, Quaternion.Euler(0, looseObjectEulerY, 0));
+            }  
         }     
     }
 

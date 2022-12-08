@@ -7,7 +7,7 @@ public class BuildingGhost : MonoBehaviour {
     [SerializeField] Material validGhostMaterial;
     [SerializeField] Material inValidGhostMaterial;
     [SerializeField] Material farAwayGhostMaterial;
-    [SerializeField] LayerMask ignoreMask;
+    [SerializeField] string ignoreMaskName;
     Transform visual;
     Material currentGhostMaterial;
     GridBuildingInfo gridBuildingInfo;
@@ -27,7 +27,11 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(GridBuildingManager.Instance.AmILookingAtCollider())
         {
-            RefreshVisual();
+            if(visual == null)
+            {
+                RefreshVisual();
+            }
+            
         }
         else
         {
@@ -104,7 +108,7 @@ public class BuildingGhost : MonoBehaviour {
             visual.parent = transform;
             visual.localPosition = Vector3.zero;
             visual.localEulerAngles = Vector3.zero;
-            SetLayerAndMatRecursive(visual.gameObject, currentGhostMaterial, ignoreMask);
+            SetLayerAndMatRecursive(visual.gameObject, currentGhostMaterial, ignoreMaskName);
         }
         else
         {
@@ -117,7 +121,7 @@ public class BuildingGhost : MonoBehaviour {
         
     }
 
-    private void SetLayerAndMatRecursive(GameObject targetGameObject, Material mat, LayerMask layer) 
+    private void SetLayerAndMatRecursive(GameObject targetGameObject, Material mat, string layerName) 
     {
         MeshRenderer meshRenderer;
         targetGameObject.TryGetComponent<MeshRenderer>(out meshRenderer);
@@ -127,11 +131,11 @@ public class BuildingGhost : MonoBehaviour {
             meshRenderer.material = mat;
         }
 
-        targetGameObject.layer = layer;
+        targetGameObject.layer = LayerMask.NameToLayer(layerName);
         
         foreach(Transform child in targetGameObject.transform) 
         {
-            SetLayerAndMatRecursive(child.gameObject, mat, layer);
+            SetLayerAndMatRecursive(child.gameObject, mat, layerName);
         }
     }
 

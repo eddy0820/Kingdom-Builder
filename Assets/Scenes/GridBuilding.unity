@@ -172,6 +172,9 @@ MonoBehaviour:
   debug: 0
   debugFontSize: 100
   currentDirection: 0
+  test:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!4 &494544615
 Transform:
   m_ObjectHideFlags: 0
@@ -201,9 +204,7 @@ MonoBehaviour:
   validGhostMaterial: {fileID: 2100000, guid: defc570f0bb23ed459697e9c68edf458, type: 2}
   inValidGhostMaterial: {fileID: 2100000, guid: 9793866f5f8007946b26e127f05f2f5f, type: 2}
   farAwayGhostMaterial: {fileID: 2100000, guid: ab42cc1c39598f34a8b70f182b65df33, type: 2}
-  ignoreMask:
-    serializedVersion: 2
-    m_Bits: 4
+  ignoreMaskName: Building Ghost
 --- !u!1 &1093064663
 GameObject:
   m_ObjectHideFlags: 0
