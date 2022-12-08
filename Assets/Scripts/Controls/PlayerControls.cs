@@ -236,6 +236,52 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""PlayerMechanics"",
+            ""id"": ""9a7b6c6e-a3df-44e2-acbc-b0359e730ade"",
+            ""actions"": [
+                {
+                    ""name"": ""ToggleBuildMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""96d645cc-b900-4b00-bdb5-8a550d7b83cf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""BuildOrDemolish"",
+                    ""type"": ""Button"",
+                    ""id"": ""e3e365cf-f31f-45bb-ab8c-e611b3c9695a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""238c131c-d847-49e1-9976-816e9bde21e7"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""ToggleBuildMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a0baf16c-b7e5-4935-a978-df2d3a05aa54"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""BuildOrDemolish"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -268,6 +314,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_GroundMovement_Crouch = m_GroundMovement.FindAction("Crouch", throwIfNotFound: true);
         m_GroundMovement_Walk = m_GroundMovement.FindAction("Walk", throwIfNotFound: true);
         m_GroundMovement_Sprint = m_GroundMovement.FindAction("Sprint", throwIfNotFound: true);
+        // PlayerMechanics
+        m_PlayerMechanics = asset.FindActionMap("PlayerMechanics", throwIfNotFound: true);
+        m_PlayerMechanics_ToggleBuildMode = m_PlayerMechanics.FindAction("ToggleBuildMode", throwIfNotFound: true);
+        m_PlayerMechanics_BuildOrDemolish = m_PlayerMechanics.FindAction("BuildOrDemolish", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -410,6 +460,47 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public GroundMovementActions @GroundMovement => new GroundMovementActions(this);
+
+    // PlayerMechanics
+    private readonly InputActionMap m_PlayerMechanics;
+    private IPlayerMechanicsActions m_PlayerMechanicsActionsCallbackInterface;
+    private readonly InputAction m_PlayerMechanics_ToggleBuildMode;
+    private readonly InputAction m_PlayerMechanics_BuildOrDemolish;
+    public struct PlayerMechanicsActions
+    {
+        private @PlayerControls m_Wrapper;
+        public PlayerMechanicsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ToggleBuildMode => m_Wrapper.m_PlayerMechanics_ToggleBuildMode;
+        public InputAction @BuildOrDemolish => m_Wrapper.m_PlayerMechanics_BuildOrDemolish;
+        public InputActionMap Get() { return m_Wrapper.m_PlayerMechanics; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(PlayerMechanicsActions set) { return set.Get(); }
+        public void SetCallbacks(IPlayerMechanicsActions instance)
+        {
+            if (m_Wrapper.m_PlayerMechanicsActionsCallbackInterface != null)
+            {
+                @ToggleBuildMode.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
+                @ToggleBuildMode.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
+                @ToggleBuildMode.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
+                @BuildOrDemolish.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuildOrDemolish;
+                @BuildOrDemolish.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuildOrDemolish;
+                @BuildOrDemolish.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuildOrDemolish;
+            }
+            m_Wrapper.m_PlayerMechanicsActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @ToggleBuildMode.started += instance.OnToggleBuildMode;
+                @ToggleBuildMode.performed += instance.OnToggleBuildMode;
+                @ToggleBuildMode.canceled += instance.OnToggleBuildMode;
+                @BuildOrDemolish.started += instance.OnBuildOrDemolish;
+                @BuildOrDemolish.performed += instance.OnBuildOrDemolish;
+                @BuildOrDemolish.canceled += instance.OnBuildOrDemolish;
+            }
+        }
+    }
+    public PlayerMechanicsActions @PlayerMechanics => new PlayerMechanicsActions(this);
     private int m_MouseKeyboardSchemeIndex = -1;
     public InputControlScheme MouseKeyboardScheme
     {
@@ -430,5 +521,10 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnCrouch(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+    }
+    public interface IPlayerMechanicsActions
+    {
+        void OnToggleBuildMode(InputAction.CallbackContext context);
+        void OnBuildOrDemolish(InputAction.CallbackContext context);
     }
 }

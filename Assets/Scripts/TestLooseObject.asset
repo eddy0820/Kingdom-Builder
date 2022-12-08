@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7114630a8545ce9478da47507bcbefc6, type: 3}
+  m_Name: TestLooseObject
+  m_EditorClassIdentifier: 
+  name: Test Loose Object
+  prefab: {fileID: 7125610727618604633, guid: 431f06670027e204dbc1979f79cce0f2, type: 3}
+  visual: {fileID: 8744702717593599679, guid: 476f17cd60994c14badae9e6258db8c8, type: 3}
+  objectType: 2

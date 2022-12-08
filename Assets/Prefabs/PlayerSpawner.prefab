@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5665706729618475041}
   - component: {fileID: 5665706729618475040}
+  - component: {fileID: 859870556}
   m_Layer: 0
   m_Name: PlayerSpawner
   m_TagString: Untagged
@@ -29,6 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5665706731287517939}
+  - {fileID: 2775792612204882374}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,6 +52,36 @@ MonoBehaviour:
   femaleModel: {fileID: 1206158840235493254, guid: 712c9bd7b28b1ed408b01c134b8eeb07, type: 3}
   avatar: {fileID: 9000000, guid: 038320a534bd8b444b43734860d1a211, type: 3}
   characterMaterial: {fileID: 2100000, guid: 95f5746a6b382db46af1cc3e96a5e008, type: 2}
+--- !u!114 &859870556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5665706729618475042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da22ef7563f89a74c86c0b20b0ff2bcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridBuildingScene: GridBuilding
+  gridOriginPoint: {fileID: 2775792612204882374}
+  enableBuilding: 1
+  placeableObjectSOList:
+  - {fileID: 11400000, guid: e58a7b4f13c873243911737bfa7b88a7, type: 2}
+  - {fileID: 11400000, guid: 3dfda4a9a59d6dd4884d9a177c46a79e, type: 2}
+  - {fileID: 11400000, guid: 6fe785846e21f1247bd7c4668f42f27c, type: 2}
+  gridWidth: 10
+  gridLength: 10
+  cellSize: 10
+  gridHeight: 10
+  gridVerticalCount: 5
+  maxBuildDistance: 15
+  edgeColliderLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  debug: 0
+  debugFontSize: 100
 --- !u!1 &5665706731287517932
 GameObject:
   m_ObjectHideFlags: 0
@@ -79,4 +111,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5665706729618475041}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8945705614560064237
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2775792612204882374}
+  m_Layer: 0
+  m_Name: GridOriginPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2775792612204882374
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8945705614560064237}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -50, y: 0, z: -50}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5665706729618475041}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

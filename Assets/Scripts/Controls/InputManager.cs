@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
 
     PlayerControls controls;
     PlayerControls.GroundMovementActions groundMovement;
+    PlayerControls.PlayerMechanicsActions playerMechanics;
 
     PlayerController playerController;
 
@@ -19,6 +20,7 @@ public class InputManager : MonoBehaviour
     {
         controls = new PlayerControls();
         groundMovement = controls.GroundMovement;
+        playerMechanics = controls.PlayerMechanics;
 
         playerController = GetComponent<PlayerController>();
 
@@ -54,6 +56,21 @@ public class InputManager : MonoBehaviour
         groundMovement.Sprint.canceled += _ =>
             playerController.Character.SetIsSprinting(false);
 
+        if(PlayerSpawner.Instance.GridBuildingInfo.EnableBuilding)
+        {
+            playerMechanics.ToggleBuildMode.performed += _ =>
+                playerController.ToggleBuildMode();
+        }
+        
+    }
+
+    private void Start()
+    {
+        if(PlayerSpawner.Instance.GridBuildingInfo.EnableBuilding)
+        {
+            playerMechanics.BuildOrDemolish.performed += _ =>
+                GridBuildingManager.Instance.PlaceObject();
+        }
     }
 
     private void Update()

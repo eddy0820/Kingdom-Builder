@@ -5,8 +5,13 @@ using KinematicCharacterController;
 
 public class PlayerController : MonoBehaviour
 {
-    public PlayerCharacterController Character;
-    public PlayerCamera CharacterCamera;
+    public static PlayerController Instance { get; private set; }
+
+    [SerializeField] PlayerCharacterController character;
+    public PlayerCharacterController Character => character;
+    [SerializeField] PlayerCamera characterCamera;
+    public PlayerCamera CharacterCamera => characterCamera;
+    [SerializeField] PlayerCanvas uiCanvas;
 
     private float verticalInput;
     private float horizontalInput;
@@ -14,16 +19,27 @@ public class PlayerController : MonoBehaviour
     private float mouseYInput;
     private float mouseScrollInput;
 
+    bool buildModeEnabled;
+    public bool BuildModeEnabled => buildModeEnabled;
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
 
         // Tell camera to follow transform
-        CharacterCamera.SetFollowTransform(Character.CameraFollowPoint);
+        characterCamera.SetFollowTransform(character.CameraFollowPoint);
 
         // Ignore the character's collider(s) for camera obstruction checks
-        CharacterCamera.IgnoredColliders.Clear();
-        CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
+        characterCamera.IgnoredColliders.Clear();
+        characterCamera.IgnoredColliders.AddRange(character.GetComponentsInChildren<Collider>());
     }
 
     private void Update()
@@ -38,10 +54,10 @@ public class PlayerController : MonoBehaviour
     private void LateUpdate()
     {
         // Handle rotating the camera along with physics movers
-        if(CharacterCamera.RotateWithPhysicsMover && Character.Motor.AttachedRigidbody != null)
+        if(characterCamera.RotateWithPhysicsMover && character.Motor.AttachedRigidbody != null)
         {
-            CharacterCamera.PlanarDirection = Character.Motor.AttachedRigidbody.GetComponent<PhysicsMover>().RotationDeltaFromInterpolation * CharacterCamera.PlanarDirection;
-            CharacterCamera.PlanarDirection = Vector3.ProjectOnPlane(CharacterCamera.PlanarDirection, Character.Motor.CharacterUp).normalized;
+            characterCamera.PlanarDirection = character.Motor.AttachedRigidbody.GetComponent<PhysicsMover>().RotationDeltaFromInterpolation * characterCamera.PlanarDirection;
+            characterCamera.PlanarDirection = Vector3.ProjectOnPlane(characterCamera.PlanarDirection, character.Motor.CharacterUp).normalized;
         }
 
         HandleCameraInput();
@@ -68,7 +84,7 @@ public class PlayerController : MonoBehaviour
         #endif
 
         // Apply inputs to the camera
-        CharacterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
+        characterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
     }
 
     private void HandleCharacterInput()
@@ -78,46 +94,54 @@ public class PlayerController : MonoBehaviour
         // Build the CharacterInputs struct
         characterInputs.MoveAxisForward = verticalInput;
         characterInputs.MoveAxisRight = horizontalInput;
-        characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
+        characterInputs.CameraRotation = characterCamera.Transform.rotation;
 
         // Apply inputs to character
-        Character.SetInputs(ref characterInputs);
+        character.SetInputs(ref characterInputs);
     }
 
     public void SetInputs(float _vertical, float _horizontal, float _mouseX, float _mouseY, float _mouseScroll)
     {
         verticalInput = _vertical;
         horizontalInput = _horizontal;
-        mouseXInput = _mouseX * CharacterCamera.SensitivityX;
-        mouseYInput = _mouseY * CharacterCamera.SensitivityY;
-        mouseScrollInput = _mouseScroll / CharacterCamera.ScrollSensitivity;
+        mouseXInput = _mouseX * characterCamera.SensitivityX;
+        mouseYInput = _mouseY * characterCamera.SensitivityY;
+        mouseScrollInput = _mouseScroll / characterCamera.ScrollSensitivity;
     }
 
     public void DoCameraSwitch()
     {
-        if(CharacterCamera.TargetDistance == 0f)
+        if(characterCamera.TargetDistance == 0f)
         {
-            CharacterCamera.TargetDistance = CharacterCamera.DefaultDistance;
+            characterCamera.TargetDistance = characterCamera.DefaultDistance;
         }
         else
         {
-            CharacterCamera.TargetDistance = 0f;
+            characterCamera.TargetDistance = 0f;
         }
     }
 
     private void CheckIfFirstPerson()
     {
-        if(CharacterCamera.TargetDistance == 0f)
+        if(characterCamera.TargetDistance == 0f)
         {
-            CharacterCamera.inFirstPerson = true;
-            Character.OrientationMethod = OrientationMethod.TowardsCamera;
-            Character.MeshRoot.gameObject.SetActive(false);
+            characterCamera.inFirstPerson = true;
+            character.OrientationMethod = OrientationMethod.TowardsCamera;
+            character.MeshRoot.gameObject.SetActive(false);
         }
         else
         {
-            CharacterCamera.inFirstPerson = false;
-            Character.OrientationMethod = OrientationMethod.TowardsMovement;
-            Character.MeshRoot.gameObject.SetActive(true);
+            characterCamera.inFirstPerson = false;
+            character.OrientationMethod = OrientationMethod.TowardsMovement;
+            character.MeshRoot.gameObject.SetActive(true);
         }
+    }
+
+    public void ToggleBuildMode()
+    {
+        buildModeEnabled = !buildModeEnabled;
+        uiCanvas.Crosshair.SetActive(buildModeEnabled);
+        characterCamera.DoBuildModeCamera(buildModeEnabled);
+        GridBuildingManager.Instance.BuildingGhost.RefreshVisual();
     }
 }

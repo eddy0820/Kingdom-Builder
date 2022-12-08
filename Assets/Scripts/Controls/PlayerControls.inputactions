@@ -223,6 +223,52 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "PlayerMechanics",
+            "id": "9a7b6c6e-a3df-44e2-acbc-b0359e730ade",
+            "actions": [
+                {
+                    "name": "ToggleBuildMode",
+                    "type": "Button",
+                    "id": "96d645cc-b900-4b00-bdb5-8a550d7b83cf",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "BuildOrDemolish",
+                    "type": "Button",
+                    "id": "e3e365cf-f31f-45bb-ab8c-e611b3c9695a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "238c131c-d847-49e1-9976-816e9bde21e7",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "ToggleBuildMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a0baf16c-b7e5-4935-a978-df2d3a05aa54",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BuildOrDemolish",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

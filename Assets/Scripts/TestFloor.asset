@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db2378dd6849334fbcade98fec7773d, type: 3}
+  m_Name: TestFloor
+  m_EditorClassIdentifier: 
+  nameString: Test Floor
+  prefab: {fileID: 2433685974642949171, guid: 37b63e744b761f14ea6a60795c80f531, type: 3}
+  visual: {fileID: 1446467511957422126, guid: 15d05aca1d008da44828ee64b5f158fb, type: 3}
+  width: 1
+  height: 1

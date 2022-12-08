@@ -6,25 +6,45 @@ using UnityEngine;
 public class GridBuildingManager : MonoBehaviour
 {
     public static GridBuildingManager Instance { get; private set; }
-    [SerializeField] List<GridObjectSO> gridObjectSOList;
-    [SerializeField] List<EdgeObjectSO> edgeObjectSOList;
+
+    [ReadOnly, SerializeField] List<PlaceableObjectSO> placeableObjectSOList;
 
     [Space(15)]
-    [SerializeField] int gridWidth = 10;
-    [SerializeField] int gridHeight = 10;
-    [SerializeField] float cellSize = 10f;
+
+    [ReadOnly, SerializeField] int gridWidth = 10;
+    [ReadOnly, SerializeField] int gridLength = 10;
+    [ReadOnly, SerializeField] float cellSize = 10f;
+
+    [Space(5)]
+
+    [ReadOnly, SerializeField] float gridHeight = 10f;
+    [ReadOnly, SerializeField] int gridVerticalCount = 5;
+
+    [Space(5)]
+
+    [ReadOnly, SerializeField] float maxBuildDistance = 15f;
 
     [Space(15)]
-    [SerializeField] bool debug;
-    [SerializeField] int debugFontSize = 100;
+
+    [ReadOnly, SerializeField] LayerMask edgeColliderLayerMask;
+
+    [Space(15)]
+
+    [ReadOnly, SerializeField] bool debug;
+    [ReadOnly, SerializeField] int debugFontSize = 100;
     [ReadOnly, SerializeField] GridObjectSO.Dir currentDirection = GridObjectSO.Dir.Down;
-    [ReadOnly, SerializeField] PlacedObjectType placedObjectType = PlacedObjectType.GridObject;
 
-    GridXZ<GridBuildingCell> grid;
-    GridObjectSO currentGridObjectSO;
-    EdgeObjectSO currentEdgeObjectSO;
+    List<GridXZ<GridBuildingCell>> gridList;
+    GridXZ<GridBuildingCell> selectedGrid;
 
-    public event EventHandler OnSelectedChanged;
+    PlaceableObjectSO currentPlaceableObjectSO;
+    public PlaceableObjectSO CurrentPlaceableObjectSO => currentPlaceableObjectSO;
+
+    float looseObjectEulerY;
+    public float LooseObjectEulerY => looseObjectEulerY;
+
+    BuildingGhost buildingGhost;
+    public BuildingGhost BuildingGhost => buildingGhost;
 
     private void Awake()
     {
@@ -33,62 +53,190 @@ public class GridBuildingManager : MonoBehaviour
             Instance = this;
         }
 
-        grid = new GridXZ<GridBuildingCell>(gridWidth, gridHeight, cellSize, Vector3.zero, (GridXZ<GridBuildingCell> g, int x, int z) => new GridBuildingCell(g, x, z), debug, debugFontSize);
+        buildingGhost = GetComponent<BuildingGhost>();
+    }
+
+    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, bool _debug, int _debugFontSize)
+    {
+        placeableObjectSOList = _placeableObjectSOList;
+        gridWidth = _gridWidth;
+        gridLength = _gridLength;
+        cellSize = _cellSize;
+        gridHeight = _gridHeight;
+        gridVerticalCount = _gridVerticalCount;
+        maxBuildDistance = _maxBuildDistance;
+        edgeColliderLayerMask = _edgeColliderLayerMask;
+        debug = _debug;
+        debugFontSize = _debugFontSize;
+    }
+
+    public void Setup(Vector3 origin)
+    {
+        gridList = new List<GridXZ<GridBuildingCell>>();
         
-        SelectGridObjectSO(gridObjectSOList[0]);
-        SelectEdgeObjectSO(edgeObjectSOList[0]);
+        for(int i = 0; i < gridVerticalCount; i++)
+        {
+            Vector3 originPos = new Vector3(origin.x, origin.y + gridHeight * i, origin.z);
+            GridXZ<GridBuildingCell> grid = new GridXZ<GridBuildingCell>(gridWidth, gridLength, cellSize, originPos, (GridXZ<GridBuildingCell> g, int x, int z) => new GridBuildingCell(g, x, z), debug, debugFontSize);
+            gridList.Add(grid);
+        }
+
+        selectedGrid = gridList[0];
+        
+        SelectPlaceableObject(placeableObjectSOList[0]);
     }
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        HandleGridSwitch();
+
+        if(currentPlaceableObjectSO is LooseObjectSO)
         {
-            Place();
-        }
-
-        if(Input.GetMouseButtonDown(1))
-        {
-            DestroyPlacedObject();
-        }
-
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            currentDirection = GridObjectSO.GetNextDir(currentDirection);
-            Debug.Log("Direction: " + currentDirection);
-        }
-
-        if(Input.GetKeyDown(KeyCode.Alpha1)) {SelectGridObjectSO(gridObjectSOList[0]);}
-        if(Input.GetKeyDown(KeyCode.Alpha2)) {SelectGridObjectSO(gridObjectSOList[1]);}
-        if(Input.GetKeyDown(KeyCode.Alpha3)) {SelectGridObjectSO(gridObjectSOList[2]);}
-    }
-
-    private void Place()
-    {
-        grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
-
-        List<Vector2Int> gridObjectPositionList = currentGridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
-        
-        bool canBuild = true;
-
-        foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
-        {
-            if(!grid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
+            if (Input.GetKey(KeyCode.R)) 
             {
-                canBuild = false; 
-                break;
+                looseObjectEulerY += Time.deltaTime * 90f;
             }
         }
-        
-        if(canBuild)
+        else
         {
-            Vector2Int rotationOffset = currentGridObjectSO.GetRotationOffset(currentDirection);
-            Vector3 gridObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                currentDirection = GridObjectSO.GetNextDir(currentDirection);
+                Debug.Log("Direction: " + currentDirection);
+            }
+        } 
 
-            GridObject gridObject = GridObject.Create(gridObjectWorldPosition, new Vector2Int(x, z), currentDirection, currentGridObjectSO);
+        if(Input.GetKeyDown(KeyCode.Alpha1)) {SelectPlaceableObject(placeableObjectSOList[0]);}
+        if(Input.GetKeyDown(KeyCode.Alpha2)) {SelectPlaceableObject(placeableObjectSOList[1]);}
+        if(Input.GetKeyDown(KeyCode.Alpha3)) {SelectPlaceableObject(placeableObjectSOList[2]);}
+        if(Input.GetKeyDown(KeyCode.Alpha4)) {SelectPlaceableObject(placeableObjectSOList[3]);}
+        if(Input.GetKeyDown(KeyCode.Alpha5)) {SelectPlaceableObject(placeableObjectSOList[4]);}
+        if(Input.GetKeyDown(KeyCode.Alpha6)) {SelectPlaceableObject(placeableObjectSOList[5]);}
+    }
+
+    private void HandleGridSwitch()
+    {
+        Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
+        int newGridIndex = Mathf.Clamp(Mathf.RoundToInt(mousePosition.y / gridHeight), 0, gridList.Count - 1);
+        selectedGrid = gridList[newGridIndex];
+    }
+
+    public void PlaceObject()
+    {
+        if(PlayerController.Instance.BuildModeEnabled)
+        {
+            if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.GetMouseWorldPosition()) <= maxBuildDistance)
+            {
+                if(AmILookingAtCollider())
+                {
+                    switch(currentPlaceableObjectSO.ObjectType)
+                    {
+                        case PlaceableObjectTypes.GridObject:
+                            PlaceGridObject();
+                        break;
+
+                        case PlaceableObjectTypes.EdgeObject:
+                            PlaceEdgeObject();
+                        break;
+
+                        case PlaceableObjectTypes.LooseObject:
+                            PlaceLooseObject();
+                        break;
+                    }
+                } 
+            }  
+        }   
+    }
+
+    public bool CanPlaceObject()
+    {
+        switch(currentPlaceableObjectSO.ObjectType)
+        {
+            case PlaceableObjectTypes.GridObject:
+
+                GridObjectSO gridObjectSO = (GridObjectSO) currentPlaceableObjectSO;
+
+                selectedGrid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
+
+                List<Vector2Int> gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
+
+                foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+                {
+                    if(!selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+
+            case PlaceableObjectTypes.EdgeObject:
+
+                EdgeObjectSO edgeObjectSO = (EdgeObjectSO) currentPlaceableObjectSO;
+
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, edgeColliderLayerMask)) 
+                {
+                    if(raycastHit.collider.TryGetComponent(out EdgePosition edgePosition)) 
+                    {
+                        if(raycastHit.collider.transform.parent.TryGetComponent(out FloorGridObject floorGridObject)) 
+                        {
+                            if(edgeObjectSO != null) 
+                            {
+                                EdgeObject currentEdgeObject = floorGridObject.GetEdgeObject(edgePosition.edge);
+
+                                if(currentEdgeObject == null)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return false;
+
+            case PlaceableObjectTypes.LooseObject:
+                //Not In Yet
+                return true;
+
+            default:
+                return true;
+        }
+    }
+
+    private bool CanPlaceGridObject(List<Vector2Int> gridObjectPositionList)
+    {
+        foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+        {
+            if(!selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void PlaceGridObject()
+    {
+        GridObjectSO gridObjectSO = (GridObjectSO) currentPlaceableObjectSO;
+
+        selectedGrid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
+
+        List<Vector2Int> gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
+        
+        if(CanPlaceGridObject(gridObjectPositionList))
+        {
+            Vector2Int rotationOffset = gridObjectSO.GetRotationOffset(currentDirection);
+            Vector3 gridObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
+
+            GridObject gridObject = GridObject.Create(gridObjectWorldPosition, new Vector2Int(x, z), currentDirection, gridObjectSO);
             
             foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
             {
-                grid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).SetGridObject(gridObject);
+                selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).SetGridObject(gridObject);
             }
         }
         else
@@ -97,9 +245,49 @@ public class GridBuildingManager : MonoBehaviour
         } 
     }
 
+    private void PlaceEdgeObject()
+    {
+        EdgeObjectSO edgeObjectSO = (EdgeObjectSO) currentPlaceableObjectSO;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, edgeColliderLayerMask)) 
+        {
+            if(raycastHit.collider.TryGetComponent(out EdgePosition edgePosition)) 
+            {
+                if(raycastHit.collider.transform.parent.TryGetComponent(out FloorGridObject floorGridObject)) 
+                {
+                    if(edgeObjectSO != null) 
+                    {
+                        EdgeObject currentEdgeObject = floorGridObject.GetEdgeObject(edgePosition.edge);
+
+                        if(currentEdgeObject == null)
+                        {
+                            floorGridObject.PlaceEdge(edgePosition.edge, edgeObjectSO);
+                        }
+                        else
+                        {
+                            Debug.Log("Can't Place Edge Object");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void PlaceLooseObject()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit raycastHit)) 
+        {
+            Transform looseObjectTransform = Instantiate(currentPlaceableObjectSO.Prefab, raycastHit.point, Quaternion.Euler(0, looseObjectEulerY, 0));
+        }     
+    }
+
     private void DestroyPlacedObject()
     {
-        GridBuildingCell gridBuildingCell = grid.GetGridObject(Mouse3D.GetMouseWorldPosition());
+        GridBuildingCell gridBuildingCell = selectedGrid.GetGridObject(Mouse3D.GetMouseWorldPosition());
         GridObject gridObject = gridBuildingCell.GetGridObject();
 
         if(gridObject != null)
@@ -110,69 +298,73 @@ public class GridBuildingManager : MonoBehaviour
         
             foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
             {
-                grid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).ClearGridObject();
+                selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).ClearGridObject();
             }
         }
     }
 
-    public void SelectGridObjectSO(GridObjectSO gridObjectSO) 
+    public void SelectPlaceableObject(PlaceableObjectSO placeableObject)
     {
-        placedObjectType = PlacedObjectType.GridObject;
-        currentGridObjectSO = gridObjectSO;
-        RefreshSelectedObjectType();
-    }
-
-    public void SelectEdgeObjectSO(EdgeObjectSO edgeObjectSO) 
-    {
-        placedObjectType = PlacedObjectType.EdgeObject;
-        currentEdgeObjectSO = edgeObjectSO;
-        RefreshSelectedObjectType();
-    }
-
-    private void RefreshSelectedObjectType()
-    {
-        OnSelectedChanged?.Invoke(this, EventArgs.Empty);
+        currentPlaceableObjectSO = placeableObject;
+        buildingGhost.RefreshVisual();
     }
 
     public Vector3 GetMouseWorldSnappedPosition() 
     {
         Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
-        grid.GetXZ(mousePosition, out int x, out int z);
 
-        if (currentGridObjectSO != null) 
+        selectedGrid.GetXZ(mousePosition, out int x, out int z);
+
+        if(currentPlaceableObjectSO is GridObjectSO) 
         {
-            Vector2Int rotationOffset = currentGridObjectSO.GetRotationOffset(currentDirection);
-            Vector3 gridObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+            Vector2Int rotationOffset = ((GridObjectSO) currentPlaceableObjectSO).GetRotationOffset(currentDirection);
+            Vector3 gridObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
             return gridObjectWorldPosition;
-        } 
+        }
         else 
         {
             return mousePosition;
         }
     }
 
+    public EdgePosition GetMouseEdgePosition() 
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, edgeColliderLayerMask)) 
+        {
+            if(raycastHit.collider.TryGetComponent(out EdgePosition edgePosition)) 
+            {
+                return edgePosition;
+            }
+        }
+
+        return null;
+    }
+
     public Quaternion GetGridObjectRotation() 
     {
-        if (currentGridObjectSO != null) 
+        if(currentPlaceableObjectSO is GridObjectSO)
         {
-            return Quaternion.Euler(0, currentGridObjectSO.GetRotationAngle(currentDirection), 0);
-        } 
-        else 
+            return Quaternion.Euler(0, ((GridObjectSO) currentPlaceableObjectSO).GetRotationAngle(currentDirection), 0);
+        }
+        else
         {
             return Quaternion.identity;
         }
     }
 
-    public GridObjectSO GetGridObjectType() 
+    public bool AmILookingAtCollider()
     {
-        return currentGridObjectSO;
-    }
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-    [System.Serializable]
-    public enum PlacedObjectType 
-    {
-        GridObject,
-        EdgeObject,
-        LooseObject,
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMask)) 
+        {
+            return true;
+        } 
+        else 
+        {
+            return false;
+        }
     }
 }

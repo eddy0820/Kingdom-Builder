@@ -10,7 +10,7 @@ public class GridObject : MonoBehaviour
 
     public static GridObject Create(Vector3 worldPosition, Vector2Int _origin, GridObjectSO.Dir _direction, GridObjectSO _gridObjectSO) 
     {
-        Transform placedObjectTransform = Instantiate(_gridObjectSO.prefab, worldPosition, Quaternion.Euler(0, _gridObjectSO.GetRotationAngle(_direction), 0));
+        Transform placedObjectTransform = Instantiate(_gridObjectSO.Prefab, worldPosition, Quaternion.Euler(0, _gridObjectSO.GetRotationAngle(_direction), 0));
 
         GridObject placedObject = placedObjectTransform.GetComponent<GridObject>();
         

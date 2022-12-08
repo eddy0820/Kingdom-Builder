@@ -22,20 +22,13 @@ public class FloorGridObject : GridObject {
     private EdgeObject rightEdgeObject;
 
     public void PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO) 
-    {
+    {  
         EdgePosition edgePosition = GetEdgePosition(edge);
 
-        Transform edgeObjectTransform = Instantiate(edgeObjectSO.prefab, edgePosition.transform.position, edgePosition.transform.rotation);
-
-        EdgeObject currentEdgeObject = GetEdgeObject(edge);
-
-        if (currentEdgeObject != null) 
-        {
-            Destroy(currentEdgeObject.gameObject);
-        }
+        Transform edgeObjectTransform = Instantiate(edgeObjectSO.Prefab, edgePosition.transform.position, edgePosition.transform.rotation);
 
         EdgeObject floorEdgeObject = edgeObjectTransform.GetComponent<EdgeObject>();
-        SetEdgeObject(edge, floorEdgeObject);
+        SetEdgeObject(edge, floorEdgeObject); 
     }
 
     private EdgePosition GetEdgePosition(Edge edge) 
@@ -70,7 +63,7 @@ public class FloorGridObject : GridObject {
         }
     }
 
-    private EdgeObject GetEdgeObject(Edge edge) 
+    public EdgeObject GetEdgeObject(Edge edge) 
     {
         switch (edge) 
         {

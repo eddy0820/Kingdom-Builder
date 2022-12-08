@@ -7,6 +7,7 @@ public class Mouse3D : MonoBehaviour {
     public static Mouse3D Instance { get; private set; }
 
     [SerializeField] private LayerMask mouseColliderLayerMask = new LayerMask();
+    public LayerMask MouseColliderLayerMask => mouseColliderLayerMask;
     [SerializeField] private Transform debugVisual;
 
     private void Awake() {

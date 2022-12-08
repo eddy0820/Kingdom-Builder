@@ -8,6 +8,9 @@ public class PlayerCamera : MonoBehaviour
     [Header("Framing")]
     public Camera Camera;
     public Vector2 FollowPointFraming = new Vector2(0f, 0f);
+    public Vector2 DefaultFollowPointFraming = new Vector2(0f, 0f);
+    public Vector2 BuildModeFollowPointFraming = new Vector2(0f, 0f);
+    [SerializeField] float buildModeLerpDuration = 1f;
     public float FollowingSharpness = 10000f;
 
     [Header("Distance")]
@@ -189,5 +192,35 @@ public class PlayerCamera : MonoBehaviour
             // Apply position
             Transform.position = targetPosition;
         }
+    }
+
+    public void DoBuildModeCamera(bool enabled)
+    {
+        StopAllCoroutines();
+
+        if(enabled)
+        {
+            StartCoroutine(DoCameraLerp(DefaultFollowPointFraming, BuildModeFollowPointFraming));
+        }
+        else
+        {
+            StartCoroutine(DoCameraLerp(BuildModeFollowPointFraming, DefaultFollowPointFraming));
+        }
+    }
+
+    IEnumerator DoCameraLerp(Vector2 startPosition, Vector2 targetPosition)
+    {
+        float time = 0;
+
+        while(time < buildModeLerpDuration)
+        {
+            FollowPointFraming = Vector2.Lerp(startPosition, targetPosition, time / buildModeLerpDuration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        FollowPointFraming = targetPosition;
+
+        yield break;
     }
 }

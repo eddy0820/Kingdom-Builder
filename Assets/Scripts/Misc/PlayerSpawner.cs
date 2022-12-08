@@ -5,6 +5,8 @@ using BattleDrakeStudios.ModularCharacters;
 
 public class PlayerSpawner : MonoBehaviour
 {
+    public static PlayerSpawner Instance { get; private set; }
+
     [Scene]
     [SerializeField] string playerScene;
 
@@ -12,7 +14,7 @@ public class PlayerSpawner : MonoBehaviour
 
     [SerializeField] Transform spawnPoint;
     public Transform SpawnPoint => spawnPoint;
-
+    
     [Space(15)]
 
     [SerializeField] GameObject maleModel;
@@ -21,15 +23,31 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject FemaleModel => femaleModel; 
 
     [Space(15)]
+
     [SerializeField] Avatar avatar;
     [SerializeField] Material characterMaterial;
+
+    GridBuildingInfo gridBuildingInfo;
+    public GridBuildingInfo GridBuildingInfo => gridBuildingInfo;
 
     PlayerInfoHolder playerInfo = null;
     PlayerCharacterController playerCharacter;
 
     private void Awake()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+
+        gridBuildingInfo = GetComponent<GridBuildingInfo>();
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(playerScene, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+
+        if(gridBuildingInfo.EnableBuilding)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(gridBuildingInfo.GridBuildingScene, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        }
     }
 
     private void Start()
@@ -38,6 +56,25 @@ public class PlayerSpawner : MonoBehaviour
         playerCharacter.Motor.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
 
         CheckIfPreExistingCharacter();
+
+        if(gridBuildingInfo.EnableBuilding)
+        {
+            GridBuildingManager.Instance.Init
+                (
+                    gridBuildingInfo.PlaceableObjectSOList, 
+                    gridBuildingInfo.GridWidth, 
+                    gridBuildingInfo.GridLength,
+                    gridBuildingInfo.CellSize,
+                    gridBuildingInfo.GridHeight,
+                    gridBuildingInfo.GridVerticalCount,
+                    gridBuildingInfo.MaxBuildDistance,
+                    gridBuildingInfo.EdgeColliderLayerMask,
+                    gridBuildingInfo.Debug,
+                    gridBuildingInfo.DebugFontSize
+                );
+
+            GridBuildingManager.Instance.Setup(gridBuildingInfo.GridOriginPoint.position);
+        }
     }
 
     private void CheckIfPreExistingCharacter()
