@@ -207,7 +207,10 @@ public class GridBuildingManager : MonoBehaviour
                 {
                     if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit2.distance + 0.2f, placeableObjectsColliderLayerMask))
                     {
-                        return true;
+                        if(!buildingGhost.GetIfGhostisColliding())
+                        {       
+                            return true;
+                        }
                     }  
                 }
 
@@ -293,7 +296,10 @@ public class GridBuildingManager : MonoBehaviour
         {
             if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit.distance + 0.2f, placeableObjectsColliderLayerMask))
             {
-                Transform looseObjectTransform = Instantiate(currentPlaceableObjectSO.Prefab, raycastHit.point, Quaternion.Euler(0, looseObjectEulerY, 0));
+                if(!buildingGhost.GetIfGhostisColliding())
+                {
+                    Transform looseObjectTransform = Instantiate(currentPlaceableObjectSO.Prefab, dummyHit.point, Quaternion.Euler(0, looseObjectEulerY, 0));
+                }
             }  
         }     
     }

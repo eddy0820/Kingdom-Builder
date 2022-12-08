@@ -8,6 +8,7 @@ public class Mouse3D : MonoBehaviour {
 
     [SerializeField] private LayerMask mouseColliderLayerMask = new LayerMask();
     public LayerMask MouseColliderLayerMask => mouseColliderLayerMask;
+    
     [SerializeField] private Transform debugVisual;
 
     private void Awake() {
@@ -24,10 +25,20 @@ public class Mouse3D : MonoBehaviour {
     }
 
     public static Vector3 GetMouseWorldPosition() => Instance.GetMouseWorldPosition_Instance();
+    public static Vector3 GetMouseWorldPosition(LayerMask mask) => Instance.GetMouseWorldPosition_Instance(mask);
 
     private Vector3 GetMouseWorldPosition_Instance() {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, mouseColliderLayerMask)) {
+            return raycastHit.point;
+        } else {
+            return Vector3.zero;
+        }
+    }
+
+    private Vector3 GetMouseWorldPosition_Instance(LayerMask mask) {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, mask)) {
             return raycastHit.point;
         } else {
             return Vector3.zero;

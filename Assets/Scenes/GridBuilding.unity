@@ -169,12 +169,12 @@ MonoBehaviour:
   edgeColliderLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  placeableObjectsColliderLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   debug: 0
   debugFontSize: 100
   currentDirection: 0
-  test:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!4 &494544615
 Transform:
   m_ObjectHideFlags: 0
@@ -236,7 +236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseColliderLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 257
   debugVisual: {fileID: 0}
 --- !u!4 &1093064665
 Transform:

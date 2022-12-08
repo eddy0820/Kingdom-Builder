@@ -174,6 +174,21 @@ public class BuildingGhost : MonoBehaviour {
         SetMatRecursive(visual.gameObject, currentGhostMaterial);
     }
 
+    public bool GetIfGhostisColliding()
+    {
+        if(visual != null)
+        {
+            LooseObjectVisual looseObjectVisual = visual.GetComponent<LooseObjectVisual>();
+
+            if(looseObjectVisual.Colliding)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public enum GhostValidityState
     {
         Valid,
