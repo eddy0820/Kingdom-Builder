@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloorGridObject : GridObject {
-
-    public enum Edge {
+public class FloorGridObject : GridObject 
+{
+    public enum Edge 
+    {
         Up,
         Down,
         Left,
@@ -27,8 +28,9 @@ public class FloorGridObject : GridObject {
 
         Transform edgeObjectTransform = Instantiate(edgeObjectSO.Prefab, edgePosition.transform.position, edgePosition.transform.rotation);
 
-        EdgeObject floorEdgeObject = edgeObjectTransform.GetComponent<EdgeObject>();
-        SetEdgeObject(edge, floorEdgeObject); 
+        EdgeObject edgeObject = edgeObjectTransform.GetComponent<EdgeObject>();
+        edgeObject.SetParentGridObject(this, edge);
+        SetEdgeObject(edge, edgeObject); 
     }
 
     private EdgePosition GetEdgePosition(Edge edge) 
@@ -79,8 +81,29 @@ public class FloorGridObject : GridObject {
         }
     }
 
+    public void DestroyEdge(Edge edge)
+    {
+        switch(edge)
+        {
+            default:
+            case Edge.Up:
+                Destroy(upEdgeObject.gameObject);
+                break;
+            case Edge.Down:
+                Destroy(downEdgeObject.gameObject);
+                break;
+            case Edge.Left:
+                Destroy(leftEdgeObject.gameObject);
+                break;
+            case Edge.Right:
+                Destroy(rightEdgeObject.gameObject);
+                break;
+        }
+    }
 
-    public override void DestroySelf() {
+
+    public override void DestroySelf() 
+    {
         if (upEdgeObject != null) Destroy(upEdgeObject.gameObject);
         if (downEdgeObject != null) Destroy(downEdgeObject.gameObject);
         if (leftEdgeObject != null) Destroy(leftEdgeObject.gameObject);

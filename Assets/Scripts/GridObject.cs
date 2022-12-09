@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridObject : MonoBehaviour
+public class GridObject : PlaceableObject
 {
     GridObjectSO gridObjectSO;
     Vector2Int origin;
@@ -26,7 +26,7 @@ public class GridObject : MonoBehaviour
         return gridObjectSO.GetGridPositionList(origin, direction);
     }
 
-    public virtual void DestroySelf()
+    public override void DestroySelf()
     {
         Destroy(gameObject);
     }

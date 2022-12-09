@@ -92,6 +92,11 @@ public class GridBuildingManager : MonoBehaviour
     {
         HandleGridSwitch();
 
+        if(Input.GetKeyDown(KeyCode.T))
+        {
+            DestroyPlacedObject();
+        }
+
         if(currentPlaceableObjectSO is LooseObjectSO)
         {
             if (Input.GetKey(KeyCode.R)) 
@@ -177,8 +182,6 @@ public class GridBuildingManager : MonoBehaviour
             case PlaceableObjectTypes.EdgeObject:
 
                 EdgeObjectSO edgeObjectSO = (EdgeObjectSO) currentPlaceableObjectSO;
-
-                
 
                 if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, edgeColliderLayerMask)) 
                 {
@@ -306,18 +309,32 @@ public class GridBuildingManager : MonoBehaviour
 
     private void DestroyPlacedObject()
     {
-        GridBuildingCell gridBuildingCell = selectedGrid.GetGridObject(Mouse3D.GetMouseWorldPosition());
-        GridObject gridObject = gridBuildingCell.GetGridObject();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(gridObject != null)
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMask))
         {
-            gridObject.DestroySelf(); 
-
-            List<Vector2Int> gridObjectPositionList = gridObject.GetGridPositionList();
-        
-            foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+            if(raycastHit.collider.GetComponentInParent<GridObject>() != null)
             {
-                selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).ClearGridObject();
+                GridObject gridObject = raycastHit.collider.GetComponentInParent<GridObject>();
+                gridObject.DestroySelf(); 
+
+                List<Vector2Int> gridObjectPositionList = gridObject.GetGridPositionList();
+            
+                foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+                {
+                    selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).ClearGridObject();
+                }
+            }
+            else if(raycastHit.collider.GetComponentInParent<EdgeObject>() != null)
+            {
+                EdgeObject edgeObject = raycastHit.collider.GetComponentInParent<EdgeObject>();
+                edgeObject.DestroySelf();
+            }
+            else if(raycastHit.collider.GetComponentInParent<LooseObject>() != null)
+            {
+                LooseObject looseObject = raycastHit.collider.GetComponentInParent<LooseObject>();
+                looseObject.DestroySelf();
+                buildingGhost.RefreshVisual();
             }
         }
     }
