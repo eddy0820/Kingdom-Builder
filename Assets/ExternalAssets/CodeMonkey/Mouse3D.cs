@@ -7,8 +7,10 @@ public class Mouse3D : MonoBehaviour {
     public static Mouse3D Instance { get; private set; }
 
     [SerializeField] LayerMask mouseColliderLayerMask = new LayerMask();
+    public LayerMask MouseColliderLayerMask => mouseColliderLayerMask;
 
     [SerializeField] LayerMask mouseColliderLayerMaskNoPlaceableCollider = new LayerMask();
+    public LayerMask MouseColliderLayerMaskNoPlaceableCollider => mouseColliderLayerMaskNoPlaceableCollider;
     [SerializeField] LayerMask placeableColliderLayer = new LayerMask();
     
     LayerMask currentLayerMask;
@@ -39,7 +41,7 @@ public class Mouse3D : MonoBehaviour {
     {
         GameObject mouseObj = GetMouseGameObject(placeableColliderLayer);
 
-        if(mouseObj != null && CheckIfLookingAtTopOrSides(placeableColliderLayer) && PlayerController.Instance.Character.transform.position.y + PlayerController.Instance.Character.Motor.Capsule.height < GetMouseWorldPosition(placeableColliderLayer).y)
+        if(GridBuildingManager.Instance.CurrentPlaceableObjectSO is LooseObjectSO || (mouseObj != null && CheckIfLookingAtTopOrSides(placeableColliderLayer) && PlayerController.Instance.Character.transform.position.y + PlayerController.Instance.Character.Motor.Capsule.height < GetMouseWorldPosition(placeableColliderLayer).y))
         {
             currentLayerMask = mouseColliderLayerMaskNoPlaceableCollider;
         }

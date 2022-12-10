@@ -218,7 +218,7 @@ public class GridBuildingManager : MonoBehaviour
 
             case PlaceableObjectTypes.LooseObject:
                 
-                if(Physics.Raycast(ray, out RaycastHit raycastHit2, 999f, Mouse3D.Instance.CurrentLayerMask)) 
+                if(Physics.Raycast(ray, out RaycastHit raycastHit2, 999f, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider)) 
                 {
                     if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit2.distance + 0.2f, placeableObjectsColliderLayerMask))
                     {
@@ -307,7 +307,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.CurrentLayerMask)) 
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider)) 
         {
             if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit.distance + 0.2f, placeableObjectsColliderLayerMask))
             {
@@ -323,7 +323,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.CurrentLayerMask))
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider))
         {
             if(raycastHit.collider.GetComponentInParent<GridObject>() != null)
             {

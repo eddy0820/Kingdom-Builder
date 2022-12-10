@@ -9,7 +9,8 @@ public class LooseObjectVisual : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider") ||
+           other.gameObject.layer == LayerMask.NameToLayer("Placeable Collider"))
         {
             return;
         }
@@ -20,7 +21,8 @@ public class LooseObjectVisual : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider") ||
+           other.gameObject.layer == LayerMask.NameToLayer("Placeable Collider"))
         {
             return;
         }
@@ -30,7 +32,8 @@ public class LooseObjectVisual : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider") ||
+           other.gameObject.layer == LayerMask.NameToLayer("Placeable Collider"))
         {
             return;
         }
