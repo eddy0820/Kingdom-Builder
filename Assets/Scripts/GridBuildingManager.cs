@@ -135,7 +135,7 @@ public class GridBuildingManager : MonoBehaviour
 
     private void HandleGridSwitch()
     {
-        Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
+        Vector3 mousePosition = Mouse3D.Instance.GetMouseWorldPosition();
         int newGridIndex = Mathf.Clamp(Mathf.RoundToInt(mousePosition.y / gridHeight), 0, gridList.Count - 1);
         selectedGrid = gridList[newGridIndex];
     }
@@ -144,7 +144,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         if(PlayerController.Instance.BuildModeEnabled)
         {
-            if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.GetMouseWorldPosition()) <= maxBuildDistance)
+            if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.Instance.GetMouseWorldPosition()) <= maxBuildDistance)
             {
                 if(AmILookingAtCollider())
                 {
@@ -177,7 +177,7 @@ public class GridBuildingManager : MonoBehaviour
 
                 GridObjectSO gridObjectSO = (GridObjectSO) currentPlaceableObjectSO;
 
-                selectedGrid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
+                selectedGrid.GetXZ(Mouse3D.Instance.GetMouseWorldPosition(), out int x, out int z);
 
                 List<Vector2Int> gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
 
@@ -218,7 +218,7 @@ public class GridBuildingManager : MonoBehaviour
 
             case PlaceableObjectTypes.LooseObject:
                 
-                if(Physics.Raycast(ray, out RaycastHit raycastHit2, 999f, Mouse3D.Instance.MouseColliderLayerMask)) 
+                if(Physics.Raycast(ray, out RaycastHit raycastHit2, 999f, Mouse3D.Instance.CurrentLayerMask)) 
                 {
                     if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit2.distance + 0.2f, placeableObjectsColliderLayerMask))
                     {
@@ -240,7 +240,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         GridObjectSO gridObjectSO = (GridObjectSO) currentPlaceableObjectSO;
 
-        selectedGrid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
+        selectedGrid.GetXZ(Mouse3D.Instance.GetMouseWorldPosition(), out int x, out int z);
 
         List<Vector2Int> gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
         
@@ -307,7 +307,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMask)) 
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.CurrentLayerMask)) 
         {
             if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit.distance + 0.2f, placeableObjectsColliderLayerMask))
             {
@@ -323,7 +323,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMask))
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.CurrentLayerMask))
         {
             if(raycastHit.collider.GetComponentInParent<GridObject>() != null)
             {
@@ -359,7 +359,7 @@ public class GridBuildingManager : MonoBehaviour
 
     public Vector3 GetMouseWorldSnappedPosition() 
     {
-        Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
+        Vector3 mousePosition = Mouse3D.Instance.GetMouseWorldPosition();
 
         selectedGrid.GetXZ(mousePosition, out int x, out int z);
 
@@ -406,7 +406,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMask)) 
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.CurrentLayerMask)) 
         {
             return true;
         } 

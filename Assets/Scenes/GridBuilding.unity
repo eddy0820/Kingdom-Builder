@@ -298,7 +298,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseColliderLayerMask:
     serializedVersion: 2
+    m_Bits: 769
+  mouseColliderLayerMaskNoPlaceableCollider:
+    serializedVersion: 2
     m_Bits: 257
+  placeableColliderLayer:
+    serializedVersion: 2
+    m_Bits: 512
   debugVisual: {fileID: 1086291258}
 --- !u!4 &1093064665
 Transform:

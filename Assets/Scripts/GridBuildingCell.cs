@@ -42,4 +42,14 @@ public class GridBuildingCell
     {
         return x + ", " + z + "\n" + gridObject;
     }
+
+    public bool CompareGridCords(GridBuildingCell other)
+    {
+        if(x == other.x && z == other.z)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

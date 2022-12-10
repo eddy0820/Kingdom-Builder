@@ -690,7 +690,7 @@ MonoBehaviour:
   ObstructionCheckRadius: 0.2
   ObstructionLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 381
   ObstructionSharpness: 10000
   IgnoredColliders: []
   inFirstPerson: 0

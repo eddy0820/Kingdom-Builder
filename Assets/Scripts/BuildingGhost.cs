@@ -44,7 +44,7 @@ public class BuildingGhost : MonoBehaviour {
 
         if(visual != null)
         {
-            if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.GetMouseWorldPosition()) > gridBuildingInfo.MaxBuildDistance)
+            if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.Instance.GetMouseWorldPosition()) > gridBuildingInfo.MaxBuildDistance)
             {
                 SetGhostValidityState(GhostValidityState.FarAway);
             }
@@ -79,13 +79,13 @@ public class BuildingGhost : MonoBehaviour {
                 } 
                 else
                 {
-                    transform.position = Vector3.Lerp(transform.position, Mouse3D.GetMouseWorldPosition(), Time.deltaTime * 15f);
+                    transform.position = Vector3.Lerp(transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
                     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
                 }
             break;
 
             case PlaceableObjectTypes.LooseObject:
-                transform.position = Vector3.Lerp(transform.position, Mouse3D.GetMouseWorldPosition(), Time.deltaTime * 15f);
+                transform.position = Vector3.Lerp(transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, GridBuildingManager.Instance.LooseObjectEulerY, 0), Time.deltaTime * 25f);
             break;
         }
