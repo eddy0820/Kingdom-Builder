@@ -47,6 +47,8 @@ public class GridBuildingManager : MonoBehaviour
     BuildingGhost buildingGhost;
     public BuildingGhost BuildingGhost => buildingGhost;
 
+    bool enableMouse3DDebug;
+
     private void Awake()
     {
         if(Instance == null)
@@ -57,7 +59,7 @@ public class GridBuildingManager : MonoBehaviour
         buildingGhost = GetComponent<BuildingGhost>();
     }
 
-    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize)
+    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
     {
         placeableObjectSOList = _placeableObjectSOList;
         gridWidth = _gridWidth;
@@ -70,6 +72,7 @@ public class GridBuildingManager : MonoBehaviour
         placeableObjectsColliderLayerMask = _placeableObjectsColliderLayerMask;
         debug = _debug;
         debugFontSize = _debugFontSize;
+        enableMouse3DDebug = _enableMouse3DDebug;
     }
 
     public void Setup(Vector3 origin)
@@ -86,6 +89,15 @@ public class GridBuildingManager : MonoBehaviour
         selectedGrid = gridList[0];
         
         SelectPlaceableObject(placeableObjectSOList[0]);
+
+        if(enableMouse3DDebug)
+        {
+            Mouse3D.Instance.debugVisual.gameObject.SetActive(true);
+        }
+        else
+        {
+            Mouse3D.Instance.debugVisual.gameObject.SetActive(false);
+        }
     }
 
     private void Update()

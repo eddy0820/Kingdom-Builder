@@ -68,13 +68,12 @@ MonoBehaviour:
   gridOriginPoint: {fileID: 2775792612204882374}
   enableBuilding: 1
   placeableObjectSOList:
-  - {fileID: 11400000, guid: e58a7b4f13c873243911737bfa7b88a7, type: 2}
-  - {fileID: 11400000, guid: 3dfda4a9a59d6dd4884d9a177c46a79e, type: 2}
+  - {fileID: 11400000, guid: 06c2699624260554783f26e0a4bd5089, type: 2}
   - {fileID: 11400000, guid: 6fe785846e21f1247bd7c4668f42f27c, type: 2}
-  gridWidth: 10
-  gridLength: 10
-  cellSize: 10
-  gridHeight: 10
+  gridWidth: 80
+  gridLength: 80
+  cellSize: 1.25
+  gridHeight: 2.35
   gridVerticalCount: 5
   maxBuildDistance: 15
   edgeColliderLayerMask:
@@ -84,7 +83,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   debug: 0
-  debugFontSize: 100
+  debugFontSize: 12
+  enableMouse3DDebug: 0
 --- !u!1 &5665706731287517932
 GameObject:
   m_ObjectHideFlags: 0

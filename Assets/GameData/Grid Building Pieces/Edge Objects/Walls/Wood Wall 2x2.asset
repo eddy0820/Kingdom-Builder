@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecf06de692047344cb4206f67e473d8e, type: 3}
+  m_Name: Wood Wall 2x2
+  m_EditorClassIdentifier: 
+  name: Wood Wall 2x2
+  prefab: {fileID: 8538997225677848771, guid: 4c75d717607ec0e40bd511444ee64b92, type: 3}
+  visual: {fileID: 2832740655321918605, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
+  objectType: 1

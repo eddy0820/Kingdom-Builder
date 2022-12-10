@@ -205,6 +205,68 @@ MonoBehaviour:
   inValidGhostMaterial: {fileID: 2100000, guid: 9793866f5f8007946b26e127f05f2f5f, type: 2}
   farAwayGhostMaterial: {fileID: 2100000, guid: ab42cc1c39598f34a8b70f182b65df33, type: 2}
   ignoreMaskName: Building Ghost
+--- !u!1001 &1086291257
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1538902455546854601, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_Name
+      value: Mouse3D Debug Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+--- !u!4 &1086291258 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1538902455546854612, guid: 380e01534f23161419528eef17a31f5e, type: 3}
+  m_PrefabInstance: {fileID: 1086291257}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1093064663
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,7 +299,7 @@ MonoBehaviour:
   mouseColliderLayerMask:
     serializedVersion: 2
     m_Bits: 257
-  debugVisual: {fileID: 0}
+  debugVisual: {fileID: 1086291258}
 --- !u!4 &1093064665
 Transform:
   m_ObjectHideFlags: 0

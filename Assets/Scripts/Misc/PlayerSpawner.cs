@@ -71,7 +71,8 @@ public class PlayerSpawner : MonoBehaviour
                     gridBuildingInfo.EdgeColliderLayerMask,
                     gridBuildingInfo.PlaceableObjectsColliderLayerMask,
                     gridBuildingInfo.Debug,
-                    gridBuildingInfo.DebugFontSize
+                    gridBuildingInfo.DebugFontSize,
+                    gridBuildingInfo.EnableMouse3DDebug
                 );
 
             GridBuildingManager.Instance.Setup(gridBuildingInfo.GridOriginPoint.position);

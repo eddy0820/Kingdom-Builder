@@ -55,4 +55,6 @@ public class GridBuildingInfo : MonoBehaviour
     public bool Debug => debug;
     [SerializeField] int debugFontSize = 100;
     public int DebugFontSize => debugFontSize;
+    [SerializeField] bool enableMouse3DDebug;
+    public bool EnableMouse3DDebug => enableMouse3DDebug;
 }

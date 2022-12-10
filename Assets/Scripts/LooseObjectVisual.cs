@@ -18,6 +18,16 @@ public class LooseObjectVisual : MonoBehaviour
         
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider"))
+        {
+            return;
+        }
+
+        colliding = true;
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider"))

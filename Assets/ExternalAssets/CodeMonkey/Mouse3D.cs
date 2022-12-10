@@ -9,7 +9,7 @@ public class Mouse3D : MonoBehaviour {
     [SerializeField] private LayerMask mouseColliderLayerMask = new LayerMask();
     public LayerMask MouseColliderLayerMask => mouseColliderLayerMask;
     
-    [SerializeField] private Transform debugVisual;
+    public Transform debugVisual;
 
     private void Awake() {
         Instance = this;
