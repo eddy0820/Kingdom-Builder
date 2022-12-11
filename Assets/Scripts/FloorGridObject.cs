@@ -111,4 +111,16 @@ public class FloorGridObject : GridObject
 
         base.DestroySelf();
     }
+
+    public static Direction ConvertToDirection(Edge edge)
+    {
+        switch(edge)
+        {
+            case Edge.Up: return Direction.Up;
+            case Edge.Down: return Direction.Down;
+            case Edge.Left: return Direction.Left;
+            case Edge.Right: return Direction.Right;
+            default: return Direction.Down;
+        }
+    }
 }

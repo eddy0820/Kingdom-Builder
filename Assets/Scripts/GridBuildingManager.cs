@@ -255,23 +255,14 @@ public class GridBuildingManager : MonoBehaviour
             }
             else if(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<EdgeObject>() != null)
             {
-                targetDirection = GridObjectSO.FlipDirection(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<EdgeObject>().ParentGridObject.Direction);
-            }
-
-            foreach(PlaceableColliderPosition b in list)
-            {
-                
-                    Debug.Log(b.transform.position);
-                
+                targetDirection = FloorGridObject.ConvertToDirection(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<EdgeObject>().GridEdge);
             }
 
             foreach(PlaceableColliderPosition b in list)
             {
                 if(b.PosDir == targetDirection)
                 {
-                    //Debug.Log(b.transform.position);
                     selectedGrid.GetXZ(b.transform.position, out x, out z);
-                    Debug.Log(x + ", " + z);
                     gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), b.PosDir);
                     break;
                 }
