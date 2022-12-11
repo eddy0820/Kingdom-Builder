@@ -79,6 +79,18 @@ public class GridObjectSO : PlaceableObjectSO
         }
     }
 
+    public static Direction FlipDirection(Direction dir) 
+    {
+        switch(dir) 
+        {
+            default:
+            case Direction.Down:      return Direction.Up;
+            case Direction.Left:      return Direction.Right;
+            case Direction.Up:        return Direction.Down;
+            case Direction.Right:     return Direction.Left;
+        }
+    }
+
     public static Vector2Int GetDirectionForwardVector(Direction dir) 
     {
         switch(dir) 
