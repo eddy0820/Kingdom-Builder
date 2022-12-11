@@ -33,7 +33,7 @@ public class GridBuildingManager : MonoBehaviour
 
     [ReadOnly, SerializeField] bool debug;
     [ReadOnly, SerializeField] int debugFontSize = 100;
-    [ReadOnly, SerializeField] GridObjectSO.Dir currentDirection = GridObjectSO.Dir.Down;
+    [ReadOnly, SerializeField] Direction currentDirection = Direction.Down;
 
     List<GridXZ<GridBuildingCell>> gridList;
     GridXZ<GridBuildingCell> selectedGrid;
@@ -57,6 +57,8 @@ public class GridBuildingManager : MonoBehaviour
         }
 
         buildingGhost = GetComponent<BuildingGhost>();
+
+        currentDirection = Direction.Down;
     }
 
     public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
@@ -120,7 +122,7 @@ public class GridBuildingManager : MonoBehaviour
         {
             if(Input.GetKeyDown(KeyCode.R))
             {
-                currentDirection = GridObjectSO.GetNextDir(currentDirection);
+                currentDirection = GridObjectSO.GetNextDirection(currentDirection);
                 Debug.Log("Direction: " + currentDirection);
             }
         } 
@@ -239,17 +241,36 @@ public class GridBuildingManager : MonoBehaviour
     private void PlaceGridObject()
     {
         GridObjectSO gridObjectSO = (GridObjectSO) currentPlaceableObjectSO;
+        int x = 0, z = 0;
+        List<Vector2Int> gridObjectPositionList = new List<Vector2Int>();
 
-        selectedGrid.GetXZ(Mouse3D.Instance.GetMouseWorldPosition(), out int x, out int z);
-
-        List<Vector2Int> gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
+        if(Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider") && Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>()!= false)
+        {
+            PlaceableColliderPosition[] list = Mouse3D.Instance.GetMouseGameObject().GetComponentsInChildren<PlaceableColliderPosition>();
+            foreach(PlaceableColliderPosition b in list)
+            {
+                if(b.PosDir == Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>().Direction)
+                {
+                    selectedGrid.GetXZ(b.transform.position, out x, out z);
+                    gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), b.PosDir);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            selectedGrid.GetXZ(Mouse3D.Instance.GetMouseWorldPosition(), out x, out z);
+            gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
         
+        }
+           
         bool canPlace = true;
 
         foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
         {
             if(!selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
             {
+                
                 canPlace = false;
                 break;
             }

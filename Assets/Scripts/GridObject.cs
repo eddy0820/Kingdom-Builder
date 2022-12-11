@@ -6,9 +6,10 @@ public class GridObject : PlaceableObject
 {
     GridObjectSO gridObjectSO;
     Vector2Int origin;
-    GridObjectSO.Dir direction;
+    Direction direction;
+    public Direction Direction => direction;
 
-    public static GridObject Create(Vector3 worldPosition, Vector2Int _origin, GridObjectSO.Dir _direction, GridObjectSO _gridObjectSO) 
+    public static GridObject Create(Vector3 worldPosition, Vector2Int _origin, Direction _direction, GridObjectSO _gridObjectSO) 
     {
         Transform placedObjectTransform = Instantiate(_gridObjectSO.Prefab, worldPosition, Quaternion.Euler(0, _gridObjectSO.GetRotationAngle(_direction), 0));
 

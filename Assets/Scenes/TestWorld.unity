@@ -365,7 +365,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: debug
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: maxBuildDistance
@@ -373,7 +373,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: gridVerticalCount
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: enableMouse3DDebug

@@ -13,38 +13,38 @@ public class GridObjectSO : PlaceableObjectSO
         objectType = PlaceableObjectTypes.GridObject;
     }
 
-    public int GetRotationAngle(Dir dir) 
+    public int GetRotationAngle(Direction dir) 
     {
         switch(dir) 
         {
             default:
-            case Dir.Down:  return 0;
-            case Dir.Left:  return 90;
-            case Dir.Up:    return 180;
-            case Dir.Right: return 270;
+            case Direction.Down:  return 0;
+            case Direction.Left:  return 90;
+            case Direction.Up:    return 180;
+            case Direction.Right: return 270;
         }
     }
 
-    public Vector2Int GetRotationOffset(Dir dir) 
+    public Vector2Int GetRotationOffset(Direction dir) 
     {
         switch(dir) 
         {
             default:
-            case Dir.Down:  return new Vector2Int(0, 0);
-            case Dir.Left:  return new Vector2Int(0, width);
-            case Dir.Up:    return new Vector2Int(width, height);
-            case Dir.Right: return new Vector2Int(height, 0);
+            case Direction.Down:  return new Vector2Int(0, 0);
+            case Direction.Left:  return new Vector2Int(0, width);
+            case Direction.Up:    return new Vector2Int(width, height);
+            case Direction.Right: return new Vector2Int(height, 0);
         }
     }
 
-    public List<Vector2Int> GetGridPositionList(Vector2Int offset, Dir dir) 
+    public List<Vector2Int> GetGridPositionList(Vector2Int offset, Direction dir) 
     {
         List<Vector2Int> gridPositionList = new List<Vector2Int>();
         switch(dir) 
         {
             default:
-            case Dir.Down:
-            case Dir.Up:
+            case Direction.Down:
+            case Direction.Up:
                 for(int x = 0; x < width; x++) 
                 {
                     for(int y = 0; y < height; y++) 
@@ -53,8 +53,8 @@ public class GridObjectSO : PlaceableObjectSO
                     }
                 }
                 break;
-            case Dir.Left:
-            case Dir.Right:
+            case Direction.Left:
+            case Direction.Right:
                 for(int x = 0; x < height; x++) 
                 {
                     for(int y = 0; y < width; y++) 
@@ -67,61 +67,53 @@ public class GridObjectSO : PlaceableObjectSO
         return gridPositionList;
     }
 
-    public static Dir GetNextDir(Dir dir) 
+    public static Direction GetNextDirection(Direction dir) 
     {
         switch(dir) 
         {
             default:
-            case Dir.Down:      return Dir.Left;
-            case Dir.Left:      return Dir.Up;
-            case Dir.Up:        return Dir.Right;
-            case Dir.Right:     return Dir.Down;
+            case Direction.Down:      return Direction.Left;
+            case Direction.Left:      return Direction.Up;
+            case Direction.Up:        return Direction.Right;
+            case Direction.Right:     return Direction.Down;
         }
     }
 
-    public static Vector2Int GetDirForwardVector(Dir dir) 
+    public static Vector2Int GetDirectionForwardVector(Direction dir) 
     {
         switch(dir) 
         {
             default:
-            case Dir.Down: return new Vector2Int(0, -1);
-            case Dir.Left: return new Vector2Int(-1, 0);
-            case Dir.Up: return new Vector2Int(0, +1);
-            case Dir.Right: return new Vector2Int(+1, 0);
+            case Direction.Down: return new Vector2Int(0, -1);
+            case Direction.Left: return new Vector2Int(-1, 0);
+            case Direction.Up: return new Vector2Int(0, +1);
+            case Direction.Right: return new Vector2Int(+1, 0);
         }
     }
 
-    public static Dir GetDir(Vector2Int from, Vector2Int to) 
+    public static Direction GetDirection(Vector2Int from, Vector2Int to) 
     {
         if(from.x < to.x) 
         {
-            return Dir.Right;
+            return Direction.Right;
         } 
         else 
         {
             if(from.x > to.x) 
             {
-                return Dir.Left;
+                return Direction.Left;
             } 
             else 
             {
                 if(from.y < to.y) 
                 {
-                    return Dir.Up;
+                    return Direction.Up;
                 } 
                 else 
                 {
-                    return Dir.Down;
+                    return Direction.Down;
                 }
             }
         }
     }  
-
-    public enum Dir 
-    {
-        Down,
-        Left,
-        Up,
-        Right,
-    }
 }
