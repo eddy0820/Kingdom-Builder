@@ -501,10 +501,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8538997225677848771}
     m_Modifications:
-    - target: {fileID: 2832740655281570456, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -2.5
-      objectReference: {fileID: 0}
     - target: {fileID: 2832740655321918604, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
       propertyPath: m_Name
       value: Wood Wall 2x2 (Visual)
@@ -551,22 +547,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2832740655321918605, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2832740656648641799, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2832740656648641799, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2832740656648641799, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2832740656648641799, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
