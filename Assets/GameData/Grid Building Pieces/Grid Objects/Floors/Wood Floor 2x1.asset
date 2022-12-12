@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db2378dd6849334fbcade98fec7773d, type: 3}
+  m_Name: Wood Floor 2x1
+  m_EditorClassIdentifier: 
+  name: Wood Floor 2x1
+  prefab: {fileID: 702567018134962564, guid: 78dba5bf76cc3c64cb8b06d8d5732523, type: 3}
+  visual: {fileID: 2295573704496123280, guid: 54c39cd229d68dd47af4089f169c17f0, type: 3}
+  objectType: 0
+  width: 2
+  height: 1
