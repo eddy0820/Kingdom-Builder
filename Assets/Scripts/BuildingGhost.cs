@@ -66,6 +66,23 @@ public class BuildingGhost : MonoBehaviour {
         switch(GridBuildingManager.Instance.CurrentPlaceableObjectSO.ObjectType)
         {
             case PlaceableObjectTypes.GridObject:
+
+                if(Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider") && Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>() != null)
+                {
+                    PlaceableColliderPosition[] list = Mouse3D.Instance.GetMouseGameObject().GetComponentsInChildren<PlaceableColliderPosition>();
+                    
+                    Direction targetDirection = GetGhostPlaceableColliderDirection();
+                    
+                    foreach(PlaceableColliderPosition b in list)
+                    { 
+                        if(b.PosDir == targetDirection)
+                        {
+                            targetPosition = b.transform.position;
+                            break;
+                        }
+                    }
+                }
+                
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, GridBuildingManager.Instance.GetGridObjectRotation(), Time.deltaTime * 15f);
             break;
@@ -187,6 +204,85 @@ public class BuildingGhost : MonoBehaviour {
         }
 
         return false;
+    }
+
+    public Direction GetGhostPlaceableColliderDirection()
+    {
+        Direction targetDirection = GridBuildingManager.Instance.CurrentDirection;
+
+        switch(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>().Direction)
+        {
+            case Direction.Up:
+                switch(GridBuildingManager.Instance.CurrentDirection)
+                {
+                    case Direction.Up:
+                        targetDirection = Direction.Down;
+                        break;
+                    case Direction.Down:
+                        targetDirection = Direction.Up;
+                        break;
+                    case Direction.Left:
+                        // NOTHING
+                        break;
+                    case Direction.Right:
+                        // NOTHING
+                        break;
+                }
+                break;
+            case Direction.Down:
+                switch(GridBuildingManager.Instance.CurrentDirection)
+                {
+                    case Direction.Up:
+                        // NOTHING
+                        break;
+                    case Direction.Down:
+                        // NOTHING
+                        break;
+                    case Direction.Left:
+                        targetDirection = Direction.Right;
+                        break;
+                    case Direction.Right:
+                        targetDirection = Direction.Left;
+                        break;
+                }
+                break;
+            case Direction.Left:
+                switch(GridBuildingManager.Instance.CurrentDirection)
+                {
+                    case Direction.Up:
+                        targetDirection = Direction.Right;
+                        break;
+                    case Direction.Down:
+                        targetDirection = Direction.Left;
+                        break;
+                    case Direction.Left:
+                        targetDirection = Direction.Down;
+                        break;
+                    case Direction.Right:
+                        targetDirection = Direction.Up;
+                        break;
+                }
+                break;
+            case Direction.Right:
+                switch(GridBuildingManager.Instance.CurrentDirection)
+                {
+                    case Direction.Up:
+                        targetDirection = Direction.Left;
+                        break;
+                    case Direction.Down:
+                        targetDirection = Direction.Right;
+                        break;
+                    case Direction.Left:
+                        targetDirection = Direction.Up;
+                        break;
+                    case Direction.Right:
+                        targetDirection = Direction.Down;
+                        break;
+                }
+                break;
+        }
+
+        return targetDirection;
     }
 
     public enum GhostValidityState

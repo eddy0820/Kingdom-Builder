@@ -74,9 +74,16 @@ public class Mouse3D : MonoBehaviour {
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(ray, out RaycastHit raycastHit, 999f, currentLayerMask);
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, currentLayerMask))
+        {
+            return raycastHit.transform.gameObject.layer;
+        }
+        else
+        {
+            return 0;
+        }
         
-        return raycastHit.transform.gameObject.layer;
+        
     }
 
     public Vector3 GetMouseWorldPosition() 
