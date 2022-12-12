@@ -67,12 +67,12 @@ public class BuildingGhost : MonoBehaviour {
         {
             case PlaceableObjectTypes.GridObject:
 
-                if(Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider") && Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>() != null)
+                if(PlayerSpawner.Instance.GridBuildingInfo.EnableStrictPlacement && Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider") && Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>() != null)
                 {
                     PlaceableColliderPosition[] list = Mouse3D.Instance.GetMouseGameObject().GetComponentsInChildren<PlaceableColliderPosition>();
                     
                     Direction targetDirection = GetGhostPlaceableColliderDirection();
-                    
+
                     foreach(PlaceableColliderPosition b in list)
                     { 
                         if(b.PosDir == targetDirection)

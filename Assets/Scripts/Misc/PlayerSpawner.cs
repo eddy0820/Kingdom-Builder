@@ -61,6 +61,7 @@ public class PlayerSpawner : MonoBehaviour
         {
             GridBuildingManager.Instance.Init
                 (
+                    gridBuildingInfo.EnableStrictPlacement,
                     gridBuildingInfo.PlaceableObjectSOList, 
                     gridBuildingInfo.GridWidth, 
                     gridBuildingInfo.GridLength,

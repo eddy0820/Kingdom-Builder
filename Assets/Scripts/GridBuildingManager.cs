@@ -7,6 +7,7 @@ public class GridBuildingManager : MonoBehaviour
 {
     public static GridBuildingManager Instance { get; private set; }
 
+    [ReadOnly, SerializeField] bool enableStrictPlacement;
     [ReadOnly, SerializeField] List<PlaceableObjectSO> placeableObjectSOList;
 
     [Space(15)]
@@ -62,8 +63,9 @@ public class GridBuildingManager : MonoBehaviour
         currentDirection = Direction.Down;
     }
 
-    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
+    public void Init(bool _enableStrictPlacement, List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
     {
+        enableStrictPlacement = _enableStrictPlacement;
         placeableObjectSOList = _placeableObjectSOList;
         gridWidth = _gridWidth;
         gridLength = _gridLength;
@@ -182,7 +184,7 @@ public class GridBuildingManager : MonoBehaviour
                 int x = 0, z = 0;
                 List<Vector2Int> gridObjectPositionList = new List<Vector2Int>();
                 
-                if(Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider"))
+                if(enableStrictPlacement && Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider"))
                 {
                     PlaceableColliderPosition placeableColliderPosition = GetPlaceableColliderPosition();
 
@@ -194,10 +196,7 @@ public class GridBuildingManager : MonoBehaviour
                     selectedGrid.GetXZ(Mouse3D.Instance.GetMouseWorldPosition(), out x, out z);
                     gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection); 
                 }
-                //selectedGrid.GetXZ(Mouse3D.Instance.GetMouseWorldPosition(), out int x, out int z);
-
-                //List<Vector2Int> gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
-
+                
                 foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
                 {
                     if(!selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
@@ -259,7 +258,7 @@ public class GridBuildingManager : MonoBehaviour
         int x = 0, z = 0;
         List<Vector2Int> gridObjectPositionList = new List<Vector2Int>();
 
-        if(Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider"))
+        if(enableStrictPlacement && Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider"))
         {
             PlaceableColliderPosition placeableColliderPosition = GetPlaceableColliderPosition();
 
