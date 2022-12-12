@@ -67,7 +67,7 @@ public class BuildingGhost : MonoBehaviour {
         {
             case PlaceableObjectTypes.GridObject:
 
-                if(PlayerSpawner.Instance.GridBuildingInfo.EnableStrictPlacement && Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider") && Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>() != null)
+                if(PlayerSpawner.Instance.GridBuildingInfo.EnableStrictPlacement && Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider"))
                 {
                     PlaceableColliderPosition[] list = Mouse3D.Instance.GetMouseGameObject().GetComponentsInChildren<PlaceableColliderPosition>();
                     
@@ -209,8 +209,18 @@ public class BuildingGhost : MonoBehaviour {
     public Direction GetGhostPlaceableColliderDirection()
     {
         Direction targetDirection = GridBuildingManager.Instance.CurrentDirection;
+        Direction sampledDirection = Direction.Down;
 
-        switch(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>().Direction)
+        if(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>() != null)
+        {
+            sampledDirection = Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>().Direction;
+        }
+        else if(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<EdgeObject>() != null)
+        {
+            sampledDirection = FloorGridObject.ConvertToDirection(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<EdgeObject>().GridEdge);
+        }
+
+        switch(sampledDirection)
         {
             case Direction.Up:
                 switch(GridBuildingManager.Instance.CurrentDirection)
