@@ -12,6 +12,7 @@ public class Mouse3D : MonoBehaviour {
     [SerializeField] LayerMask mouseColliderLayerMaskNoPlaceableCollider = new LayerMask();
     public LayerMask MouseColliderLayerMaskNoPlaceableCollider => mouseColliderLayerMaskNoPlaceableCollider;
     [SerializeField] LayerMask placeableColliderLayer = new LayerMask();
+    public LayerMask PlaceabeColliderLayer => placeableColliderLayer;
     
     LayerMask currentLayerMask;
     public LayerMask CurrentLayerMask => currentLayerMask;
@@ -82,8 +83,20 @@ public class Mouse3D : MonoBehaviour {
         {
             return 0;
         }
-        
-        
+    }
+
+    public int GetMouseWorldLayer(LayerMask mask)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, mask))
+        {
+            return raycastHit.transform.gameObject.layer;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public Vector3 GetMouseWorldPosition() 

@@ -267,18 +267,39 @@ public class GridBuildingManager : MonoBehaviour
             gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), placeableColliderPosition.PosDir);
         }
 
-        bool canPlace = true;
+        bool canPlace1 = true;
 
         foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
         {
             if(!selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).CanBuild())
             {  
-                canPlace = false;
+                canPlace1 = false;
                 break;
             }
         }
 
-        if(canPlace)
+        List<Vector2Int> gridObjectAdjacentPositionList = gridObjectSO.GetGridAdjacentPositionList(gridObjectPositionList);
+
+        bool canPlace2 = false;
+
+
+        if(Mouse3D.Instance.GetMouseWorldLayer(Mouse3D.Instance.PlaceabeColliderLayer) == 0)
+        {
+            canPlace2 = true;
+        }
+        else
+        {
+            foreach(Vector2Int gridObjectAdjacentPosition in gridObjectAdjacentPositionList)
+            {
+                if(!selectedGrid.GetGridObject(gridObjectAdjacentPosition.x, gridObjectAdjacentPosition.y).CanBuild())
+                {
+                    canPlace2 = true;
+                    break;
+                }
+            }
+        }
+
+        if(canPlace1 && canPlace2)
         {
             Vector2Int rotationOffset = gridObjectSO.GetRotationOffset(currentDirection);
             Vector3 gridObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
@@ -414,18 +435,6 @@ public class GridBuildingManager : MonoBehaviour
     }
 
     public Quaternion GetGridObjectRotation() 
-    {
-        if(currentPlaceableObjectSO is GridObjectSO)
-        {
-            return Quaternion.Euler(0, ((GridObjectSO) currentPlaceableObjectSO).GetRotationAngle(currentDirection), 0);
-        }
-        else
-        {
-            return Quaternion.identity;
-        }
-    }
-
-    public Quaternion GetGridObjectRotation2() 
     {
         if(currentPlaceableObjectSO is GridObjectSO)
         {

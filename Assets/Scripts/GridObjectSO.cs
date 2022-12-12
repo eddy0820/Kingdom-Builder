@@ -67,6 +67,31 @@ public class GridObjectSO : PlaceableObjectSO
         return gridPositionList;
     }
 
+    public List<Vector2Int> GetGridAdjacentPositionList(List<Vector2Int> gridPositionList)
+    {
+        List<Vector2Int> gridAdjacentPositionList = new List<Vector2Int>();
+
+        foreach(Vector2Int gridPosition in gridPositionList)
+        {
+            List<Vector2Int> singularAdjacentPositionList = new List<Vector2Int>();
+
+            singularAdjacentPositionList.Add(gridPosition + new Vector2Int(0, -1)); //Down
+            singularAdjacentPositionList.Add(gridPosition + new Vector2Int(0, 1)); //Up
+            singularAdjacentPositionList.Add(gridPosition + new Vector2Int(-1, 0)); //Left
+            singularAdjacentPositionList.Add(gridPosition + new Vector2Int(1, 0)); //Right
+
+            foreach(Vector2Int singularAdjacentPositon in singularAdjacentPositionList)
+            {
+                if(!gridAdjacentPositionList.Contains(singularAdjacentPositon) && !gridPositionList.Contains(singularAdjacentPositon))
+                {
+                    gridAdjacentPositionList.Add(singularAdjacentPositon);
+                }
+            }
+        }
+
+        return gridAdjacentPositionList;
+    }
+
     public static Direction GetNextDirection(Direction dir) 
     {
         switch(dir) 

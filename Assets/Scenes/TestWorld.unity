@@ -377,7 +377,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: enableMouse3DDebug
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: enableStrictPlacement
