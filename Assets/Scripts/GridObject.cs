@@ -6,7 +6,7 @@ public class GridObject : PlaceableObject
 {
     GridObjectSO gridObjectSO;
     Vector2Int origin;
-    Direction direction;
+    [ReadOnly, SerializeField] Direction direction;
     public Direction Direction => direction;
 
     public static GridObject Create(Vector3 worldPosition, Vector2Int _origin, Direction _direction, GridObjectSO _gridObjectSO) 

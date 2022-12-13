@@ -6,7 +6,7 @@ public class EdgeObject : PlaceableObject
 {
     FloorGridObject parentGridObject;
     public FloorGridObject ParentGridObject => parentGridObject;
-    FloorGridObject.Edge gridEdge;
+    [ReadOnly, SerializeField] FloorGridObject.Edge gridEdge;
     public FloorGridObject.Edge GridEdge => gridEdge;
 
     public void SetParentGridObject(FloorGridObject gridObject, FloorGridObject.Edge edge)

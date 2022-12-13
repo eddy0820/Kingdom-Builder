@@ -12,6 +12,8 @@ public class BuildingGhost : MonoBehaviour {
     Material currentGhostMaterial;
     GridBuildingInfo gridBuildingInfo;
 
+    bool doOverlapBox;
+
     private void Awake()
     {
         gridBuildingInfo = PlayerSpawner.Instance.GridBuildingInfo;
@@ -67,20 +69,16 @@ public class BuildingGhost : MonoBehaviour {
         {
             case PlaceableObjectTypes.GridObject:
 
-                if(PlayerSpawner.Instance.GridBuildingInfo.EnableStrictPlacement && Mouse3D.Instance.GetMouseWorldLayer() == LayerMask.NameToLayer("Placeable Collider"))
-                {
-                    PlaceableColliderPosition[] list = Mouse3D.Instance.GetMouseGameObject().GetComponentsInChildren<PlaceableColliderPosition>();
-                    
-                    Direction targetDirection = GetGhostPlaceableColliderDirection();
+                Vector3 newPos = GridBuildingManager.Instance.GetNewGridObjectPosition();
 
-                    foreach(PlaceableColliderPosition b in list)
-                    { 
-                        if(b.PosDir == targetDirection)
-                        {
-                            targetPosition = b.transform.position;
-                            break;
-                        }
-                    }
+                if(newPos != Vector3.zero)
+                {
+                    targetPosition = newPos;
+                    doOverlapBox = false;
+                }
+                else
+                {
+                    doOverlapBox = true;
                 }
                 
                 transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f);
@@ -206,93 +204,63 @@ public class BuildingGhost : MonoBehaviour {
         return false;
     }
 
-    public Direction GetGhostPlaceableColliderDirection()
+    public bool GhostOverlapBoxEdgeObject()
     {
-        Direction targetDirection = GridBuildingManager.Instance.CurrentDirection;
-        Direction sampledDirection = Direction.Down;
+        if(doOverlapBox && visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is GridObjectSO)
+        {
+            BoxCollider boxCollider = visual.GetComponent<BoxCollider>();
 
-        if(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>() != null)
-        {
-            sampledDirection = Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<GridObject>().Direction;
-        }
-        else if(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<EdgeObject>() != null)
-        {
-            sampledDirection = FloorGridObject.ConvertToDirection(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<EdgeObject>().GridEdge);
-        }
+            Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
+            Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
+            
+            if(rotationOffsetV2.x > 0)
+            {
+                rotationOffsetV2.x = rotationOffsetV2.x + 0.4f;
+            }
+            if(rotationOffsetV2.y > 0)
+            {
+                rotationOffsetV2.y = rotationOffsetV2.y + 0.4f;
+            }
 
-        switch(sampledDirection)
-        {
-            case Direction.Up:
-                switch(GridBuildingManager.Instance.CurrentDirection)
+            Vector3 rotationOffsetV3 = new Vector3(rotationOffsetV2.x, 0, rotationOffsetV2.y);
+
+            Collider[] colliders = Physics.OverlapBox(boxCollider.center + visual.position - rotationOffsetV3, (boxCollider.size / 2) + new Vector3(0.2f, 0.2f, 0.2f), visual.rotation, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
+            
+            foreach(Collider collider in colliders)
+            {
+                if(collider.GetComponentInParent<EdgeObject>() != null)
                 {
-                    case Direction.Up:
-                        targetDirection = Direction.Down;
-                        break;
-                    case Direction.Down:
-                        targetDirection = Direction.Up;
-                        break;
-                    case Direction.Left:
-                        // NOTHING
-                        break;
-                    case Direction.Right:
-                        // NOTHING
-                        break;
+                    return true;
                 }
-                break;
-            case Direction.Down:
-                switch(GridBuildingManager.Instance.CurrentDirection)
-                {
-                    case Direction.Up:
-                        // NOTHING
-                        break;
-                    case Direction.Down:
-                        // NOTHING
-                        break;
-                    case Direction.Left:
-                        targetDirection = Direction.Right;
-                        break;
-                    case Direction.Right:
-                        targetDirection = Direction.Left;
-                        break;
-                }
-                break;
-            case Direction.Left:
-                switch(GridBuildingManager.Instance.CurrentDirection)
-                {
-                    case Direction.Up:
-                        targetDirection = Direction.Right;
-                        break;
-                    case Direction.Down:
-                        targetDirection = Direction.Left;
-                        break;
-                    case Direction.Left:
-                        targetDirection = Direction.Down;
-                        break;
-                    case Direction.Right:
-                        targetDirection = Direction.Up;
-                        break;
-                }
-                break;
-            case Direction.Right:
-                switch(GridBuildingManager.Instance.CurrentDirection)
-                {
-                    case Direction.Up:
-                        targetDirection = Direction.Left;
-                        break;
-                    case Direction.Down:
-                        targetDirection = Direction.Right;
-                        break;
-                    case Direction.Left:
-                        targetDirection = Direction.Up;
-                        break;
-                    case Direction.Right:
-                        targetDirection = Direction.Down;
-                        break;
-                }
-                break;
+            }
         }
 
-        return targetDirection;
+        return false;
+    }
+
+    void OnDrawGizmos()
+    {
+        if(PlayerSpawner.Instance.GridBuildingInfo.Debug && visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is GridObjectSO)
+        {
+            BoxCollider boxCollider = visual.GetComponent<BoxCollider>();
+            Gizmos.color = Color.yellow;
+
+            Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
+            Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
+            
+            if(rotationOffsetV2.x > 0)
+            {
+                rotationOffsetV2.x = rotationOffsetV2.x + 0.4f;
+            }
+            if(rotationOffsetV2.y > 0)
+            {
+                rotationOffsetV2.y = rotationOffsetV2.y + 0.4f;
+            }
+
+            Vector3 rotationOffsetV3 = new Vector3(rotationOffsetV2.x, 0, rotationOffsetV2.y);
+
+            Gizmos.DrawCube(boxCollider.center + visual.position - rotationOffsetV3, boxCollider.size + new Vector3(0.2f, 0.2f, 0.2f));
+        }
     }
 
     public enum GhostValidityState

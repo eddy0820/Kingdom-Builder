@@ -14,8 +14,6 @@ public class GridBuildingInfo : MonoBehaviour
 
     [SerializeField] bool enableBuilding = true;
     public bool EnableBuilding => enableBuilding;
-    [SerializeField] bool enableStrictPlacement = true;
-    public bool EnableStrictPlacement => enableStrictPlacement;
 
     [Space(15)]
 
