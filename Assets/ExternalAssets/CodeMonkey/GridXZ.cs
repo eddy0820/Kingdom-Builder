@@ -48,7 +48,7 @@ public class GridXZ<TGridObject> {
 
             for (int x = 0; x < gridArray.GetLength(0); x++) {
                 for (int z = 0; z < gridArray.GetLength(1); z++) {
-                    debugTextArray[x, z] = CreateWorldText(gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, debugFontSize, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
+                    debugTextArray[x, z] = CreateWorldText(gridArray[x, z]?.ToString(), GridBuildingManager.Instance.DebugHolder.transform, GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, debugFontSize, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
                     debugTextArray[x, z].transform.localScale = Vector3.one * .13f;
                     debugTextArray[x, z].transform.eulerAngles = new Vector3(90, 0, 0);
                     Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.white, 100f);

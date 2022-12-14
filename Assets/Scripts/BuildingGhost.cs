@@ -213,18 +213,44 @@ public class BuildingGhost : MonoBehaviour {
             Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
             Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
             
-            if(rotationOffsetV2.x > 0)
+            if(((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).width != ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).height)
             {
-                rotationOffsetV2.x = rotationOffsetV2.x + 0.4f;
+                //These are hardcoded but i think they can be derived by diving 0.2 or the whatever the added scale is
+                // Up
+                if(rotationOffsetV2.x > 0 && rotationOffsetV2.y > 0)
+                {
+                    rotationOffsetV2.x = rotationOffsetV2.x + 0.5f;
+                    rotationOffsetV2.y = rotationOffsetV2.y + 0.25f;
+                }
+                // Right
+                else if(rotationOffsetV2.x > 0)
+                {
+                    rotationOffsetV2.x = rotationOffsetV2.x + 0.875f;
+                    rotationOffsetV2.y = rotationOffsetV2.y - 0.625f;
+                }
+                // Left
+                else if(rotationOffsetV2.y > 0)
+                {
+                    rotationOffsetV2.x = rotationOffsetV2.x + 0.625f;
+                    rotationOffsetV2.y = rotationOffsetV2.y - 0.125f;
+
+                }
             }
-            if(rotationOffsetV2.y > 0)
+            else
             {
-                rotationOffsetV2.y = rotationOffsetV2.y + 0.4f;
+                if(rotationOffsetV2.x > 0)
+                {
+                    rotationOffsetV2.x = rotationOffsetV2.x + 0.4f;
+                }
+                if(rotationOffsetV2.y > 0)
+                {
+                    rotationOffsetV2.y = rotationOffsetV2.y + 0.4f;
+                }
             }
 
             Vector3 rotationOffsetV3 = new Vector3(rotationOffsetV2.x, 0, rotationOffsetV2.y);
 
-            Collider[] colliders = Physics.OverlapBox(boxCollider.center + visual.position - rotationOffsetV3, (boxCollider.size / 2) + new Vector3(0.2f, 0.2f, 0.2f), visual.rotation, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
+            Collider[] colliders = Physics.OverlapBox(boxCollider.center + visual.position - rotationOffsetV3, (boxCollider.size / 2) + new Vector3(0.2f, 0.2f, 0.2f), GridBuildingManager.Instance.GetGridObjectRotation(), Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
             
             foreach(Collider collider in colliders)
             {
@@ -248,18 +274,55 @@ public class BuildingGhost : MonoBehaviour {
             Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
             Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
             
-            if(rotationOffsetV2.x > 0)
+            if(((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).width != ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).height)
             {
-                rotationOffsetV2.x = rotationOffsetV2.x + 0.4f;
+                //These are hardcoded but i think they can be derived by diving 0.2 or the whatever the added scale is
+                // Up
+                if(rotationOffsetV2.x > 0 && rotationOffsetV2.y > 0)
+                {
+                    rotationOffsetV2.x = rotationOffsetV2.x + 0.5f;
+                    rotationOffsetV2.y = rotationOffsetV2.y + 0.25f;
+                }
+                // Right
+                else if(rotationOffsetV2.x > 0)
+                {
+                    rotationOffsetV2.x = rotationOffsetV2.x + 0.875f;
+                    rotationOffsetV2.y = rotationOffsetV2.y - 0.625f;
+                }
+                // Left
+                else if(rotationOffsetV2.y > 0)
+                {
+                    rotationOffsetV2.x = rotationOffsetV2.x + 0.625f;
+                    rotationOffsetV2.y = rotationOffsetV2.y - 0.125f;
+
+                }
             }
-            if(rotationOffsetV2.y > 0)
+            else
             {
-                rotationOffsetV2.y = rotationOffsetV2.y + 0.4f;
+                if(rotationOffsetV2.x > 0)
+                {
+                    rotationOffsetV2.x = rotationOffsetV2.x + 0.4f;
+                }
+                if(rotationOffsetV2.y > 0)
+                {
+                    rotationOffsetV2.y = rotationOffsetV2.y + 0.4f;
+                }
             }
+            
+
+            
 
             Vector3 rotationOffsetV3 = new Vector3(rotationOffsetV2.x, 0, rotationOffsetV2.y);
 
-            Gizmos.DrawCube(boxCollider.center + visual.position - rotationOffsetV3, boxCollider.size + new Vector3(0.2f, 0.2f, 0.2f));
+            Matrix4x4 prevMatrix = Gizmos.matrix;
+            Gizmos.matrix = transform.localToWorldMatrix; 
+
+            Vector3 pos = boxCollider.center + visual.position - rotationOffsetV3;
+            pos = transform.InverseTransformPoint(pos);
+
+            Gizmos.DrawCube(pos, boxCollider.size + new Vector3(0.2f, 0.2f, 0.2f));
+
+            Gizmos.matrix = prevMatrix;
         }
     }
 

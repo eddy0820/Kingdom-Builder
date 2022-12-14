@@ -6,7 +6,9 @@ public class GridBuildingCell
 {
     GridXZ<GridBuildingCell> grid;
     int x;
+    public int X => x;
     int z;
+    public int Z => z;
     GridObject gridObject;
 
     public GridBuildingCell(GridXZ<GridBuildingCell> _grid, int _x, int _z)

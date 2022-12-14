@@ -50,6 +50,9 @@ public class GridBuildingManager : MonoBehaviour
 
     bool enableMouse3DDebug;
 
+    [SerializeField] GameObject debugHolder;
+    public GameObject DebugHolder => debugHolder;
+
     private void Awake()
     {
         if(Instance == null)
@@ -185,7 +188,7 @@ public class GridBuildingManager : MonoBehaviour
                 selectedGrid.GetXZ(Mouse3D.Instance.GetMouseWorldPosition(), out x, out z);
                 gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection); 
 
-                return CanPlaceGridObjectCheck(gridObjectPositionList);
+                return CanPlaceGridObjectCheck1(gridObjectPositionList);
 
             case PlaceableObjectTypes.EdgeObject:
 
@@ -243,7 +246,7 @@ public class GridBuildingManager : MonoBehaviour
 
         List<Vector2Int> gridObjectAdjacentPositionList = gridObjectSO.GetGridAdjacentPositionList(gridObjectPositionList); 
 
-        bool canPlace = CanPlaceGridObjectCheck(gridObjectPositionList);
+        bool canPlace = CanPlaceGridObjectCheck1(gridObjectPositionList);
         gridObjectPositionList = GetNewGridObjectPositionList(gridObjectPositionList, gridObjectAdjacentPositionList, x, z, out x, out z);
 
         if(canPlace)
@@ -264,7 +267,7 @@ public class GridBuildingManager : MonoBehaviour
         } 
     }
 
-    private bool CanPlaceGridObjectCheck(List<Vector2Int> gridObjectPositionList)
+    private bool CanPlaceGridObjectCheck1(List<Vector2Int> gridObjectPositionList)
     {
         foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
         {
@@ -277,39 +280,47 @@ public class GridBuildingManager : MonoBehaviour
         return true;
     }
 
-    private List<Vector2Int> GetNewGridObjectPositionList(List<Vector2Int> gridObjectPositionList, List<Vector2Int> gridObjectAdjacentPositionList, int x, int z, out int x2, out int z2)
+    private bool CanPlaceGridObjectCheck2(List<Vector2Int> gridObjectAdjacentPositionList)
     {
-        bool canPlace = false;
-
         if(!Mouse3D.Instance.GetMouseWorldLayerBool(Mouse3D.Instance.PlaceableColliderLayer))
         {
-            canPlace = true;
+            Debug.Log("1");
+            return true;
         }
         else if(Mouse3D.Instance.GetMouseWorldLayerBool(Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider))
         {
-            canPlace = true;
+            Debug.Log("2");
+            return true;
         }
         else
         {
+            
             // Case Placeable Collider is part of a Grid Object
             foreach(Vector2Int gridObjectAdjacentPosition in gridObjectAdjacentPositionList)
             {
                 if(!selectedGrid.GetGridObject(gridObjectAdjacentPosition.x, gridObjectAdjacentPosition.y).CanBuild())
                 {
-                    canPlace = true;
-                    break;
+                    Debug.Log("3");
+                    return true;
                 }
             }
 
             // Case Placeable Collider is part of an Edge Object
-            if(!canPlace)
+            
+            if(buildingGhost.GhostOverlapBoxEdgeObject())
             {
-                if(buildingGhost.GhostOverlapBoxEdgeObject())
-                {
-                    canPlace = true;
-                }
+                Debug.Log("4");
+                return true;
             }
+            
+            Debug.Log("5");
+            return false;
         }
+    }
+
+    private List<Vector2Int> GetNewGridObjectPositionList(List<Vector2Int> gridObjectPositionList, List<Vector2Int> gridObjectAdjacentPositionList, int x, int z, out int x2, out int z2)
+    {
+        bool canPlace = CanPlaceGridObjectCheck2(gridObjectAdjacentPositionList);
 
         // Still cannot place means its a floating placement
         if(canPlace)
@@ -320,10 +331,35 @@ public class GridBuildingManager : MonoBehaviour
         }
         else
         {
-            Transform objPos = Mouse3D.Instance.GetMouseGameObject().transform.parent.transform;
+            Debug.Log("Direction Offset Time");
             List<Vector2Int> newGridObjectPositionList = new List<Vector2Int>();
 
-            if(Mouse3D.Instance.GetMouseWorldPosition().z > objPos.position.z && Mouse3D.Instance.GetMouseWorldPosition().z - objPos.position.z > Mouse3D.Instance.GetMouseWorldPosition().x - objPos.position.x)
+            GetDirectionOffsets(gridObjectPositionList, newGridObjectPositionList, x, z, out x2, out z2);
+
+            return newGridObjectPositionList;
+        }
+    }
+
+    private void GetDirectionOffsets(List<Vector2Int> gridObjectPositionList, List<Vector2Int> newGridObjectPositionList, int x, int z, out int x2, out int z2)
+    {
+        Vector3 objPosV3 = Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<PlaceableObject>().CenterPivot.position;
+        Vector2 objPosV2 = new Vector2(objPosV3.x, objPosV3.z);
+
+        Vector3 mouseWorldPosition = Mouse3D.Instance.GetMouseWorldPosition();
+        Vector2Int gridPos = new Vector2Int(selectedGrid.GetGridObject(mouseWorldPosition).X, selectedGrid.GetGridObject(mouseWorldPosition).Z);
+        Vector2 mouseGridPosV2 = new Vector2(selectedGrid.GetWorldPosition(gridPos.x, gridPos.y).x, selectedGrid.GetWorldPosition(gridPos.x, gridPos.y).z);
+        mouseGridPosV2 = mouseGridPosV2 + new Vector2(cellSize/2, cellSize/2);
+
+        Vector2 directionVector = mouseGridPosV2 - objPosV2;
+        directionVector = directionVector.normalized;
+        
+        x2 = x;
+        z2 = z;
+
+        if(Mathf.Abs(directionVector.y) > 0.5)
+        {
+            // Up
+            if(directionVector.y > 0)
             {
                 foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
                 {
@@ -331,25 +367,40 @@ public class GridBuildingManager : MonoBehaviour
                 }
 
                 z2 = z - 1;
-                x2 = x;
             }
-            else if(Mouse3D.Instance.GetMouseWorldPosition().x > objPos.position.x && Mouse3D.Instance.GetMouseWorldPosition().z - objPos.position.z < Mouse3D.Instance.GetMouseWorldPosition().x - objPos.position.x)
-            {   
+            // Down
+            else if(directionVector.y < 0)
+            {
+                foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+                {
+                    newGridObjectPositionList.Add(new Vector2Int(gridObjectPosition.x, gridObjectPosition.y + 1));
+                }
+
+                z2 = z + 1;
+            }
+        }
+        else if(Math.Abs(directionVector.x) > 0.5)
+        {
+            // Right
+            if(directionVector.x > 0)
+            {
                 foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
                 {
                     newGridObjectPositionList.Add(new Vector2Int(gridObjectPosition.x - 1, gridObjectPosition.y));
                 }
 
                 x2 = x - 1;
-                z2 = z;
             }
-            else
+            // Left
+            else if(directionVector.x < 0)
             {
-                x2 = x;
-                z2 = z;
-            }
+            foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+                {
+                    newGridObjectPositionList.Add(new Vector2Int(gridObjectPosition.x + 1, gridObjectPosition.y));
+                }
 
-            return newGridObjectPositionList;
+                x2 = x + 1;
+            }
         }
     }
 
@@ -506,38 +557,8 @@ public class GridBuildingManager : MonoBehaviour
         gridObjectPositionList = gridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
 
         List<Vector2Int> gridObjectAdjacentPositionList = gridObjectSO.GetGridAdjacentPositionList(gridObjectPositionList); 
-        bool canPlace = false;
-
-        if(!Mouse3D.Instance.GetMouseWorldLayerBool(Mouse3D.Instance.PlaceableColliderLayer))
-        {
-            canPlace = true;
-        }
-        else if(Mouse3D.Instance.GetMouseWorldLayerBool(Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider))
-        {
-            canPlace = true;
-        }
-        else
-        {
-            // Case Placeable Collider is part of a Grid Object
-            foreach(Vector2Int gridObjectAdjacentPosition in gridObjectAdjacentPositionList)
-            {
-                if(!selectedGrid.GetGridObject(gridObjectAdjacentPosition.x, gridObjectAdjacentPosition.y).CanBuild())
-                {
-                    canPlace = true;
-                    break;
-                }
-            }
-
-            // Case Placeable Collider is part of an Edge Object
-            if(!canPlace)
-            {
-                if(buildingGhost.GhostOverlapBoxEdgeObject())
-                {
-                    canPlace = true;
-                }
-            }
-        }
-
+        
+        bool canPlace = CanPlaceGridObjectCheck2(gridObjectAdjacentPositionList);
         bool setNewPos = false;
 
         // Still cannot place means its a floating placement
@@ -545,27 +566,10 @@ public class GridBuildingManager : MonoBehaviour
         {
             if(Mouse3D.Instance.GetMouseGameObject() != null)
             {
-                Transform objPos = Mouse3D.Instance.GetMouseGameObject().transform.parent.transform;
                 List<Vector2Int> newGridObjectPositionList = new List<Vector2Int>();
 
-                if(Mouse3D.Instance.GetMouseWorldPosition().z > objPos.position.z && Mouse3D.Instance.GetMouseWorldPosition().z - objPos.position.z > Mouse3D.Instance.GetMouseWorldPosition().x - objPos.position.x)
-                {
-                    foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
-                    {
-                        newGridObjectPositionList.Add(new Vector2Int(gridObjectPosition.x, gridObjectPosition.y - 1));
-                    }
-
-                    z = z - 1;
-                }
-                else if(Mouse3D.Instance.GetMouseWorldPosition().x > objPos.position.x && Mouse3D.Instance.GetMouseWorldPosition().z - objPos.position.z < Mouse3D.Instance.GetMouseWorldPosition().x - objPos.position.x)
-                {   
-                    foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
-                    {
-                        newGridObjectPositionList.Add(new Vector2Int(gridObjectPosition.x - 1, gridObjectPosition.y));
-                    }
-
-                    x = x - 1;
-                }
+                Debug.Log("Direction Offset Time");
+                GetDirectionOffsets(gridObjectPositionList, newGridObjectPositionList, x, z, out x, out z);
 
                 gridObjectPositionList = newGridObjectPositionList;
                 canPlace = true;

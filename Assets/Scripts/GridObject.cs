@@ -6,6 +6,7 @@ public class GridObject : PlaceableObject
 {
     GridObjectSO gridObjectSO;
     Vector2Int origin;
+    public Vector2Int Origin => origin;
     [ReadOnly, SerializeField] Direction direction;
     public Direction Direction => direction;
 

@@ -175,6 +175,7 @@ MonoBehaviour:
   debug: 0
   debugFontSize: 100
   currentDirection: 0
+  debugHolder: {fileID: 1023364185}
 --- !u!4 &494544615
 Transform:
   m_ObjectHideFlags: 0
@@ -205,6 +206,36 @@ MonoBehaviour:
   inValidGhostMaterial: {fileID: 2100000, guid: 9793866f5f8007946b26e127f05f2f5f, type: 2}
   farAwayGhostMaterial: {fileID: 2100000, guid: ab42cc1c39598f34a8b70f182b65df33, type: 2}
   ignoreMaskName: Building Ghost
+--- !u!1 &1023364185
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1023364186}
+  m_Layer: 0
+  m_Name: DebugHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1023364186
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023364185}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1086291257
 PrefabInstance:
   m_ObjectHideFlags: 0

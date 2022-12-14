@@ -42,7 +42,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.5, y: 0, z: 2.5}
+  m_Size: {x: 2.5, y: 0.15, z: 2.5}
   m_Center: {x: 1.25, y: 0.075, z: 1.25}
 --- !u!1 &114081514624971348
 GameObject:
@@ -86,7 +86,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.5, y: 0, z: 2.5}
+  m_Size: {x: 2.5, y: 0.15, z: 2.5}
   m_Center: {x: 1.25, y: 0.075, z: 1.25}
 --- !u!1 &592731565985263479
 GameObject:
@@ -188,7 +188,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.5, y: 0, z: 2.5}
+  m_Size: {x: 2.5, y: 0.15, z: 2.5}
   m_Center: {x: 1.25, y: 0.075, z: 1.25}
 --- !u!1 &4489080349724032384
 GameObject:
@@ -343,6 +343,7 @@ Transform:
   - {fileID: 4794264408466782100}
   - {fileID: 3348925840843149078}
   - {fileID: 6311987155665503301}
+  - {fileID: 6204678396337134451}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -358,11 +359,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179af6d3d223fa647ba56ad145f95c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  centerPivot: {fileID: 6204678396337134451}
   direction: 0
   upFloorEdgePosition: {fileID: 6305353080921551756}
   downFloorEdgePosition: {fileID: 6737110268709023902}
   leftFloorEdgePosition: {fileID: 2356309014756520638}
   rightFloorEdgePosition: {fileID: 8998378329403550992}
+--- !u!1 &5917382336545913675
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6204678396337134451}
+  m_Layer: 0
+  m_Name: Center Pivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6204678396337134451
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5917382336545913675}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.25, y: 0.075, z: 1.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5785724299158041941}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6840597351627729611
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +437,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.5, y: 0, z: 2.5}
+  m_Size: {x: 2.5, y: 0.15, z: 2.5}
   m_Center: {x: 1.25, y: 0.075, z: 1.25}
 --- !u!1 &8903381700853604663
 GameObject:
