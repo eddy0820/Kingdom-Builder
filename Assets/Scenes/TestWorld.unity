@@ -386,7 +386,11 @@ PrefabInstance:
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: placeableObjectSOList.Array.data[5]
       value: 
-      objectReference: {fileID: 11400000, guid: 6fe785846e21f1247bd7c4668f42f27c, type: 2}
+      objectReference: {fileID: 11400000, guid: 58265fd6ac2c5394f83278d410409f39, type: 2}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: placeableObjectSOList.Array.data[6]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5665706729618475041, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: m_RootOrder
       value: 0

@@ -8,6 +8,7 @@ public class BuildingGhost : MonoBehaviour {
     [SerializeField] Material inValidGhostMaterial;
     [SerializeField] Material farAwayGhostMaterial;
     [SerializeField] string ignoreMaskName;
+    [SerializeField] string ignoreCollisionMaskName;
     Transform visual;
     Transform fakeVisual;
     Material currentGhostMaterial;
@@ -139,6 +140,7 @@ public class BuildingGhost : MonoBehaviour {
             fakeVisual.localPosition = Vector3.zero;
             fakeVisual.localEulerAngles = Vector3.zero;
             DisableMeshRendererRecursive(fakeVisual.gameObject);
+            SetLayerRecursive(fakeVisual.gameObject, "Ignore Collision");
         }
         else
         {
@@ -171,6 +173,16 @@ public class BuildingGhost : MonoBehaviour {
             SetLayerAndMatRecursive(child.gameObject, mat, layerName);
         }
     }
+
+    private void SetLayerRecursive(GameObject targetGameObject, string layerName)
+    {
+        targetGameObject.layer = LayerMask.NameToLayer(layerName);
+
+        foreach(Transform child in targetGameObject.transform) 
+        {
+            SetLayerRecursive(child.gameObject, layerName);
+        }
+    }   
 
     private void SetMatRecursive(GameObject targetGameObject, Material mat)
     {
@@ -228,12 +240,16 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(visual != null)
         {
+            Debug.Log("2.5");
             LooseObjectVisual looseObjectVisual = visual.GetComponent<LooseObjectVisual>();
 
             if(looseObjectVisual.Colliding)
             {
+                Debug.Log("2.6");
                 return true;
             }
+
+            Debug.Log("2.7");
         }
 
         return false;

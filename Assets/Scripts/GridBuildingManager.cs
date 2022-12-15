@@ -137,6 +137,9 @@ public class GridBuildingManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha4)) {SelectPlaceableObject(placeableObjectSOList[3]);}
         if(Input.GetKeyDown(KeyCode.Alpha5)) {SelectPlaceableObject(placeableObjectSOList[4]);}
         if(Input.GetKeyDown(KeyCode.Alpha6)) {SelectPlaceableObject(placeableObjectSOList[5]);}
+        if(Input.GetKeyDown(KeyCode.Alpha7)) {SelectPlaceableObject(placeableObjectSOList[6]);}
+        if(Input.GetKeyDown(KeyCode.Alpha8)) {SelectPlaceableObject(placeableObjectSOList[7]);}
+        if(Input.GetKeyDown(KeyCode.Alpha9)) {SelectPlaceableObject(placeableObjectSOList[8]);}
     }
 
     private void HandleGridSwitch()
@@ -470,10 +473,13 @@ public class GridBuildingManager : MonoBehaviour
 
         if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider)) 
         {
+            Debug.Log("1");
             if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit.distance + 0.2f, placeableObjectsColliderLayerMask))
             {
+                Debug.Log("2");
                 if(!buildingGhost.GetIfGhostisColliding())
                 {
+                    Debug.Log("3");
                     Transform looseObjectTransform = Instantiate(currentPlaceableObjectSO.Prefab, dummyHit.point, Quaternion.Euler(0, looseObjectEulerY, 0));
                 }
             }  
