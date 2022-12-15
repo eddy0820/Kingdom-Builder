@@ -284,14 +284,34 @@ public class GridBuildingManager : MonoBehaviour
     {
         if(!Mouse3D.Instance.GetMouseWorldLayerBool(Mouse3D.Instance.PlaceableColliderLayer))
         {
-            Debug.Log("1");
             return true;
         }
         else if(Mouse3D.Instance.GetMouseWorldLayerBool(Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider))
         {
+            Vector3 firstHitPos = Mouse3D.Instance.GetMouseWorldPosition(Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
+            Vector3 secondHitPos = Mouse3D.Instance.GetMouseWorldPosition(Mouse3D.Instance.PlaceableColliderLayer);
+
+            if(Vector3.Distance(firstHitPos, secondHitPos) < 1)
+            {
+                return true;
+            }
+
+            // Case Placeable Collider is part of a Grid Object
+            foreach(Vector2Int gridObjectAdjacentPosition in gridObjectAdjacentPositionList)
+            {
+                if(!selectedGrid.GetGridObject(gridObjectAdjacentPosition.x, gridObjectAdjacentPosition.y).CanBuild())
+                {
+                    return true;
+                }
+            }
+
+            // Case Placeable Collider is part of an Edge Object
+            if(buildingGhost.GhostOverlapBoxEdgeObject())
+            {
+                return true;
+            }
             
-            Debug.Log("2");
-            return true;
+            return false;
         }
         else
         {
@@ -300,7 +320,6 @@ public class GridBuildingManager : MonoBehaviour
             {
                 if(!selectedGrid.GetGridObject(gridObjectAdjacentPosition.x, gridObjectAdjacentPosition.y).CanBuild())
                 {
-                    Debug.Log("3");
                     return true;
                 }
             }
@@ -308,11 +327,9 @@ public class GridBuildingManager : MonoBehaviour
             // Case Placeable Collider is part of an Edge Object
             if(buildingGhost.GhostOverlapBoxEdgeObject())
             {
-                Debug.Log("4");
                 return true;
             }
             
-            Debug.Log("5");
             return false;
         }
     }
@@ -340,6 +357,10 @@ public class GridBuildingManager : MonoBehaviour
 
     private void GetDirectionOffsets(List<Vector2Int> gridObjectPositionList, List<Vector2Int> newGridObjectPositionList, int x, int z, out int x2, out int z2)
     {
+        if(Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<PlaceableObject>() == null)
+        {
+            Debug.Log(Mouse3D.Instance.GetMouseGameObject().transform.parent.gameObject.name);
+        }
         Vector3 objPosV3 = Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<PlaceableObject>().CenterPivot.position;
         Vector2 objPosV2 = new Vector2(objPosV3.x, objPosV3.z);
 
@@ -564,7 +585,7 @@ public class GridBuildingManager : MonoBehaviour
         // Still cannot place means its a floating placement
         if(!canPlace)
         {
-            if(Mouse3D.Instance.GetMouseGameObject() != null)
+            if(Mouse3D.Instance.GetMouseGameObject() != null && Mouse3D.Instance.GetMouseGameObject().GetComponentInParent<PlaceableObject>() != null)
             {
                 List<Vector2Int> newGridObjectPositionList = new List<Vector2Int>();
 
