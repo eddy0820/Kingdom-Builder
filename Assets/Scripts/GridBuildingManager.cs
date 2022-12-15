@@ -206,6 +206,11 @@ public class GridBuildingManager : MonoBehaviour
 
                                 if(currentEdgeObject == null)
                                 {
+                                    if(edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two && floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null && floorGridObject.IsWestEdge(edgePosition.edge))
+                                    {
+                                        return false;
+                                    }
+
                                     return true;
                                 }
                             }
@@ -441,6 +446,12 @@ public class GridBuildingManager : MonoBehaviour
 
                         if(currentEdgeObject == null)
                         {
+                            if(edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two && floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null && floorGridObject.IsWestEdge(edgePosition.edge))
+                            {
+                                Debug.Log("Can't Place Edge Object");
+                                return;
+                            }
+
                             floorGridObject.PlaceEdge(edgePosition.edge, edgeObjectSO);
                         }
                         else

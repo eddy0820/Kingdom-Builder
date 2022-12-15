@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ecf06de692047344cb4206f67e473d8e, type: 3}
-  m_Name: Wood Stairs
+  m_Name: Wattle & Daub Wall 2x1
   m_EditorClassIdentifier: 
-  name: Wood Stairs
-  prefab: {fileID: 6657927494599985878, guid: 3ed3001b6c16e7c4881e858811f52fc7, type: 3}
-  visual: {fileID: 5719044356686296884, guid: 1d1f10efa59510e48b4b0053f0127c31, type: 3}
+  name: Wattle & Daub Wall 2x1
+  prefab: {fileID: 6456869666786929887, guid: b025946a0e28d3047b1527b4f100fccc, type: 3}
+  visual: {fileID: 8914321079817113199, guid: 9e7701e3d4295af47a8c22a9036a39c4, type: 3}
   objectType: 1
-  width: 1
