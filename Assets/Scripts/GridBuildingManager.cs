@@ -289,12 +289,12 @@ public class GridBuildingManager : MonoBehaviour
         }
         else if(Mouse3D.Instance.GetMouseWorldLayerBool(Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider))
         {
+            
             Debug.Log("2");
             return true;
         }
         else
         {
-            
             // Case Placeable Collider is part of a Grid Object
             foreach(Vector2Int gridObjectAdjacentPosition in gridObjectAdjacentPositionList)
             {
@@ -306,7 +306,6 @@ public class GridBuildingManager : MonoBehaviour
             }
 
             // Case Placeable Collider is part of an Edge Object
-            
             if(buildingGhost.GhostOverlapBoxEdgeObject())
             {
                 Debug.Log("4");
@@ -331,7 +330,6 @@ public class GridBuildingManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Direction Offset Time");
             List<Vector2Int> newGridObjectPositionList = new List<Vector2Int>();
 
             GetDirectionOffsets(gridObjectPositionList, newGridObjectPositionList, x, z, out x2, out z2);
@@ -559,7 +557,9 @@ public class GridBuildingManager : MonoBehaviour
         List<Vector2Int> gridObjectAdjacentPositionList = gridObjectSO.GetGridAdjacentPositionList(gridObjectPositionList); 
         
         bool canPlace = CanPlaceGridObjectCheck2(gridObjectAdjacentPositionList);
-        bool setNewPos = false;
+
+        Vector2Int rotationOffset = gridObjectSO.GetRotationOffset(currentDirection);
+        Vector3 gridObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
 
         // Still cannot place means its a floating placement
         if(!canPlace)
@@ -568,25 +568,14 @@ public class GridBuildingManager : MonoBehaviour
             {
                 List<Vector2Int> newGridObjectPositionList = new List<Vector2Int>();
 
-                Debug.Log("Direction Offset Time");
                 GetDirectionOffsets(gridObjectPositionList, newGridObjectPositionList, x, z, out x, out z);
 
                 gridObjectPositionList = newGridObjectPositionList;
-                canPlace = true;
-                setNewPos = true;
+
+                gridObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
             }
         }
 
-        Vector2Int rotationOffset = gridObjectSO.GetRotationOffset(currentDirection);
-        Vector3 gridObjectWorldPosition = selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
-
-        if(setNewPos)
-        {
-            return gridObjectWorldPosition;
-        }
-        else
-        {   
-            return Vector3.zero;
-        }
+        return gridObjectWorldPosition;
     }
 }

@@ -9,10 +9,11 @@ public class BuildingGhost : MonoBehaviour {
     [SerializeField] Material farAwayGhostMaterial;
     [SerializeField] string ignoreMaskName;
     Transform visual;
+    Transform fakeVisual;
     Material currentGhostMaterial;
     GridBuildingInfo gridBuildingInfo;
 
-    bool doOverlapBox;
+    [HideInInspector] public bool doOverlapBox;
 
     private void Awake()
     {
@@ -41,6 +42,9 @@ public class BuildingGhost : MonoBehaviour {
             {
                 Destroy(visual.gameObject);
                 visual = null;
+
+                Destroy(fakeVisual.gameObject);
+                fakeVisual = null;
             }
         }
 
@@ -63,58 +67,63 @@ public class BuildingGhost : MonoBehaviour {
 
     private void LateUpdate() 
     {
-        Vector3 targetPosition = GridBuildingManager.Instance.GetMouseWorldSnappedPosition();
-
-        switch(GridBuildingManager.Instance.CurrentPlaceableObjectSO.ObjectType)
+        if(visual != null)
         {
-            case PlaceableObjectTypes.GridObject:
+            Vector3 targetPosition = GridBuildingManager.Instance.GetMouseWorldSnappedPosition();
 
-                Vector3 newPos = GridBuildingManager.Instance.GetNewGridObjectPosition();
+            switch(GridBuildingManager.Instance.CurrentPlaceableObjectSO.ObjectType)
+            {
+                case PlaceableObjectTypes.GridObject:
+                    
+                    visual.transform.position = Vector3.Lerp(visual.transform.position, GridBuildingManager.Instance.GetNewGridObjectPosition(), Time.deltaTime * 15f);
+                    visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, GridBuildingManager.Instance.GetGridObjectRotation(), Time.deltaTime * 15f);
 
-                if(newPos != Vector3.zero)
-                {
-                    targetPosition = newPos;
-                    doOverlapBox = false;
-                }
-                else
-                {
-                    doOverlapBox = true;
-                }
-                
-                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f);
-                transform.rotation = Quaternion.Lerp(transform.rotation, GridBuildingManager.Instance.GetGridObjectRotation(), Time.deltaTime * 15f);
-            break;
+                    fakeVisual.transform.position = Vector3.Lerp(fakeVisual.transform.position, targetPosition, Time.deltaTime * 15f);
+                    fakeVisual.transform.rotation = visual.transform.rotation;
+                break;
 
-            case PlaceableObjectTypes.EdgeObject:
-                EdgePosition edgePosition = GridBuildingManager.Instance.GetMouseEdgePosition();
-                if(edgePosition != null) 
-                {
-                    transform.position = Vector3.Lerp(transform.position, edgePosition.transform.position, Time.deltaTime * 15f);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, edgePosition.transform.rotation, Time.deltaTime * 25f);
-                } 
-                else
-                {
-                    transform.position = Vector3.Lerp(transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
-                }
-            break;
+                case PlaceableObjectTypes.EdgeObject:
+                    EdgePosition edgePosition = GridBuildingManager.Instance.GetMouseEdgePosition();
+                    if(edgePosition != null) 
+                    {
+                        visual.transform.position = Vector3.Lerp(visual.transform.position, edgePosition.transform.position, Time.deltaTime * 15f);
+                        visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, edgePosition.transform.rotation, Time.deltaTime * 25f);
 
-            case PlaceableObjectTypes.LooseObject:
-                transform.position = Vector3.Lerp(transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, GridBuildingManager.Instance.LooseObjectEulerY, 0), Time.deltaTime * 25f);
-            break;
+                        fakeVisual.transform.position = visual.transform.position;
+                        fakeVisual.transform.rotation = visual.transform.rotation;
+                    } 
+                    else
+                    {
+                        visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
+                        visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
+
+                        fakeVisual.transform.position = visual.transform.position;
+                        fakeVisual.transform.rotation = visual.transform.rotation;
+                    }
+                break;
+
+                case PlaceableObjectTypes.LooseObject:
+                    visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
+                    visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.Euler(0, GridBuildingManager.Instance.LooseObjectEulerY, 0), Time.deltaTime * 25f);
+
+                    fakeVisual.transform.position = visual.transform.position;
+                    fakeVisual.transform.rotation = visual.transform.rotation;
+                break;
+            }
         }
-        
     }
 
     public void RefreshVisual() 
     {
         if(PlayerController.Instance.BuildModeEnabled)
         {
-            if (visual != null) 
+            if(visual != null) 
             {
                 Destroy(visual.gameObject);
                 visual = null;
+
+                Destroy(fakeVisual.gameObject);
+                fakeVisual = null;
             }
 
             PlaceableObjectSO placeableObjectSO = GridBuildingManager.Instance.CurrentPlaceableObjectSO;
@@ -124,6 +133,12 @@ public class BuildingGhost : MonoBehaviour {
             visual.localPosition = Vector3.zero;
             visual.localEulerAngles = Vector3.zero;
             SetLayerAndMatRecursive(visual.gameObject, currentGhostMaterial, ignoreMaskName);
+
+            fakeVisual = Instantiate(visual, visual.position, visual.rotation);
+            fakeVisual.parent = transform;
+            fakeVisual.localPosition = Vector3.zero;
+            fakeVisual.localEulerAngles = Vector3.zero;
+            DisableMeshRendererRecursive(fakeVisual.gameObject);
         }
         else
         {
@@ -131,6 +146,9 @@ public class BuildingGhost : MonoBehaviour {
             {
                 Destroy(visual.gameObject);
                 visual = null;
+
+                Destroy(fakeVisual.gameObject);
+                fakeVisual = null;
             }
         }
         
@@ -163,9 +181,26 @@ public class BuildingGhost : MonoBehaviour {
         {
             meshRenderer.material = mat;
         }
+
         foreach(Transform child in targetGameObject.transform) 
         {
             SetMatRecursive(child.gameObject, mat);
+        }
+    }
+
+    private void DisableMeshRendererRecursive(GameObject targetGameObject)
+    {
+        MeshRenderer meshRenderer;
+        targetGameObject.TryGetComponent<MeshRenderer>(out meshRenderer);
+
+        if(meshRenderer != null)
+        {
+            meshRenderer.enabled = false;
+        }
+
+        foreach(Transform child in targetGameObject.transform) 
+        {
+            DisableMeshRendererRecursive(child.gameObject);
         }
     }
 
@@ -206,9 +241,9 @@ public class BuildingGhost : MonoBehaviour {
 
     public bool GhostOverlapBoxEdgeObject()
     {
-        if(doOverlapBox && visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is GridObjectSO)
+        if(visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is GridObjectSO)
         {
-            BoxCollider boxCollider = visual.GetComponent<BoxCollider>();
+            BoxCollider boxCollider = fakeVisual.GetComponent<BoxCollider>();
 
             Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
             Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
@@ -250,7 +285,7 @@ public class BuildingGhost : MonoBehaviour {
 
             Vector3 rotationOffsetV3 = new Vector3(rotationOffsetV2.x, 0, rotationOffsetV2.y);
 
-            Collider[] colliders = Physics.OverlapBox(boxCollider.center + visual.position - rotationOffsetV3, (boxCollider.size / 2) + new Vector3(0.2f, 0.2f, 0.2f), GridBuildingManager.Instance.GetGridObjectRotation(), Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
+            Collider[] colliders = Physics.OverlapBox(boxCollider.center + fakeVisual.position - rotationOffsetV3, (boxCollider.size / 2) + new Vector3(0.2f, 0.2f, 0.2f), GridBuildingManager.Instance.GetGridObjectRotation(), Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
             
             foreach(Collider collider in colliders)
             {
@@ -268,7 +303,7 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(PlayerSpawner.Instance.GridBuildingInfo.Debug && visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is GridObjectSO)
         {
-            BoxCollider boxCollider = visual.GetComponent<BoxCollider>();
+            BoxCollider boxCollider = fakeVisual.GetComponent<BoxCollider>();
             Gizmos.color = Color.yellow;
 
             Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
@@ -309,15 +344,12 @@ public class BuildingGhost : MonoBehaviour {
                 }
             }
             
-
-            
-
             Vector3 rotationOffsetV3 = new Vector3(rotationOffsetV2.x, 0, rotationOffsetV2.y);
 
             Matrix4x4 prevMatrix = Gizmos.matrix;
             Gizmos.matrix = transform.localToWorldMatrix; 
 
-            Vector3 pos = boxCollider.center + visual.position - rotationOffsetV3;
+            Vector3 pos = boxCollider.center + fakeVisual.position - rotationOffsetV3;
             pos = transform.InverseTransformPoint(pos);
 
             Gizmos.DrawCube(pos, boxCollider.size + new Vector3(0.2f, 0.2f, 0.2f));
