@@ -69,11 +69,14 @@ MonoBehaviour:
   enableBuilding: 1
   placeableObjectSOList:
   - {fileID: 11400000, guid: 06c2699624260554783f26e0a4bd5089, type: 2}
+  - {fileID: 11400000, guid: 957c0cbd64114ba4caac277016b5388f, type: 2}
+  - {fileID: 11400000, guid: 20c17af2423551642bbeb9da282c84f2, type: 2}
+  - {fileID: 11400000, guid: 3835de30719849848acacd4b0f5d6f98, type: 2}
   - {fileID: 11400000, guid: 6fe785846e21f1247bd7c4668f42f27c, type: 2}
   gridWidth: 80
   gridLength: 80
   cellSize: 1.25
-  gridHeight: 2.35
+  gridHeight: 2.5
   gridVerticalCount: 5
   maxBuildDistance: 15
   edgeColliderLayerMask:
