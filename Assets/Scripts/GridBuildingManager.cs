@@ -36,6 +36,8 @@ public class GridBuildingManager : MonoBehaviour
     [ReadOnly, SerializeField] int debugFontSize = 100;
     [ReadOnly, SerializeField] Direction currentDirection = Direction.Down;
     public Direction CurrentDirection => currentDirection;
+    [ReadOnly, SerializeField] bool currentEdgeFlipMode = false;
+    public bool CurrentEdgeFlipMode => currentEdgeFlipMode;
 
     List<GridXZ<GridBuildingCell>> gridList;
     GridXZ<GridBuildingCell> selectedGrid;
@@ -118,9 +120,17 @@ public class GridBuildingManager : MonoBehaviour
 
         if(currentPlaceableObjectSO is LooseObjectSO)
         {
-            if (Input.GetKey(KeyCode.R)) 
+            if(Input.GetKey(KeyCode.R)) 
             {
                 looseObjectEulerY += Time.deltaTime * 90f;
+            }
+        }
+        else if(currentPlaceableObjectSO is EdgeObjectSO)
+        {
+            if(Input.GetKeyDown(KeyCode.R)) 
+            {
+                currentEdgeFlipMode = !currentEdgeFlipMode;
+                buildingGhost.FlipEdgeObjectGhost(currentEdgeFlipMode);
             }
         }
         else
@@ -466,7 +476,7 @@ public class GridBuildingManager : MonoBehaviour
 
                             if(!buildingGhost.GetIfGhostisCollidingEdgeObject())
                             {
-                                floorGridObject.PlaceEdge(edgePosition.edge, edgeObjectSO);
+                                floorGridObject.PlaceEdge(edgePosition.edge, edgeObjectSO, currentEdgeFlipMode);
                             }
                             else
                             {

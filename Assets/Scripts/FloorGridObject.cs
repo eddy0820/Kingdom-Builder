@@ -34,11 +34,14 @@ public class FloorGridObject : GridObject
     EdgeObject rightWestEdgeObject;
     EdgeObject rightEastEdgeObject;
 
-    public void PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO) 
+    public void PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO, bool currentEdgeFlipMode) 
     {  
         EdgePosition edgePosition = GetEdgePosition(edge);
 
         Transform edgeObjectTransform = Instantiate(edgeObjectSO.Prefab, edgePosition.transform.position, edgePosition.transform.rotation);
+
+        EdgeObjectOffset edgeObjectOffset = edgeObjectTransform.GetComponentInChildren<EdgeObjectOffset>();
+        edgeObjectOffset.ChangeOffset(currentEdgeFlipMode);
 
         EdgeObject edgeObject = edgeObjectTransform.GetComponent<EdgeObject>();
 

@@ -385,6 +385,14 @@ public class BuildingGhost : MonoBehaviour {
         }
     }
 
+    public void FlipEdgeObjectGhost(bool currentEdgeFlipMode)
+    {
+        if(visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is EdgeObjectSO)
+        {
+            visual.GetComponentInChildren<EdgeObjectOffset>().ChangeOffset(currentEdgeFlipMode);
+        }
+    }
+
     public enum GhostValidityState
     {
         Valid,

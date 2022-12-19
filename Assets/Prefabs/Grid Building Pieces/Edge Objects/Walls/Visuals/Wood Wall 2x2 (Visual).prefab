@@ -127,7 +127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280f17ac9a430c5448867f54be1232b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelCollider: {fileID: 2858660864773505169}
 --- !u!54 &8018072950609460534
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -166,6 +165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2832740656648641799}
+  - component: {fileID: 3375945145885126210}
   m_Layer: 0
   m_Name: Offset
   m_TagString: Untagged
@@ -189,6 +189,24 @@ Transform:
   m_Father: {fileID: 2832740655321918605}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3375945145885126210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2832740656648641798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9835f24bbe84a88408c5ca2910c13c8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultOffset:
+    position: {x: 2.5, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+  flippedOffset:
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 180, z: 0}
 --- !u!1001 &2832740655550576291
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -249,10 +267,5 @@ PrefabInstance:
 --- !u!4 &2837038158637263191 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4720970760413172, guid: 6aff29903aa05e84486db7a76de8db3d, type: 3}
-  m_PrefabInstance: {fileID: 2832740655550576291}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &2858660864773505169 stripped
-MeshCollider:
-  m_CorrespondingSourceObject: {fileID: 64152616548234802, guid: 6aff29903aa05e84486db7a76de8db3d, type: 3}
   m_PrefabInstance: {fileID: 2832740655550576291}
   m_PrefabAsset: {fileID: 0}
