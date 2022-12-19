@@ -5,6 +5,7 @@ using UnityEngine;
 public class GridObject : PlaceableObject
 {
     GridObjectSO gridObjectSO;
+    public GridObjectSO GridObjectSO => gridObjectSO;
     Vector2Int origin;
     public Vector2Int Origin => origin;
     [ReadOnly, SerializeField] Direction direction;

@@ -331,10 +331,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseColliderLayerMask:
     serializedVersion: 2
-    m_Bits: 769
+    m_Bits: 2817
   mouseColliderLayerMaskNoPlaceableCollider:
     serializedVersion: 2
-    m_Bits: 257
+    m_Bits: 2305
   placeableColliderLayer:
     serializedVersion: 2
     m_Bits: 512

@@ -167,6 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   centerPivot: {fileID: 9081182099903846792}
   gridEdge: 0
+  secondaryGridEdge: 0
 --- !u!1001 &5895060326933005717
 PrefabInstance:
   m_ObjectHideFlags: 0

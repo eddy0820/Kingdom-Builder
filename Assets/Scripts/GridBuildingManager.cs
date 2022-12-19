@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+////////////// U NEED TO CHECK ALL Physics.Raycast YOU ARE USING THE COLLIDER MASK WRONG
+////////////// LOOSE PLACEMENT BUG WHEN MOVING MOUSE FAST COULD BE BECAUSE OF ^^
 public class GridBuildingManager : MonoBehaviour
 {
     public static GridBuildingManager Instance { get; private set; }
@@ -209,12 +210,18 @@ public class GridBuildingManager : MonoBehaviour
 
                                 if(currentEdgeObject == null)
                                 {
-                                    if(edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two && floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null && floorGridObject.IsWestEdge(edgePosition.edge))
+                                    if(edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two && 
+                                       floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null && 
+                                       floorGridObject.IsWestEdge(edgePosition.edge))
                                     {
                                         return false;
                                     }
 
-                                    return true;
+                                    if(!buildingGhost.GetIfGhostisCollidingEdgeObject())
+                                    {
+                                        return true;
+                                    }
+                                    
                                 }
                             }
                         }
@@ -449,13 +456,22 @@ public class GridBuildingManager : MonoBehaviour
 
                         if(currentEdgeObject == null)
                         {
-                            if(edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two && floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null && floorGridObject.IsWestEdge(edgePosition.edge))
+                            if(edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two && 
+                               floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null && 
+                               floorGridObject.IsWestEdge(edgePosition.edge))
                             {
                                 Debug.Log("Can't Place Edge Object");
                                 return;
                             }
 
-                            floorGridObject.PlaceEdge(edgePosition.edge, edgeObjectSO);
+                            if(!buildingGhost.GetIfGhostisCollidingEdgeObject())
+                            {
+                                floorGridObject.PlaceEdge(edgePosition.edge, edgeObjectSO);
+                            }
+                            else
+                            {
+                                Debug.Log("Can't Place Edge Object");
+                            }
                         }
                         else
                         {

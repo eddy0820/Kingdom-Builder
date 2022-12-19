@@ -240,16 +240,27 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(visual != null)
         {
-            Debug.Log("2.5");
             LooseObjectVisual looseObjectVisual = visual.GetComponent<LooseObjectVisual>();
 
             if(looseObjectVisual.Colliding)
             {
-                Debug.Log("2.6");
                 return true;
             }
+        }
 
-            Debug.Log("2.7");
+        return false;
+    }
+
+    public bool GetIfGhostisCollidingEdgeObject()
+    {
+        if(visual != null && ((EdgeObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width == EdgeObjectSO.EdgeWidth.Two)
+        {
+            EdgeObjectVisual2x2 edgeObjectVisual = visual.GetComponent<EdgeObjectVisual2x2>();
+
+            if(edgeObjectVisual.Colliding)
+            {
+                return true;
+            }
         }
 
         return false;

@@ -52,7 +52,6 @@ public class FloorGridObject : GridObject
                 edgeObject.SetParentGridObject(this, edge);
                 SetEdgeObject(GetComplimentaryEdge(edge), edgeObject); 
             }
-            
         }
     }
 
@@ -87,7 +86,7 @@ public class FloorGridObject : GridObject
         }
     }
 
-    private void SetEdgeObject(Edge edge, EdgeObject edgeObject) 
+    public void SetEdgeObject(Edge edge, EdgeObject edgeObject) 
     {
         switch(edge) 
         {
@@ -154,14 +153,33 @@ public class FloorGridObject : GridObject
 
     public override void DestroySelf() 
     {
-        if(upWestEdgeObject != null) Destroy(upWestEdgeObject.gameObject);
-        if(upEastEdgeObject != null) Destroy(upEastEdgeObject.gameObject);
-        if(downWestEdgeObject != null) Destroy(downWestEdgeObject.gameObject);
-        if(downEastEdgeObject != null) Destroy(downEastEdgeObject.gameObject);
-        if(leftWestEdgeObject != null) Destroy(leftWestEdgeObject.gameObject);
-        if(leftEastEdgeObject != null) Destroy(leftEastEdgeObject.gameObject);
-        if(rightWestEdgeObject != null) Destroy(rightWestEdgeObject.gameObject);
-        if(rightEastEdgeObject != null) Destroy(rightEastEdgeObject.gameObject);
+        EdgeObject edgeObject = null;
+
+        if(upWestEdgeObject != null) edgeObject = upWestEdgeObject;
+        if(upEastEdgeObject != null) edgeObject = upEastEdgeObject;
+        if(leftWestEdgeObject != null) edgeObject = leftWestEdgeObject;
+        if(leftEastEdgeObject != null) edgeObject = leftEastEdgeObject;
+        if(downWestEdgeObject != null) edgeObject = downWestEdgeObject;
+        if(downEastEdgeObject != null) edgeObject = downEastEdgeObject;
+        if(rightWestEdgeObject != null) edgeObject = rightWestEdgeObject;
+        if(rightEastEdgeObject != null) edgeObject = rightEastEdgeObject;
+
+        if(edgeObject != null) 
+        {
+            if(edgeObject.ParentGridObject == this)
+            {
+                edgeObject.NullifyParent();
+            }
+            else if(edgeObject.SecondaryParentGridObject == this)
+            {
+                edgeObject.NullifySecondaryParent();
+            }
+
+            if(edgeObject.ParentGridObject == null && edgeObject.SecondaryParentGridObject == null)
+            {
+                Destroy(edgeObject.gameObject);
+            }
+        }    
 
         base.DestroySelf();
     }

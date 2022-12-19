@@ -5,11 +5,11 @@ using UnityEngine;
 public class EdgeObject : PlaceableObject
 {
     FloorGridObject parentGridObject;
+    public FloorGridObject ParentGridObject => parentGridObject;
     FloorGridObject secondaryParentGridObject;
+    public FloorGridObject SecondaryParentGridObject => secondaryParentGridObject;
     [ReadOnly, SerializeField] FloorGridObject.Edge gridEdge;
-    public FloorGridObject.Edge GridEdge => gridEdge;
     [ReadOnly, SerializeField] FloorGridObject.Edge secondaryGridEdge;
-    public FloorGridObject.Edge SecondaryGridEdge => secondaryGridEdge;
 
     public void SetParentGridObject(FloorGridObject gridObject, FloorGridObject.Edge edge)
     {
@@ -17,20 +17,25 @@ public class EdgeObject : PlaceableObject
         gridEdge = edge;
     }
 
-    public void SetParentGridObjectSecondary(FloorGridObject gridObject, FloorGridObject.Edge edge)
+    public void SetSecondaryParentGridObject(FloorGridObject gridObject, FloorGridObject.Edge edge)
     {
         secondaryParentGridObject = gridObject;
         secondaryGridEdge = edge;
     }
 
+    public void NullifyParent()
+    {
+        parentGridObject = null;
+    }
+    
+    public void NullifySecondaryParent()
+    {
+        secondaryParentGridObject = null;
+    }
+
     public override void DestroySelf()
     {
         parentGridObject.DestroyEdge(gridEdge);
-
-        if(secondaryParentGridObject != null)
-        {
-            secondaryParentGridObject.DestroyEdge(secondaryGridEdge);
-        }
         
         Destroy(gameObject);
     }
