@@ -72,8 +72,8 @@ public class StairObject : EdgeObject
 
     public override void DestroySelf() 
     {
-        if(leftStairEdgeObject != null)     Destroy(leftStairEdgeObject);
-        if(rightStairEdgeObject != null)    Destroy(rightStairEdgeObject);
+        if(leftStairEdgeObject != null)     Destroy(leftStairEdgeObject.gameObject);
+        if(rightStairEdgeObject != null)    Destroy(rightStairEdgeObject.gameObject);
 
         base.DestroySelf();
     }
