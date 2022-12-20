@@ -250,10 +250,26 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""BuildOrDemolish"",
+                    ""name"": ""Build"",
                     ""type"": ""Button"",
                     ""id"": ""e3e365cf-f31f-45bb-ab8c-e611b3c9695a"",
                     ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Demolish"",
+                    ""type"": ""Button"",
+                    ""id"": ""a53dfc1b-5666-4bcb-b6e3-ae22d472d0f0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""26a930d9-d14f-459f-866c-363605b2cf32"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -273,11 +289,33 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a0baf16c-b7e5-4935-a978-df2d3a05aa54"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""BuildOrDemolish"",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""Build"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e964024-1f68-4d47-aabe-620c747f4a6c"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""Demolish"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b7217eb-d294-42df-aa80-3269680b1fb7"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -317,7 +355,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         // PlayerMechanics
         m_PlayerMechanics = asset.FindActionMap("PlayerMechanics", throwIfNotFound: true);
         m_PlayerMechanics_ToggleBuildMode = m_PlayerMechanics.FindAction("ToggleBuildMode", throwIfNotFound: true);
-        m_PlayerMechanics_BuildOrDemolish = m_PlayerMechanics.FindAction("BuildOrDemolish", throwIfNotFound: true);
+        m_PlayerMechanics_Build = m_PlayerMechanics.FindAction("Build", throwIfNotFound: true);
+        m_PlayerMechanics_Demolish = m_PlayerMechanics.FindAction("Demolish", throwIfNotFound: true);
+        m_PlayerMechanics_Rotate = m_PlayerMechanics.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -465,13 +505,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_PlayerMechanics;
     private IPlayerMechanicsActions m_PlayerMechanicsActionsCallbackInterface;
     private readonly InputAction m_PlayerMechanics_ToggleBuildMode;
-    private readonly InputAction m_PlayerMechanics_BuildOrDemolish;
+    private readonly InputAction m_PlayerMechanics_Build;
+    private readonly InputAction m_PlayerMechanics_Demolish;
+    private readonly InputAction m_PlayerMechanics_Rotate;
     public struct PlayerMechanicsActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerMechanicsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @ToggleBuildMode => m_Wrapper.m_PlayerMechanics_ToggleBuildMode;
-        public InputAction @BuildOrDemolish => m_Wrapper.m_PlayerMechanics_BuildOrDemolish;
+        public InputAction @Build => m_Wrapper.m_PlayerMechanics_Build;
+        public InputAction @Demolish => m_Wrapper.m_PlayerMechanics_Demolish;
+        public InputAction @Rotate => m_Wrapper.m_PlayerMechanics_Rotate;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMechanics; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -484,9 +528,15 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @ToggleBuildMode.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
                 @ToggleBuildMode.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
                 @ToggleBuildMode.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
-                @BuildOrDemolish.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuildOrDemolish;
-                @BuildOrDemolish.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuildOrDemolish;
-                @BuildOrDemolish.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuildOrDemolish;
+                @Build.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuild;
+                @Build.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuild;
+                @Build.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuild;
+                @Demolish.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnDemolish;
+                @Demolish.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnDemolish;
+                @Demolish.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnDemolish;
+                @Rotate.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnRotate;
             }
             m_Wrapper.m_PlayerMechanicsActionsCallbackInterface = instance;
             if (instance != null)
@@ -494,9 +544,15 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @ToggleBuildMode.started += instance.OnToggleBuildMode;
                 @ToggleBuildMode.performed += instance.OnToggleBuildMode;
                 @ToggleBuildMode.canceled += instance.OnToggleBuildMode;
-                @BuildOrDemolish.started += instance.OnBuildOrDemolish;
-                @BuildOrDemolish.performed += instance.OnBuildOrDemolish;
-                @BuildOrDemolish.canceled += instance.OnBuildOrDemolish;
+                @Build.started += instance.OnBuild;
+                @Build.performed += instance.OnBuild;
+                @Build.canceled += instance.OnBuild;
+                @Demolish.started += instance.OnDemolish;
+                @Demolish.performed += instance.OnDemolish;
+                @Demolish.canceled += instance.OnDemolish;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
             }
         }
     }
@@ -525,6 +581,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     public interface IPlayerMechanicsActions
     {
         void OnToggleBuildMode(InputAction.CallbackContext context);
-        void OnBuildOrDemolish(InputAction.CallbackContext context);
+        void OnBuild(InputAction.CallbackContext context);
+        void OnDemolish(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }

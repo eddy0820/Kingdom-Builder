@@ -59,6 +59,8 @@ public class GridBuildingManager : MonoBehaviour
     [SerializeField] GameObject debugHolder;
     public GameObject DebugHolder => debugHolder;
 
+    bool looseObjectRotate = false;
+
     private void Awake()
     {
         if(Instance == null)
@@ -117,34 +119,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         HandleGridSwitch();
 
-        if(Input.GetKeyDown(KeyCode.T))
-        {
-            DestroyPlacedObject();
-        }
-
-        if(currentPlaceableObjectSO is LooseObjectSO)
-        {
-            if(Input.GetKey(KeyCode.R)) 
-            {
-                looseObjectEulerY += Time.deltaTime * 90f;
-            }
-        }
-        else if(currentPlaceableObjectSO is EdgeObjectSO)
-        {
-            if(Input.GetKeyDown(KeyCode.R)) 
-            {
-                currentEdgeFlipMode = !currentEdgeFlipMode;
-                buildingGhost.FlipEdgeObjectGhost(currentEdgeFlipMode);
-            }
-        }
-        else
-        {
-            if(Input.GetKeyDown(KeyCode.R))
-            {
-                currentDirection = GridObjectSO.GetNextDirection(currentDirection);
-                Debug.Log("Direction: " + currentDirection);
-            }
-        } 
+        HandleLooseObjectRotation();
 
         if(Input.GetKeyDown(KeyCode.Alpha1)) {SelectPlaceableObject(placeableObjectSOList[0]);}
         if(Input.GetKeyDown(KeyCode.Alpha2)) {SelectPlaceableObject(placeableObjectSOList[1]);}
@@ -155,6 +130,45 @@ public class GridBuildingManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha7)) {SelectPlaceableObject(placeableObjectSOList[6]);}
         if(Input.GetKeyDown(KeyCode.Alpha8)) {SelectPlaceableObject(placeableObjectSOList[7]);}
         if(Input.GetKeyDown(KeyCode.Alpha9)) {SelectPlaceableObject(placeableObjectSOList[8]);}
+    }
+
+    public void Rotate(float value)
+    {
+        if(PlayerController.Instance.BuildModeEnabled)
+        {  
+            if(value > 0.1f)
+            {
+                if(currentPlaceableObjectSO is EdgeObjectSO)
+                {
+                    currentEdgeFlipMode = !currentEdgeFlipMode;
+                    buildingGhost.FlipEdgeObjectGhost(currentEdgeFlipMode);
+                }
+                else if(currentPlaceableObjectSO is GridObjectSO)
+                {
+                    currentDirection = GridObjectSO.GetNextDirection(currentDirection);
+                    Debug.Log("Direction: " + currentDirection); 
+                } 
+                else if(currentPlaceableObjectSO is LooseObjectSO)
+                {
+                    looseObjectRotate = true;
+                }
+            }
+            else
+            {
+                looseObjectRotate = false;
+            }
+        }
+    }
+
+    private void HandleLooseObjectRotation()
+    {
+        if(PlayerController.Instance.BuildModeEnabled && looseObjectRotate)
+        {
+            if(currentPlaceableObjectSO is LooseObjectSO)
+            {
+                looseObjectEulerY += Time.deltaTime * 90f;
+            }
+        }
     }
 
     private void HandleGridSwitch()
@@ -579,39 +593,42 @@ public class GridBuildingManager : MonoBehaviour
         }     
     }
 
-    private void DestroyPlacedObject()
+    public void DemolishPlacedObject()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider))
+        if(PlayerController.Instance.BuildModeEnabled)
         {
-            if(raycastHit.collider.GetComponentInParent<GridObject>() != null)
-            {
-                GridObject gridObject = raycastHit.collider.GetComponentInParent<GridObject>();
-                gridObject.DestroySelf(); 
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                List<Vector2Int> gridObjectPositionList = gridObject.GetGridPositionList();
-            
-                foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+            if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider))
+            {
+                if(raycastHit.collider.GetComponentInParent<GridObject>() != null)
                 {
-                    selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).ClearGridObject();
+                    GridObject gridObject = raycastHit.collider.GetComponentInParent<GridObject>();
+                    gridObject.DestroySelf(); 
+
+                    List<Vector2Int> gridObjectPositionList = gridObject.GetGridPositionList();
+                
+                    foreach(Vector2Int gridObjectPosition in gridObjectPositionList)
+                    {
+                        selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).ClearGridObject();
+                    }
                 }
-            }
-            else if(raycastHit.collider.GetComponentInParent<EdgeObject>() != null)
-            {
-                EdgeObject edgeObject = raycastHit.collider.GetComponentInParent<EdgeObject>();
-                edgeObject.DestroySelf();
-            }
-            else if(raycastHit.collider.GetComponentInParent<LooseObject>() != null)
-            {
-                LooseObject looseObject = raycastHit.collider.GetComponentInParent<LooseObject>();
-                looseObject.DestroySelf();
-                buildingGhost.RefreshVisual();
-            }
-            else if(raycastHit.collider.GetComponentInParent<StairEdgeObject>() != null)
-            {
-                StairEdgeObject stairEdgeObject = raycastHit.collider.GetComponentInParent<StairEdgeObject>();
-                stairEdgeObject.DestroySelf();
+                else if(raycastHit.collider.GetComponentInParent<EdgeObject>() != null)
+                {
+                    EdgeObject edgeObject = raycastHit.collider.GetComponentInParent<EdgeObject>();
+                    edgeObject.DestroySelf();
+                }
+                else if(raycastHit.collider.GetComponentInParent<LooseObject>() != null)
+                {
+                    LooseObject looseObject = raycastHit.collider.GetComponentInParent<LooseObject>();
+                    looseObject.DestroySelf();
+                    buildingGhost.RefreshVisual();
+                }
+                else if(raycastHit.collider.GetComponentInParent<StairEdgeObject>() != null)
+                {
+                    StairEdgeObject stairEdgeObject = raycastHit.collider.GetComponentInParent<StairEdgeObject>();
+                    stairEdgeObject.DestroySelf();
+                }
             }
         }
     }

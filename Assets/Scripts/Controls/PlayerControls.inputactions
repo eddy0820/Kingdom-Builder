@@ -237,10 +237,26 @@
                     "interactions": ""
                 },
                 {
-                    "name": "BuildOrDemolish",
+                    "name": "Build",
                     "type": "Button",
                     "id": "e3e365cf-f31f-45bb-ab8c-e611b3c9695a",
                     "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Demolish",
+                    "type": "Button",
+                    "id": "a53dfc1b-5666-4bcb-b6e3-ae22d472d0f0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Rotate",
+                    "type": "PassThrough",
+                    "id": "26a930d9-d14f-459f-866c-363605b2cf32",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": ""
                 }
@@ -260,11 +276,33 @@
                 {
                     "name": "",
                     "id": "a0baf16c-b7e5-4935-a978-df2d3a05aa54",
-                    "path": "<Keyboard>/e",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "BuildOrDemolish",
+                    "groups": "Mouse + Keyboard",
+                    "action": "Build",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3e964024-1f68-4d47-aabe-620c747f4a6c",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "Demolish",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b7217eb-d294-42df-aa80-3269680b1fb7",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

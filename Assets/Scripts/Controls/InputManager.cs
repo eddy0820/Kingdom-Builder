@@ -68,8 +68,14 @@ public class InputManager : MonoBehaviour
     {
         if(PlayerSpawner.Instance.GridBuildingInfo.EnableBuilding)
         {
-            playerMechanics.BuildOrDemolish.performed += _ =>
+            playerMechanics.Build.performed += _ =>
                 GridBuildingManager.Instance.PlaceObject();
+
+            playerMechanics.Demolish.performed += _ =>
+                GridBuildingManager.Instance.DemolishPlacedObject();
+                
+            playerMechanics.Rotate.performed += ctx =>
+                GridBuildingManager.Instance.Rotate(ctx.ReadValue<float>());
         }
     }
 
