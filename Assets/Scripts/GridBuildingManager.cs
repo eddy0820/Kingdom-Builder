@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 ////////////// U NEED TO CHECK ALL Physics.Raycast YOU ARE USING THE COLLIDER MASK WRONG
 ////////////// LOOSE PLACEMENT BUG WHEN MOVING MOUSE FAST COULD BE BECAUSE OF ^^
+////////////// Make it so you cant place a wall / railing on top of each other
 public class GridBuildingManager : MonoBehaviour
 {
     public static GridBuildingManager Instance { get; private set; }
@@ -28,6 +29,7 @@ public class GridBuildingManager : MonoBehaviour
     [Space(15)]
 
     [ReadOnly, SerializeField] LayerMask edgeColliderLayerMask;
+    [ReadOnly, SerializeField] LayerMask stairEdgeColliderLayerMask;
     [ReadOnly, SerializeField] LayerMask placeableObjectsColliderLayerMask;
 
     [Space(15)]
@@ -68,7 +70,7 @@ public class GridBuildingManager : MonoBehaviour
         currentDirection = Direction.Down;
     }
 
-    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
+    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _stairEdgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
     {
         placeableObjectSOList = _placeableObjectSOList;
         gridWidth = _gridWidth;
@@ -78,6 +80,7 @@ public class GridBuildingManager : MonoBehaviour
         gridVerticalCount = _gridVerticalCount;
         maxBuildDistance = _maxBuildDistance;
         edgeColliderLayerMask = _edgeColliderLayerMask;
+        stairEdgeColliderLayerMask = _stairEdgeColliderLayerMask;
         placeableObjectsColliderLayerMask = _placeableObjectsColliderLayerMask;
         debug = _debug;
         debugFontSize = _debugFontSize;
@@ -178,6 +181,10 @@ public class GridBuildingManager : MonoBehaviour
                             PlaceEdgeObject();
                         break;
 
+                        case PlaceableObjectTypes.StairEdgeObject:
+                            PlaceStairEdgeObject();
+                        break;
+
                         case PlaceableObjectTypes.LooseObject:
                             PlaceLooseObject();
                         break;
@@ -231,7 +238,34 @@ public class GridBuildingManager : MonoBehaviour
                                     {
                                         return true;
                                     }
-                                    
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return false;
+
+            case PlaceableObjectTypes.StairEdgeObject:
+
+                StairEdgeObjectSO stairEdgeObjectSO = (StairEdgeObjectSO) currentPlaceableObjectSO;
+
+                if(Physics.Raycast(ray, out RaycastHit raycastHit2, 999f, stairEdgeColliderLayerMask)) 
+                {
+                    if(raycastHit2.collider.TryGetComponent(out StairEdgePosition stairEdgePosition)) 
+                    {
+                        if(raycastHit2.collider.transform.parent.TryGetComponent(out StairObject stairObject)) 
+                        {
+                            if(stairEdgeObjectSO != null) 
+                            {
+                                StairEdgeObject currentEdgeObject = stairObject.GetStairEdgeObject(stairEdgePosition.stairEdge);
+
+                                if(currentEdgeObject == null)
+                                {
+                                    if(!buildingGhost.GetIfGhostisCollidingEdgeObject())
+                                    {
+                                        return true;
+                                    }
                                 }
                             }
                         }
@@ -242,11 +276,11 @@ public class GridBuildingManager : MonoBehaviour
 
             case PlaceableObjectTypes.LooseObject:
                 
-                if(Physics.Raycast(ray, out RaycastHit raycastHit2, 999f, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider)) 
+                if(Physics.Raycast(ray, out RaycastHit raycastHit3, 999f, Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider)) 
                 {
-                    if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit2.distance + 0.2f, placeableObjectsColliderLayerMask))
+                    if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit3.distance + 0.2f, placeableObjectsColliderLayerMask))
                     {
-                        if(!buildingGhost.GetIfGhostisColliding())
+                        if(!buildingGhost.GetIfGhostisCollidingLooseObject())
                         {       
                             return true;
                         }
@@ -493,6 +527,38 @@ public class GridBuildingManager : MonoBehaviour
         }
     }
 
+    private void PlaceStairEdgeObject()
+    {
+        StairEdgeObjectSO stairEdgeObjectSO = (StairEdgeObjectSO) currentPlaceableObjectSO;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, stairEdgeColliderLayerMask)) 
+        {
+            if(raycastHit.collider.TryGetComponent(out StairEdgePosition stairEdgePosition)) 
+            {
+                if(raycastHit.collider.transform.parent.TryGetComponent(out StairObject stairObject)) 
+                {
+                    if(stairEdgeObjectSO != null) 
+                    {
+                        if(!buildingGhost.GetIfGhostisCollidingEdgeObject())
+                        {   
+                            stairObject.PlaceStairEdge(stairEdgePosition.stairEdge, stairEdgeObjectSO);
+                        }
+                        else
+                        {
+                            Debug.Log("Can't Place Stair Edge Object");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Can't Place Stair Edge Object");
+                    }
+                }
+            }
+        }
+    }
+
     private void PlaceLooseObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -503,7 +569,7 @@ public class GridBuildingManager : MonoBehaviour
             if(Physics.Raycast(ray, out RaycastHit dummyHit, raycastHit.distance + 0.2f, placeableObjectsColliderLayerMask))
             {
                 Debug.Log("2");
-                if(!buildingGhost.GetIfGhostisColliding())
+                if(!buildingGhost.GetIfGhostisCollidingLooseObject())
                 {
                     Debug.Log("3");
                     Transform looseObjectTransform = Instantiate(currentPlaceableObjectSO.Prefab, dummyHit.point, Quaternion.Euler(0, looseObjectEulerY, 0));
@@ -541,6 +607,11 @@ public class GridBuildingManager : MonoBehaviour
                 looseObject.DestroySelf();
                 buildingGhost.RefreshVisual();
             }
+            else if(raycastHit.collider.GetComponentInParent<StairEdgeObject>() != null)
+            {
+                StairEdgeObject stairEdgeObject = raycastHit.collider.GetComponentInParent<StairEdgeObject>();
+                stairEdgeObject.DestroySelf();
+            }
         }
     }
 
@@ -577,6 +648,21 @@ public class GridBuildingManager : MonoBehaviour
             if(raycastHit.collider.TryGetComponent(out EdgePosition edgePosition)) 
             {
                 return edgePosition;
+            }
+        }
+
+        return null;
+    }
+
+    public StairEdgePosition GetMouseStairEdgePosition() 
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, stairEdgeColliderLayerMask)) 
+        {
+            if(raycastHit.collider.TryGetComponent(out StairEdgePosition stairEdgePosition)) 
+            {
+                return stairEdgePosition;
             }
         }
 

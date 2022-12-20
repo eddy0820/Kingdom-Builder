@@ -53,9 +53,15 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
   defaultPlaceableCollider: {fileID: 0}
   flippedPlaceableCollider: {fileID: 0}
-  visualCollider: {fileID: 1104822038156833271}
+  visualCollider: {fileID: 1833649404645147191}
   defaultVisualColliderCenter: {x: 1.25, y: 1.25, z: 1.25}
   flippedVisualColliderCenter: {x: 1.25, y: 1.25, z: -1.25}
+  defaultStairEdgeLeft: {fileID: 0}
+  defaultStairEdgeRight: {fileID: 0}
+  flippedStairEdgeLeft: {fileID: 0}
+  flippedStairEdgeRight: {fileID: 0}
+  defaultCenterPivot: {fileID: 0}
+  flippedCenterPivot: {fileID: 0}
 --- !u!1 &5719044356686296887
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,9 +71,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5719044356686296884}
-  - component: {fileID: 4654562049868804870}
-  - component: {fileID: 9163504621139793272}
-  - component: {fileID: 1104822038156833271}
+  - component: {fileID: 4378086212724521823}
+  - component: {fileID: 2541835400599269098}
+  - component: {fileID: 1833649404645147191}
   m_Layer: 0
   m_Name: Wood Stairs (Visual)
   m_TagString: Untagged
@@ -90,7 +96,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4654562049868804870
+--- !u!114 &4378086212724521823
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280f17ac9a430c5448867f54be1232b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!54 &9163504621139793272
+--- !u!54 &2541835400599269098
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,7 +124,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &1104822038156833271
+--- !u!65 &1833649404645147191
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

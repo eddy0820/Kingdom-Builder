@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class PlaceableObject : MonoBehaviour
 {
-    [SerializeField] Transform centerPivot;
+    [SerializeField] protected Transform centerPivot;
     public Transform CenterPivot => centerPivot;
     public abstract void DestroySelf();
 }

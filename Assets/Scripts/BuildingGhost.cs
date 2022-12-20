@@ -103,6 +103,26 @@ public class BuildingGhost : MonoBehaviour {
                     }
                 break;
 
+                case PlaceableObjectTypes.StairEdgeObject:
+                    StairEdgePosition stairEdgePosition = GridBuildingManager.Instance.GetMouseStairEdgePosition();
+                    if(stairEdgePosition != null) 
+                    {
+                        visual.transform.position = Vector3.Lerp(visual.transform.position, stairEdgePosition.transform.GetChild(0).position, Time.deltaTime * 15f);
+                        visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, stairEdgePosition.transform.GetChild(0).rotation, Time.deltaTime * 25f);
+
+                        fakeVisual.transform.position = visual.transform.position;
+                        fakeVisual.transform.rotation = visual.transform.rotation;
+                    } 
+                    else
+                    {
+                        visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
+                        visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
+
+                        fakeVisual.transform.position = visual.transform.position;
+                        fakeVisual.transform.rotation = visual.transform.rotation;
+                    }
+                break;
+
                 case PlaceableObjectTypes.LooseObject:
                     visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
                     visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.Euler(0, GridBuildingManager.Instance.LooseObjectEulerY, 0), Time.deltaTime * 25f);
@@ -236,7 +256,7 @@ public class BuildingGhost : MonoBehaviour {
         SetMatRecursive(visual.gameObject, currentGhostMaterial);
     }
 
-    public bool GetIfGhostisColliding()
+    public bool GetIfGhostisCollidingLooseObject()
     {
         if(visual != null)
         {
@@ -253,11 +273,20 @@ public class BuildingGhost : MonoBehaviour {
 
     public bool GetIfGhostisCollidingEdgeObject()
     {
-        if(visual != null && ((EdgeObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width == EdgeObjectSO.EdgeWidth.Two)
+        if(visual != null)
         {
-            EdgeObjectVisual2x2 edgeObjectVisual = visual.GetComponent<EdgeObjectVisual2x2>();
+            EdgeObjectVisual2x2 edgeObjectVisual = null;
 
-            if(edgeObjectVisual.Colliding)
+            if(GridBuildingManager.Instance.CurrentPlaceableObjectSO is EdgeObjectSO && ((EdgeObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width == EdgeObjectSO.EdgeWidth.Two)
+            {
+                edgeObjectVisual = visual.GetComponent<EdgeObjectVisual2x2>();
+            }
+            else if(GridBuildingManager.Instance.CurrentPlaceableObjectSO is StairEdgeObjectSO)
+            {
+                edgeObjectVisual = visual.GetComponentInChildren<EdgeObjectVisual2x2>();
+            }
+            
+            if(edgeObjectVisual != null && edgeObjectVisual.Colliding)
             {
                 return true;
             }

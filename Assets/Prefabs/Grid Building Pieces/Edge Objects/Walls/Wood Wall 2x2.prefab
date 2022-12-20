@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wood Wall 2x2 (Visual)
       objectReference: {fileID: 0}
+    - target: {fileID: 2832740655321918604, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 2832740655321918605, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
       propertyPath: m_RootOrder
       value: 0

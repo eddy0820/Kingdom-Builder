@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33099084843272314}
   - component: {fileID: 23055942584601014}
   - component: {fileID: 64506128980213358}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Wattle & Daub Wall 2x1 (Model)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

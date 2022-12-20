@@ -7,5 +7,6 @@ public enum PlaceableObjectTypes
 {
     GridObject,
     EdgeObject,
+    StairEdgeObject,
     LooseObject,
 }

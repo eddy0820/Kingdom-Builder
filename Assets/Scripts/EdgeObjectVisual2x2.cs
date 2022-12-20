@@ -11,7 +11,7 @@ public class EdgeObjectVisual2x2 : MonoBehaviour
 
     private void Update()
     {
-        if(colliding && otherCollider == null)
+        if(colliding && otherCollider == null && gameObject.layer == LayerMask.NameToLayer("Building Ghost"))
         {
             colliding = false;
         }
@@ -19,7 +19,7 @@ public class EdgeObjectVisual2x2 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Wall") && gameObject.layer == LayerMask.NameToLayer("Building Ghost"))
         {
             colliding = true;
             otherCollider = other;
@@ -29,16 +29,15 @@ public class EdgeObjectVisual2x2 : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Wall") && gameObject.layer == LayerMask.NameToLayer("Building Ghost"))
         {
             colliding = true;   
             otherCollider = other;  
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Wall") && gameObject.layer == LayerMask.NameToLayer("Building Ghost"))
         {
             colliding = false;
         }

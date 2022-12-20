@@ -46,6 +46,8 @@ public class GridBuildingInfo : MonoBehaviour
 
     [SerializeField] LayerMask edgeColliderLayerMask;
     public LayerMask EdgeColliderLayerMask => edgeColliderLayerMask;
+    [SerializeField] LayerMask stairEdgeColliderLayerMask;
+    public LayerMask StairEdgeColliderLayerMask => stairEdgeColliderLayerMask;
     [SerializeField] LayerMask placeableObjectsColliderLayerMask;
     public LayerMask PlaceableObjectsColliderLayerMask => placeableObjectsColliderLayerMask;
 

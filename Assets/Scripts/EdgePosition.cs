@@ -17,18 +17,6 @@ public class EdgePosition : MonoBehaviour
         layerMask = 1 << LayerMask.NameToLayer("Wall");
 
         halfExtends = new Vector3((boxCollider.size.x/2) - 0.4f, boxCollider.size.y/2, boxCollider.size.z/2);
-
-        /*Collider[] colliders = Physics.OverlapBox(transform.position + boxCollider.center - GetPositionOffset(), halfExtends, transform.rotation, layerMask);
-        
-        foreach(Collider collider in colliders)
-        {
-            if(GetComponentInParent<FloorGridObject>().GetEdgeObject(edge) != collider.GetComponentInParent<EdgeObject>())
-            {
-                Debug.Log("bruh");
-                GetComponentInParent<FloorGridObject>().SetEdgeObject(edge, collider.GetComponentInParent<EdgeObject>());
-                collider.GetComponentInParent<EdgeObject>().SetSecondaryParentGridObject(GetComponentInParent<FloorGridObject>(), edge);
-            }
-        }*/
     }
 
     private void FixedUpdate()
@@ -39,6 +27,7 @@ public class EdgePosition : MonoBehaviour
         {
             if(GetComponentInParent<FloorGridObject>().GetEdgeObject(edge) != collider.GetComponentInParent<EdgeObject>())
             {
+                Debug.Log(edge);
                 GetComponentInParent<FloorGridObject>().SetEdgeObject(edge, collider.GetComponentInParent<EdgeObject>());
                 collider.GetComponentInParent<EdgeObject>().SetSecondaryParentGridObject(GetComponentInParent<FloorGridObject>(), edge);
             }

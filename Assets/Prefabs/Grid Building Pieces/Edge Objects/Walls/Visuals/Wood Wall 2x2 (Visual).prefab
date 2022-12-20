@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 8204883268392208325}
   - component: {fileID: 8018072950609460534}
   - component: {fileID: 2435022259196108987}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Wood Wall 2x2 (Visual)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 0.1}
+  m_Size: {x: 2, y: 2, z: 0.001}
   m_Center: {x: 1.25, y: 1.25, z: 0}
 --- !u!1 &2832740656648641798
 GameObject:

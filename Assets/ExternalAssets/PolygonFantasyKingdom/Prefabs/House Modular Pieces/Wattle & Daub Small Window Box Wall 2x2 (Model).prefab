@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 33557532857467248}
   - component: {fileID: 23102863385218468}
   - component: {fileID: 64553546576310646}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Wattle & Daub Small Window Box Wall 2x2 (Model)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

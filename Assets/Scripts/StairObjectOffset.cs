@@ -15,6 +15,17 @@ public class StairObjectOffset : EdgeObjectOffset
     [SerializeField] Vector3 defaultVisualColliderCenter;
     [SerializeField] Vector3 flippedVisualColliderCenter;
 
+    [Space(10)]
+
+    [SerializeField] GameObject defaultStairEdgeLeft;
+    [SerializeField] GameObject defaultStairEdgeRight;
+    [SerializeField] GameObject flippedStairEdgeLeft;
+    [SerializeField] GameObject flippedStairEdgeRight;
+
+    [Space(10)]
+    [SerializeField] Transform defaultCenterPivot;
+    [SerializeField] Transform flippedCenterPivot;
+
     public override void ChangeOffset(bool offsetMode)
     {
         base.ChangeOffset(offsetMode);
@@ -25,6 +36,13 @@ public class StairObjectOffset : EdgeObjectOffset
             {
                 defaultPlaceableCollider.SetActive(true);
                 flippedPlaceableCollider.SetActive(false);
+
+                defaultStairEdgeLeft.SetActive(true);
+                defaultStairEdgeRight.SetActive(true);
+                flippedStairEdgeLeft.SetActive(false);
+                flippedStairEdgeRight.SetActive(false);
+
+                GetComponentInParent<StairObject>().SetCenterPivot(defaultCenterPivot);
             }
             catch{}
             
@@ -37,6 +55,13 @@ public class StairObjectOffset : EdgeObjectOffset
             {
                 defaultPlaceableCollider.SetActive(false);
                 flippedPlaceableCollider.SetActive(true);
+
+                defaultStairEdgeLeft.SetActive(false);
+                defaultStairEdgeRight.SetActive(false);
+                flippedStairEdgeLeft.SetActive(true);
+                flippedStairEdgeRight.SetActive(true);
+
+                GetComponentInParent<StairObject>().SetCenterPivot(flippedCenterPivot);
             }
             catch{}
             

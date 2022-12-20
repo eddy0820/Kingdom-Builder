@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33356997833492270}
   - component: {fileID: 23360061712575226}
   - component: {fileID: 64776092871197286}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Wood Railing Long (Model)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
