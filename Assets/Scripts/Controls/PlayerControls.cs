@@ -238,17 +238,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             ]
         },
         {
-            ""name"": ""PlayerMechanics"",
+            ""name"": ""GridBuilding"",
             ""id"": ""9a7b6c6e-a3df-44e2-acbc-b0359e730ade"",
             ""actions"": [
-                {
-                    ""name"": ""ToggleBuildMode"",
-                    ""type"": ""Button"",
-                    ""id"": ""96d645cc-b900-4b00-bdb5-8a550d7b83cf"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
                 {
                     ""name"": ""Build"",
                     ""type"": ""Button"",
@@ -272,20 +264,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""BuildMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""528686b1-2033-4f69-ab76-8dca4ddaa921"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""238c131c-d847-49e1-9976-816e9bde21e7"",
-                    ""path"": ""<Keyboard>/b"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Mouse + Keyboard"",
-                    ""action"": ""ToggleBuildMode"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""a0baf16c-b7e5-4935-a978-df2d3a05aa54"",
@@ -316,6 +305,44 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Mouse + Keyboard"",
                     ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3644e18d-7d3f-4ec4-9278-5a90c95e8cb5"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""BuildMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""PlayerMechanics"",
+            ""id"": ""95b5f076-2a3c-4bb0-9462-00cc9a9c7aa7"",
+            ""actions"": [
+                {
+                    ""name"": ""ToggleBuildMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""47f5af04-6812-4882-acee-b0066f9b61c5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""848f29e1-931f-4519-8a2a-c39e064dc424"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""ToggleBuildMode"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -352,12 +379,15 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_GroundMovement_Crouch = m_GroundMovement.FindAction("Crouch", throwIfNotFound: true);
         m_GroundMovement_Walk = m_GroundMovement.FindAction("Walk", throwIfNotFound: true);
         m_GroundMovement_Sprint = m_GroundMovement.FindAction("Sprint", throwIfNotFound: true);
+        // GridBuilding
+        m_GridBuilding = asset.FindActionMap("GridBuilding", throwIfNotFound: true);
+        m_GridBuilding_Build = m_GridBuilding.FindAction("Build", throwIfNotFound: true);
+        m_GridBuilding_Demolish = m_GridBuilding.FindAction("Demolish", throwIfNotFound: true);
+        m_GridBuilding_Rotate = m_GridBuilding.FindAction("Rotate", throwIfNotFound: true);
+        m_GridBuilding_BuildMenu = m_GridBuilding.FindAction("BuildMenu", throwIfNotFound: true);
         // PlayerMechanics
         m_PlayerMechanics = asset.FindActionMap("PlayerMechanics", throwIfNotFound: true);
         m_PlayerMechanics_ToggleBuildMode = m_PlayerMechanics.FindAction("ToggleBuildMode", throwIfNotFound: true);
-        m_PlayerMechanics_Build = m_PlayerMechanics.FindAction("Build", throwIfNotFound: true);
-        m_PlayerMechanics_Demolish = m_PlayerMechanics.FindAction("Demolish", throwIfNotFound: true);
-        m_PlayerMechanics_Rotate = m_PlayerMechanics.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -501,21 +531,72 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     }
     public GroundMovementActions @GroundMovement => new GroundMovementActions(this);
 
+    // GridBuilding
+    private readonly InputActionMap m_GridBuilding;
+    private IGridBuildingActions m_GridBuildingActionsCallbackInterface;
+    private readonly InputAction m_GridBuilding_Build;
+    private readonly InputAction m_GridBuilding_Demolish;
+    private readonly InputAction m_GridBuilding_Rotate;
+    private readonly InputAction m_GridBuilding_BuildMenu;
+    public struct GridBuildingActions
+    {
+        private @PlayerControls m_Wrapper;
+        public GridBuildingActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Build => m_Wrapper.m_GridBuilding_Build;
+        public InputAction @Demolish => m_Wrapper.m_GridBuilding_Demolish;
+        public InputAction @Rotate => m_Wrapper.m_GridBuilding_Rotate;
+        public InputAction @BuildMenu => m_Wrapper.m_GridBuilding_BuildMenu;
+        public InputActionMap Get() { return m_Wrapper.m_GridBuilding; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GridBuildingActions set) { return set.Get(); }
+        public void SetCallbacks(IGridBuildingActions instance)
+        {
+            if (m_Wrapper.m_GridBuildingActionsCallbackInterface != null)
+            {
+                @Build.started -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnBuild;
+                @Build.performed -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnBuild;
+                @Build.canceled -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnBuild;
+                @Demolish.started -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnDemolish;
+                @Demolish.performed -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnDemolish;
+                @Demolish.canceled -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnDemolish;
+                @Rotate.started -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnRotate;
+                @BuildMenu.started -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnBuildMenu;
+                @BuildMenu.performed -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnBuildMenu;
+                @BuildMenu.canceled -= m_Wrapper.m_GridBuildingActionsCallbackInterface.OnBuildMenu;
+            }
+            m_Wrapper.m_GridBuildingActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Build.started += instance.OnBuild;
+                @Build.performed += instance.OnBuild;
+                @Build.canceled += instance.OnBuild;
+                @Demolish.started += instance.OnDemolish;
+                @Demolish.performed += instance.OnDemolish;
+                @Demolish.canceled += instance.OnDemolish;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
+                @BuildMenu.started += instance.OnBuildMenu;
+                @BuildMenu.performed += instance.OnBuildMenu;
+                @BuildMenu.canceled += instance.OnBuildMenu;
+            }
+        }
+    }
+    public GridBuildingActions @GridBuilding => new GridBuildingActions(this);
+
     // PlayerMechanics
     private readonly InputActionMap m_PlayerMechanics;
     private IPlayerMechanicsActions m_PlayerMechanicsActionsCallbackInterface;
     private readonly InputAction m_PlayerMechanics_ToggleBuildMode;
-    private readonly InputAction m_PlayerMechanics_Build;
-    private readonly InputAction m_PlayerMechanics_Demolish;
-    private readonly InputAction m_PlayerMechanics_Rotate;
     public struct PlayerMechanicsActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerMechanicsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @ToggleBuildMode => m_Wrapper.m_PlayerMechanics_ToggleBuildMode;
-        public InputAction @Build => m_Wrapper.m_PlayerMechanics_Build;
-        public InputAction @Demolish => m_Wrapper.m_PlayerMechanics_Demolish;
-        public InputAction @Rotate => m_Wrapper.m_PlayerMechanics_Rotate;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMechanics; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -528,15 +609,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @ToggleBuildMode.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
                 @ToggleBuildMode.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
                 @ToggleBuildMode.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnToggleBuildMode;
-                @Build.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuild;
-                @Build.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuild;
-                @Build.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnBuild;
-                @Demolish.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnDemolish;
-                @Demolish.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnDemolish;
-                @Demolish.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnDemolish;
-                @Rotate.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnRotate;
-                @Rotate.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnRotate;
-                @Rotate.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnRotate;
             }
             m_Wrapper.m_PlayerMechanicsActionsCallbackInterface = instance;
             if (instance != null)
@@ -544,15 +616,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @ToggleBuildMode.started += instance.OnToggleBuildMode;
                 @ToggleBuildMode.performed += instance.OnToggleBuildMode;
                 @ToggleBuildMode.canceled += instance.OnToggleBuildMode;
-                @Build.started += instance.OnBuild;
-                @Build.performed += instance.OnBuild;
-                @Build.canceled += instance.OnBuild;
-                @Demolish.started += instance.OnDemolish;
-                @Demolish.performed += instance.OnDemolish;
-                @Demolish.canceled += instance.OnDemolish;
-                @Rotate.started += instance.OnRotate;
-                @Rotate.performed += instance.OnRotate;
-                @Rotate.canceled += instance.OnRotate;
             }
         }
     }
@@ -578,11 +641,15 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnWalk(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
     }
-    public interface IPlayerMechanicsActions
+    public interface IGridBuildingActions
     {
-        void OnToggleBuildMode(InputAction.CallbackContext context);
         void OnBuild(InputAction.CallbackContext context);
         void OnDemolish(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnBuildMenu(InputAction.CallbackContext context);
+    }
+    public interface IPlayerMechanicsActions
+    {
+        void OnToggleBuildMode(InputAction.CallbackContext context);
     }
 }

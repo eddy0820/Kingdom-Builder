@@ -134,35 +134,32 @@ public class GridBuildingManager : MonoBehaviour
 
     public void Rotate(float value)
     {
-        if(PlayerController.Instance.BuildModeEnabled)
-        {  
-            if(value > 0.1f)
+        if(!PlayerController.Instance.UICanvas.BuildMenuEnabled && value > 0.1f)
+        {
+            if(currentPlaceableObjectSO is EdgeObjectSO)
             {
-                if(currentPlaceableObjectSO is EdgeObjectSO)
-                {
-                    currentEdgeFlipMode = !currentEdgeFlipMode;
-                    buildingGhost.FlipEdgeObjectGhost(currentEdgeFlipMode);
-                }
-                else if(currentPlaceableObjectSO is GridObjectSO)
-                {
-                    currentDirection = GridObjectSO.GetNextDirection(currentDirection);
-                    Debug.Log("Direction: " + currentDirection); 
-                } 
-                else if(currentPlaceableObjectSO is LooseObjectSO)
-                {
-                    looseObjectRotate = true;
-                }
+                currentEdgeFlipMode = !currentEdgeFlipMode;
+                buildingGhost.FlipEdgeObjectGhost(currentEdgeFlipMode);
             }
-            else
+            else if(currentPlaceableObjectSO is GridObjectSO)
             {
-                looseObjectRotate = false;
+                currentDirection = GridObjectSO.GetNextDirection(currentDirection);
+                Debug.Log("Direction: " + currentDirection); 
+            } 
+            else if(currentPlaceableObjectSO is LooseObjectSO)
+            {
+                looseObjectRotate = true;
             }
+        }
+        else
+        {
+            looseObjectRotate = false;
         }
     }
 
     private void HandleLooseObjectRotation()
     {
-        if(PlayerController.Instance.BuildModeEnabled && looseObjectRotate)
+        if(PlayerController.Instance.BuildModeEnabled && !PlayerController.Instance.UICanvas.BuildMenuEnabled && looseObjectRotate)
         {
             if(currentPlaceableObjectSO is LooseObjectSO)
             {
@@ -180,33 +177,30 @@ public class GridBuildingManager : MonoBehaviour
 
     public void PlaceObject()
     {
-        if(PlayerController.Instance.BuildModeEnabled)
+        if(!PlayerController.Instance.UICanvas.BuildMenuEnabled && Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.Instance.GetMouseWorldPosition()) <= maxBuildDistance)
         {
-            if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.Instance.GetMouseWorldPosition()) <= maxBuildDistance)
+            if(AmILookingAtCollider())
             {
-                if(AmILookingAtCollider())
+                switch(currentPlaceableObjectSO.ObjectType)
                 {
-                    switch(currentPlaceableObjectSO.ObjectType)
-                    {
-                        case PlaceableObjectTypes.GridObject:
-                            PlaceGridObject();
-                        break;
+                    case PlaceableObjectTypes.GridObject:
+                        PlaceGridObject();
+                    break;
 
-                        case PlaceableObjectTypes.EdgeObject:
-                            PlaceEdgeObject();
-                        break;
+                    case PlaceableObjectTypes.EdgeObject:
+                        PlaceEdgeObject();
+                    break;
 
-                        case PlaceableObjectTypes.StairEdgeObject:
-                            PlaceStairEdgeObject();
-                        break;
+                    case PlaceableObjectTypes.StairEdgeObject:
+                        PlaceStairEdgeObject();
+                    break;
 
-                        case PlaceableObjectTypes.LooseObject:
-                            PlaceLooseObject();
-                        break;
-                    }
-                } 
-            }  
-        }   
+                    case PlaceableObjectTypes.LooseObject:
+                        PlaceLooseObject();
+                    break;
+                }
+            } 
+        }  
     }
 
     public bool CanPlaceObject()
@@ -595,7 +589,7 @@ public class GridBuildingManager : MonoBehaviour
 
     public void DemolishPlacedObject()
     {
-        if(PlayerController.Instance.BuildModeEnabled)
+        if(!PlayerController.Instance.UICanvas.BuildMenuEnabled)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -630,7 +624,7 @@ public class GridBuildingManager : MonoBehaviour
                     stairEdgeObject.DestroySelf();
                 }
             }
-        }
+        } 
     }
 
     public void SelectPlaceableObject(PlaceableObjectSO placeableObject)

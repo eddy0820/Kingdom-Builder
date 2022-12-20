@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 837d9237c8948e4459379217b99109b9, type: 3}
+  m_Name: Database.PlaceableObjects
+  m_EditorClassIdentifier: 
+  placeableObjects:
+  - {fileID: 11400000, guid: 957c0cbd64114ba4caac277016b5388f, type: 2}
+  - {fileID: 11400000, guid: 06c2699624260554783f26e0a4bd5089, type: 2}
+  - {fileID: 11400000, guid: 5f649c2fe44bb3647ba591813bfbb718, type: 2}
+  - {fileID: 11400000, guid: 3f327ebdbcc7d1c4181ea60d551fa85e, type: 2}
+  - {fileID: 11400000, guid: 20c17af2423551642bbeb9da282c84f2, type: 2}
+  - {fileID: 11400000, guid: 3835de30719849848acacd4b0f5d6f98, type: 2}
+  - {fileID: 11400000, guid: 013b1a9db7ab6ac41b0907b643282de0, type: 2}
+  - {fileID: 11400000, guid: c5a7e9ca313cacd46b04b03eac8d3a71, type: 2}
+  - {fileID: 11400000, guid: 58265fd6ac2c5394f83278d410409f39, type: 2}

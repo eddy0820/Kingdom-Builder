@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] PlayerCamera characterCamera;
     public PlayerCamera CharacterCamera => characterCamera;
     [SerializeField] PlayerCanvas uiCanvas;
+    public PlayerCanvas UICanvas => uiCanvas;
 
     private float verticalInput;
     private float horizontalInput;
@@ -143,5 +144,17 @@ public class PlayerController : MonoBehaviour
         uiCanvas.Crosshair.SetActive(buildModeEnabled);
         characterCamera.DoBuildModeCamera(buildModeEnabled);
         GridBuildingManager.Instance.BuildingGhost.RefreshVisual();
+
+        if(buildModeEnabled)
+        {
+            InputManager.Instance.GridBuilding.Enable();
+        }
+        else
+        {
+            uiCanvas.ToggleBuildMenu(buildModeEnabled);
+            uiCanvas.Crosshair.SetActive(buildModeEnabled);
+            InputManager.Instance.GridBuilding.Disable();
+        }
+        
     }
 }

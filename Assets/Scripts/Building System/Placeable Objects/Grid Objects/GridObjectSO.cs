@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Grid Object", menuName = "Building System/Grid Object")]
-public class GridObjectSO : PlaceableObjectSO
+public class GridObjectSO : GridPlaceableObjectSO
 {
     public int width;
     public int height;
 
+    protected override void SetBuildingCategoryType()
+    {
+        buildingCategoryType = BuildingCategoryTypes.HouseBuilding;
+    }
+    
     protected override void SetObjectType()
     {
         objectType = PlaceableObjectTypes.GridObject;

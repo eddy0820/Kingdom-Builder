@@ -16,3 +16,7 @@ MonoBehaviour:
   prefab: {fileID: 1812151057414715034, guid: 3bae9e75fb097f14fb6678688d58da99, type: 3}
   visual: {fileID: 902933118266952625, guid: 95755e2efc11a694b93338dcac0bcdaf, type: 3}
   objectType: 2
+  buildingCategoryType: 0
+  materialBuildingType: 0
+  buildingType: 3
+  subBuildingType: 3

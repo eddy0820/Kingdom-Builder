@@ -29,46 +29,49 @@ public class BuildingGhost : MonoBehaviour {
 
     private void Update()
     {
-        if(GridBuildingManager.Instance.AmILookingAtCollider())
+        if(!PlayerController.Instance.UICanvas.BuildMenuEnabled)
         {
-            if(visual == null)
+            if(GridBuildingManager.Instance.AmILookingAtCollider())
             {
-                RefreshVisual();
-            }
-            
-        }
-        else
-        {
-            if(visual != null)
-            {
-                Destroy(visual.gameObject);
-                visual = null;
-
-                Destroy(fakeVisual.gameObject);
-                fakeVisual = null;
-            }
-        }
-
-        if(visual != null)
-        {
-            if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.Instance.GetMouseWorldPosition()) > gridBuildingInfo.MaxBuildDistance)
-            {
-                SetGhostValidityState(GhostValidityState.FarAway);
-            }
-            else if(!GridBuildingManager.Instance.CanPlaceObject())
-            {
-                SetGhostValidityState(GhostValidityState.Invalid);
+                if(visual == null)
+                {
+                    RefreshVisual();
+                }
+                
             }
             else
             {
-                SetGhostValidityState(GhostValidityState.Valid);
+                if(visual != null)
+                {
+                    Destroy(visual.gameObject);
+                    visual = null;
+
+                    Destroy(fakeVisual.gameObject);
+                    fakeVisual = null;
+                }
+            }
+
+            if(visual != null)
+            {
+                if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.Instance.GetMouseWorldPosition()) > gridBuildingInfo.MaxBuildDistance)
+                {
+                    SetGhostValidityState(GhostValidityState.FarAway);
+                }
+                else if(!GridBuildingManager.Instance.CanPlaceObject())
+                {
+                    SetGhostValidityState(GhostValidityState.Invalid);
+                }
+                else
+                {
+                    SetGhostValidityState(GhostValidityState.Valid);
+                }
             }
         }
     }
 
     private void LateUpdate() 
     {
-        if(visual != null)
+        if(visual != null && !PlayerController.Instance.UICanvas.BuildMenuEnabled)
         {
             Vector3 targetPosition = GridBuildingManager.Instance.GetMouseWorldSnappedPosition();
 

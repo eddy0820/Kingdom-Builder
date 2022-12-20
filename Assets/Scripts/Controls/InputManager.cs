@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager Instance { get; private set; }
+    
     [Header("Inputs")]
     [ReadOnly, SerializeField] Vector2 horizontalInput;
     [ReadOnly, SerializeField] float mouseX;
@@ -13,14 +15,22 @@ public class InputManager : MonoBehaviour
     PlayerControls controls;
     PlayerControls.GroundMovementActions groundMovement;
     PlayerControls.PlayerMechanicsActions playerMechanics;
+    PlayerControls.GridBuildingActions gridBuilding;
+    public PlayerControls.GridBuildingActions GridBuilding => gridBuilding;
 
     PlayerController playerController;
 
     private void Awake()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+
         controls = new PlayerControls();
         groundMovement = controls.GroundMovement;
         playerMechanics = controls.PlayerMechanics;
+        gridBuilding = controls.GridBuilding;
 
         playerController = GetComponent<PlayerController>();
 
@@ -61,21 +71,23 @@ public class InputManager : MonoBehaviour
             playerMechanics.ToggleBuildMode.performed += _ =>
                 playerController.ToggleBuildMode();
         }
-        
     }
 
     private void Start()
     {
         if(PlayerSpawner.Instance.GridBuildingInfo.EnableBuilding)
         {
-            playerMechanics.Build.performed += _ =>
+            gridBuilding.Build.performed += _ =>
                 GridBuildingManager.Instance.PlaceObject();
 
-            playerMechanics.Demolish.performed += _ =>
+            gridBuilding.Demolish.performed += _ =>
                 GridBuildingManager.Instance.DemolishPlacedObject();
                 
-            playerMechanics.Rotate.performed += ctx =>
+            gridBuilding.Rotate.performed += ctx =>
                 GridBuildingManager.Instance.Rotate(ctx.ReadValue<float>());
+            
+            gridBuilding.BuildMenu.performed += ctx =>
+                playerController.UICanvas.ToggleBuildMenu();
         }
     }
 
@@ -86,11 +98,13 @@ public class InputManager : MonoBehaviour
 
     private void OnEnable()
     {
-        controls.Enable();
+        groundMovement.Enable();
+        playerMechanics.Enable();
     }
 
     private void OnDisable()
     {
-        controls.Disable();
+        groundMovement.Disable();
+        playerMechanics.Disable();
     }
 }

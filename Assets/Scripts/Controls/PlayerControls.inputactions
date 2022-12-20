@@ -225,17 +225,9 @@
             ]
         },
         {
-            "name": "PlayerMechanics",
+            "name": "GridBuilding",
             "id": "9a7b6c6e-a3df-44e2-acbc-b0359e730ade",
             "actions": [
-                {
-                    "name": "ToggleBuildMode",
-                    "type": "Button",
-                    "id": "96d645cc-b900-4b00-bdb5-8a550d7b83cf",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
                 {
                     "name": "Build",
                     "type": "Button",
@@ -259,20 +251,17 @@
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "BuildMenu",
+                    "type": "Button",
+                    "id": "528686b1-2033-4f69-ab76-8dca4ddaa921",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "238c131c-d847-49e1-9976-816e9bde21e7",
-                    "path": "<Keyboard>/b",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse + Keyboard",
-                    "action": "ToggleBuildMode",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "a0baf16c-b7e5-4935-a978-df2d3a05aa54",
@@ -303,6 +292,44 @@
                     "processors": "",
                     "groups": "Mouse + Keyboard",
                     "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3644e18d-7d3f-4ec4-9278-5a90c95e8cb5",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "BuildMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PlayerMechanics",
+            "id": "95b5f076-2a3c-4bb0-9462-00cc9a9c7aa7",
+            "actions": [
+                {
+                    "name": "ToggleBuildMode",
+                    "type": "Button",
+                    "id": "47f5af04-6812-4882-acee-b0066f9b61c5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "848f29e1-931f-4519-8a2a-c39e064dc424",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "ToggleBuildMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
