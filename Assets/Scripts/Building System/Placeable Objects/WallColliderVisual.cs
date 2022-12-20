@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EdgeObjectVisual2x2 : MonoBehaviour
+public class WallColliderVisual : MonoBehaviour
 {
     bool colliding;
     public bool Colliding => colliding;

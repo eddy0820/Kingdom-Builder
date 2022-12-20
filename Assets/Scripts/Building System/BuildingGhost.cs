@@ -275,15 +275,15 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(visual != null)
         {
-            EdgeObjectVisual2x2 edgeObjectVisual = null;
+            WallColliderVisual edgeObjectVisual = null;
 
             if(GridBuildingManager.Instance.CurrentPlaceableObjectSO is EdgeObjectSO && ((EdgeObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width == EdgeObjectSO.EdgeWidth.Two)
             {
-                edgeObjectVisual = visual.GetComponent<EdgeObjectVisual2x2>();
+                edgeObjectVisual = visual.GetComponent<WallColliderVisual>();
             }
             else if(GridBuildingManager.Instance.CurrentPlaceableObjectSO is StairEdgeObjectSO)
             {
-                edgeObjectVisual = visual.GetComponentInChildren<EdgeObjectVisual2x2>();
+                edgeObjectVisual = visual.GetComponentInChildren<WallColliderVisual>();
             }
             
             if(edgeObjectVisual != null && edgeObjectVisual.Colliding)

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 ////////////// U NEED TO CHECK ALL Physics.Raycast YOU ARE USING THE COLLIDER MASK WRONG
 ////////////// LOOSE PLACEMENT BUG WHEN MOVING MOUSE FAST COULD BE BECAUSE OF ^^
-////////////// Make it so you cant place a wall / railing on top of each other
+////////////// Fix being able to place objects that can't be placed for a frame
+////////////// fix edge object flipping maybe?
 public class GridBuildingManager : MonoBehaviour
 {
     public static GridBuildingManager Instance { get; private set; }
