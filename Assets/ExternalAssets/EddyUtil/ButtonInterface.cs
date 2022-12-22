@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public abstract class ButtonInterface<T> : AbstractGameInterface where T : ButtonInterface<T>.ButtonEntry
 {   
-    [SerializeField] List<T> buttons;
+    [SerializeField] protected List<T> buttons;
     public List<T> Buttons => buttons;
     protected override void OnAwake() 
     {
@@ -41,7 +41,7 @@ public abstract class ButtonInterface<T> : AbstractGameInterface where T : Butto
     [System.Serializable]
     public abstract class ButtonEntry
     {
-        [SerializeField] GameObject button;
+        [SerializeField] protected GameObject button;
         public GameObject Button => button;
         [SerializeField] ButtonEntryEvent function = new ButtonEntryEvent();
         public ButtonEntryEvent Function => function;

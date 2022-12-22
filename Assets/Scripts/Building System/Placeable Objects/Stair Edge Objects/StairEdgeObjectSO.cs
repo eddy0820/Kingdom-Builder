@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Stair Edge Object", menuName = "Building System/Stair Edge Object")]
+[CreateAssetMenu(fileName = "New Stair Edge Object", menuName = "Building System/Placeable Objects/Stair Edge Object")]
 public class StairEdgeObjectSO : GridPlaceableObjectSO
 {
     protected override void SetBuildingCategoryType()

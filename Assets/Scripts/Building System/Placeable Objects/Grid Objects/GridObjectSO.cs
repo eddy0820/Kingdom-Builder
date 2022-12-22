@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Grid Object", menuName = "Building System/Grid Object")]
+[CreateAssetMenu(fileName = "New Grid Object", menuName = "Building System/Placeable Objects/Grid Object")]
 public class GridObjectSO : GridPlaceableObjectSO
 {
     public int width;

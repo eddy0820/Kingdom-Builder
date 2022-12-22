@@ -8,6 +8,8 @@ public class PlayerCanvas : MonoBehaviour
     public GameObject Crosshair => crosshair;
     [SerializeField] GameObject buildMenu;
     public GameObject BuildMenu => buildMenu;
+    [SerializeField] GameObject buildHotbar;
+    public GameObject BuildHotbar => buildHotbar;
 
     [Space(15)]
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Edge Object", menuName = "Building System/Edge Object")]
+[CreateAssetMenu(fileName = "New Edge Object", menuName = "Building System/Placeable Objects/Edge Object")]
 public class EdgeObjectSO : GridPlaceableObjectSO
 {
     [Space(15)]

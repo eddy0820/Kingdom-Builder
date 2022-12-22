@@ -142,6 +142,7 @@ public class PlayerController : MonoBehaviour
     {
         buildModeEnabled = !buildModeEnabled;
         uiCanvas.Crosshair.SetActive(buildModeEnabled);
+        uiCanvas.BuildHotbar.SetActive(buildModeEnabled);
         characterCamera.DoBuildModeCamera(buildModeEnabled);
         GridBuildingManager.Instance.BuildingGhost.RefreshVisual();
 
