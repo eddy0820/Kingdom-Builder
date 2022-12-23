@@ -12,7 +12,7 @@ public abstract class PlaceableObjectSO : ScriptableObject
     public Transform Visual => visual;
     [ReadOnly, SerializeField] protected PlaceableObjectTypes objectType;
     public PlaceableObjectTypes ObjectType => objectType;
-    [ReadOnly, SerializeField] protected BuildingCategoryTypes buildingCategoryType;
+    [SerializeField] protected BuildingCategoryTypes buildingCategoryType;
     public BuildingCategoryTypes BuildingCategoryType => buildingCategoryType;
 
     private void Awake()

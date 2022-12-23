@@ -19,6 +19,10 @@ public class GridBuildingInfo : MonoBehaviour
 
     [SerializeField] List<PlaceableObjectSO> placeableObjectSOList;
     public List<PlaceableObjectSO> PlaceableObjectSOList => placeableObjectSOList;
+    [SerializeField] PlaceableObjectsDatabaseSO placeableObjectsDatabase;
+    public PlaceableObjectsDatabaseSO PlaceableObjectsDatabase => placeableObjectsDatabase;
+    [SerializeField] BuildingTypesDatabaseSO buildingTypesDatabase;
+    public BuildingTypesDatabaseSO BuildingTypesDatabase => buildingTypesDatabase;
 
     [Space(15)]
 

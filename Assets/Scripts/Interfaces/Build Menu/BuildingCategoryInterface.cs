@@ -22,14 +22,29 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
 
     protected override void OnAwake()
     {
-        foreach(string name in Enum.GetNames(typeof(BuildingCategoryTypes)))
+        CreatePlaceableObjectsList(out List<GridPlaceableObjectSO> houseBuildingPlaceableObjects, out List<LooseObjectSO> looseObjects);
+
+        foreach(int i in Enum.GetValues(typeof(BuildingCategoryTypes)))
         {
+
             GameObject button = Instantiate(buttonPrefab, buttonPrefab.transform.position, buttonPrefab.transform.rotation, transform);
             GameObject screen = Instantiate(screenPrefab, screenParent.position, screenPrefab.transform.rotation, screenParent);
-            string newName = AddSpacesToString(name, true);
+            string newName = AddSpacesToString(Enum.GetName(typeof(BuildingCategoryTypes), i), true);
             button.GetComponentInChildren<TextMeshProUGUI>().text = newName;
             screen.GetComponentInChildren<TextMeshProUGUI>().text = newName;
             buttons.Add(new SelectionButtonEntry(button, screen));
+
+            switch((BuildingCategoryTypes) i)
+            {
+                case BuildingCategoryTypes.HouseBuilding:
+                    screen.GetComponent<BuildingCategoryScreen>().HouseBuildingInit(houseBuildingPlaceableObjects);
+                break;
+
+                case BuildingCategoryTypes.Props:
+                    screen.GetComponent<BuildingCategoryScreen>().PropInit(looseObjects);
+                break;
+            }
+            
         }
 
         base.OnAwake();
@@ -41,6 +56,26 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
         }
 
         OnSelectButton(Buttons[0]);
+    }
+
+    private void CreatePlaceableObjectsList(out List<GridPlaceableObjectSO> houseBuildingPlaceableObjects, out List<LooseObjectSO> looseObjects)
+    {
+        houseBuildingPlaceableObjects = new List<GridPlaceableObjectSO>();
+        looseObjects = new List<LooseObjectSO>();
+
+        foreach(PlaceableObjectSO placeableObjectSO in PlayerSpawner.Instance.GridBuildingInfo.PlaceableObjectsDatabase.PlaceableObjects)
+        {
+            switch(placeableObjectSO.BuildingCategoryType)
+            {
+                case BuildingCategoryTypes.HouseBuilding:
+                    houseBuildingPlaceableObjects.Add((GridPlaceableObjectSO) placeableObjectSO);
+                break;
+
+                case BuildingCategoryTypes.Props:
+                    looseObjects.Add((LooseObjectSO) placeableObjectSO);
+                break;
+            }
+        }
     }
 
     public override void OnSelectButton(ButtonEntry buttonEntry)

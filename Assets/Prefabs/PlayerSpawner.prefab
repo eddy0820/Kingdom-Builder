@@ -73,6 +73,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 20c17af2423551642bbeb9da282c84f2, type: 2}
   - {fileID: 11400000, guid: 3835de30719849848acacd4b0f5d6f98, type: 2}
   - {fileID: 11400000, guid: 6fe785846e21f1247bd7c4668f42f27c, type: 2}
+  placeableObjectsDatabase: {fileID: 11400000, guid: 83771edb819104347aa5ba092e8a3bef, type: 2}
+  buildingTypesDatabase: {fileID: 11400000, guid: 296fe3535b84bf34b9c465457bff8f5d, type: 2}
   gridWidth: 80
   gridLength: 80
   cellSize: 1.25

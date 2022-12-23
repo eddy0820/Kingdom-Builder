@@ -15,4 +15,5 @@ MonoBehaviour:
   name: Barrel
   prefab: {fileID: 1345503352022865042, guid: e92c1c1e6b9cb534994c58beed5e66b1, type: 3}
   visual: {fileID: 8560817669789556664, guid: fb74573d988663d438dbeacdbc6eadfa, type: 3}
-  objectType: 2
+  objectType: 3
+  buildingCategoryType: 2

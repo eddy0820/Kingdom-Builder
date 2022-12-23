@@ -4,6 +4,6 @@ using UnityEngine;
 
 public enum BuildingCategoryTypes
 {
-    HouseBuilding,
-    Props,
+    HouseBuilding = 1,
+    Props = 2,
 }
