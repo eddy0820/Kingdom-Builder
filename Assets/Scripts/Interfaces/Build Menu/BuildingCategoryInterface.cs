@@ -14,11 +14,14 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
     [SerializeField] Color selectedButtonColor;
 
     [Header("Prefab Parents")]
-    [SerializeField] RectTransform screenParent;
+    [SerializeField] RectTransform buildingCategoryScreenParent;
 
     [Header("Prefabs")]
-    [SerializeField] GameObject buttonPrefab;
-    [SerializeField] GameObject screenPrefab;
+    [SerializeField] GameObject buildingCategoryButtonPrefab;
+    [SerializeField] GameObject buildingCategoryScreenPrefab;
+    [SerializeField] GameObject buildingTypeButtonPrefab;
+    [SerializeField] GameObject buildingTypeScreenPrefab;
+    [SerializeField] GameObject buildingTypeGridHolderPrefab;
 
     protected override void OnAwake()
     {
@@ -26,18 +29,17 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
 
         foreach(int i in Enum.GetValues(typeof(BuildingCategoryTypes)))
         {
-
-            GameObject button = Instantiate(buttonPrefab, buttonPrefab.transform.position, buttonPrefab.transform.rotation, transform);
-            GameObject screen = Instantiate(screenPrefab, screenParent.position, screenPrefab.transform.rotation, screenParent);
+            GameObject button = Instantiate(buildingCategoryButtonPrefab, buildingCategoryButtonPrefab.transform.position, buildingCategoryButtonPrefab.transform.rotation, transform);
+            GameObject screen = Instantiate(buildingCategoryScreenPrefab, buildingCategoryScreenParent.position, buildingCategoryScreenPrefab.transform.rotation, buildingCategoryScreenParent);
             string newName = AddSpacesToString(Enum.GetName(typeof(BuildingCategoryTypes), i), true);
             button.GetComponentInChildren<TextMeshProUGUI>().text = newName;
-            screen.GetComponentInChildren<TextMeshProUGUI>().text = newName;
+            //screen.GetComponentInChildren<TextMeshProUGUI>().text = newName;
             buttons.Add(new SelectionButtonEntry(button, screen));
 
             switch((BuildingCategoryTypes) i)
             {
                 case BuildingCategoryTypes.HouseBuilding:
-                    screen.GetComponent<BuildingCategoryScreen>().HouseBuildingInit(houseBuildingPlaceableObjects);
+                    screen.GetComponent<BuildingCategoryScreen>().HouseBuildingInit(houseBuildingPlaceableObjects, buildingTypeButtonPrefab, buildingTypeScreenPrefab, buildingTypeGridHolderPrefab);
                 break;
 
                 case BuildingCategoryTypes.Props:

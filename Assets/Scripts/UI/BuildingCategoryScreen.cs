@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class BuildingCategoryScreen : MonoBehaviour
 {
-    public void HouseBuildingInit(List<GridPlaceableObjectSO> placeableObjects)
+    [SerializeField] RectTransform subScreensParent;
+
+    public void HouseBuildingInit(List<GridPlaceableObjectSO> placeableObjects, GameObject buildingTypeButtonPrefab, GameObject buildingTypeScreenPrefab, GameObject buildingTypeGridHolderPrefab)
     {
-        foreach(BuildingTypesSO buildingTypeSO in PlayerSpawner.Instance.GridBuildingInfo.BuildingTypesDatabase.BuildingTypes)
-        {
-            
-        }
+        GameObject buildingTypeGridHolder = Instantiate(buildingTypeGridHolderPrefab, buildingTypeGridHolderPrefab.transform.localPosition, buildingTypeGridHolderPrefab.transform.rotation, transform);
+        buildingTypeGridHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(25, 0);
+        buildingTypeGridHolder.GetComponent<BuildingTypesInterface>().Init(buildingTypeButtonPrefab, buildingTypeScreenPrefab, subScreensParent);
     }
 
     public void PropInit(List<LooseObjectSO> loosePlaceableObjects)

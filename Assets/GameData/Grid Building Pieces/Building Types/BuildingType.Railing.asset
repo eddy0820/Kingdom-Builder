@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d7ca33c113e0114bb25310ba17e1fb0, type: 3}
   m_Name: BuildingType.Railing
   m_EditorClassIdentifier: 
-  name: Railings/Fences
+  name: Railings / Fences
   buildingType: 3
   possibleSubTypes: 03000000
