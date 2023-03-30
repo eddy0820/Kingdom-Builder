@@ -7,7 +7,7 @@ public abstract class GridPlaceableObjectSO : PlaceableObjectSO
     [SerializeField] MaterialBuildingTypes materialBuildingType;
     public MaterialBuildingTypes MaterialBuildingType => materialBuildingType;
     [SerializeField] BuildingTypes buildingType;
-    public BuildingTypes BuildingTypes => buildingType;
+    public BuildingTypes BuildingType => buildingType;
     [SerializeField] SubBuildingTypes subBuildingType;
     public SubBuildingTypes SubBuildingType => subBuildingType;
 }

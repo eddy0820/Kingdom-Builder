@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 public class GridBuildingInfo : MonoBehaviour
 {
@@ -17,50 +18,51 @@ public class GridBuildingInfo : MonoBehaviour
 
     [Space(15)]
 
-    [SerializeField] List<PlaceableObjectSO> placeableObjectSOList;
+    
+    [ShowIf("enableBuilding"), SerializeField] List<PlaceableObjectSO> placeableObjectSOList;
     public List<PlaceableObjectSO> PlaceableObjectSOList => placeableObjectSOList;
-    [SerializeField] PlaceableObjectsDatabaseSO placeableObjectsDatabase;
+    [ShowIf("enableBuilding"), SerializeField] PlaceableObjectsDatabaseSO placeableObjectsDatabase;
     public PlaceableObjectsDatabaseSO PlaceableObjectsDatabase => placeableObjectsDatabase;
-    [SerializeField] BuildingTypesDatabaseSO buildingTypesDatabase;
+    [ShowIf("enableBuilding"), SerializeField] BuildingTypesDatabaseSO buildingTypesDatabase;
     public BuildingTypesDatabaseSO BuildingTypesDatabase => buildingTypesDatabase;
 
     [Space(15)]
 
-    [SerializeField] int gridWidth = 10;
+    [ShowIf("enableBuilding"), SerializeField] int gridWidth = 10;
     public int GridWidth => gridWidth;
-    [SerializeField] int gridLength = 10;
+    [ShowIf("enableBuilding"), SerializeField] int gridLength = 10;
     public int GridLength => gridLength;
-    [SerializeField] float cellSize = 10f;
+    [ShowIf("enableBuilding"), SerializeField] float cellSize = 10f;
     public float CellSize => cellSize;
 
     [Space(5)]
 
-    [SerializeField] float gridHeight = 10f;
+    [ShowIf("enableBuilding"), SerializeField] float gridHeight = 10f;
     public float GridHeight => gridHeight;
 
-    [SerializeField] int gridVerticalCount = 5;
+    [ShowIf("enableBuilding"), SerializeField] int gridVerticalCount = 5;
     public int GridVerticalCount => gridVerticalCount;
 
     [Space(5)]
 
-    [SerializeField] float maxBuildDistance = 15f;
+    [ShowIf("enableBuilding"), SerializeField] float maxBuildDistance = 15f;
     public float MaxBuildDistance => maxBuildDistance;
 
     [Space(15)]
 
-    [SerializeField] LayerMask edgeColliderLayerMask;
+    [ShowIf("enableBuilding"), SerializeField] LayerMask edgeColliderLayerMask;
     public LayerMask EdgeColliderLayerMask => edgeColliderLayerMask;
-    [SerializeField] LayerMask stairEdgeColliderLayerMask;
+    [ShowIf("enableBuilding"), SerializeField] LayerMask stairEdgeColliderLayerMask;
     public LayerMask StairEdgeColliderLayerMask => stairEdgeColliderLayerMask;
-    [SerializeField] LayerMask placeableObjectsColliderLayerMask;
+    [ShowIf("enableBuilding"), SerializeField] LayerMask placeableObjectsColliderLayerMask;
     public LayerMask PlaceableObjectsColliderLayerMask => placeableObjectsColliderLayerMask;
 
     [Space(15)]
 
     [SerializeField] bool debug;
     public bool Debug => debug;
-    [SerializeField] int debugFontSize = 100;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] int debugFontSize = 100;
     public int DebugFontSize => debugFontSize;
-    [SerializeField] bool enableMouse3DDebug;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] bool enableMouse3DDebug;
     public bool EnableMouse3DDebug => enableMouse3DDebug;
 }

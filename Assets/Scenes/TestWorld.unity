@@ -364,8 +364,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: enableBuilding
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: gridVerticalCount
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: enableMouse3DDebug
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: enableStrictPlacement

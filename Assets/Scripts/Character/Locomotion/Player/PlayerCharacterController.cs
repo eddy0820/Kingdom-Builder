@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
-using System;
+using NaughtyAttributes;
 
 public class PlayerCharacterController : MonoBehaviour, ICharacterController
 {

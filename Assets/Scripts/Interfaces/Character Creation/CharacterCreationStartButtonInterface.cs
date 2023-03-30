@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using NaughtyAttributes;
 
 public class CharacterCreationStartButtonInterface : ButtonInterface<CharacterCreationStartButtonInterface.StartButtonEntry>
 {

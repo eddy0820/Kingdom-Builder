@@ -10,7 +10,7 @@ public class BuildingCategoryScreen : MonoBehaviour
     {
         GameObject buildingTypeGridHolder = Instantiate(buildingTypeGridHolderPrefab, buildingTypeGridHolderPrefab.transform.localPosition, buildingTypeGridHolderPrefab.transform.rotation, transform);
         buildingTypeGridHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(25, 0);
-        buildingTypeGridHolder.GetComponent<BuildingTypesInterface>().Init(buildingTypeButtonPrefab, buildingTypeScreenPrefab, subScreensParent);
+        buildingTypeGridHolder.GetComponent<BuildingTypesInterface>().Init(placeableObjects, buildingTypeButtonPrefab, buildingTypeScreenPrefab, subScreensParent);
     }
 
     public void PropInit(List<LooseObjectSO> loosePlaceableObjects)

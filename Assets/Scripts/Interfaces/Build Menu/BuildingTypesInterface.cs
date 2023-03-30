@@ -11,7 +11,7 @@ public class BuildingTypesInterface : ButtonInterface<BuildingTypesInterface.Sel
     public Color DefaultButtonColor => defaultButtonColor;
     [SerializeField] Color selectedButtonColor;
 
-    public void Init(GameObject buildingTypeButtonPrefab, GameObject buildingTypeScreenPrefab, RectTransform subScreensParent)
+    public void Init(List<GridPlaceableObjectSO> placeableObjects, GameObject buildingTypeButtonPrefab, GameObject buildingTypeScreenPrefab, RectTransform subScreensParent)
     {
         foreach(BuildingTypesSO buildingTypeSO in PlayerSpawner.Instance.GridBuildingInfo.BuildingTypesDatabase.BuildingTypes)
         {
@@ -21,7 +21,9 @@ public class BuildingTypesInterface : ButtonInterface<BuildingTypesInterface.Sel
             button.GetComponentInChildren<TextMeshProUGUI>().text = buildingTypeSO.Name;
             screen.GetComponentInChildren<TextMeshProUGUI>().text = buildingTypeSO.Name;
 
-            buttons.Add(new SelectionButtonEntry(button, screen));
+            buttons.Add(new SelectionButtonEntry(button, screen, buildingTypeSO.BuildingType));
+
+            screen.GetComponent<BuildingTypeScreen>().Init(buildingTypeSO.BuildingType, placeableObjects);
         }
 
         base.OnAwake();
@@ -58,10 +60,14 @@ public class BuildingTypesInterface : ButtonInterface<BuildingTypesInterface.Sel
         [SerializeField] GameObject screen;
         public GameObject Screen => screen;
 
-        public SelectionButtonEntry(GameObject _button, GameObject _screen)
+        [SerializeField] BuildingTypes buildingType;
+        public BuildingTypes BuildingType => buildingType;
+
+        public SelectionButtonEntry(GameObject _button, GameObject _screen, BuildingTypes _buildingType)
         {
             button = _button;
             screen = _screen;
+            buildingType = _buildingType;
         }
     }
 }
