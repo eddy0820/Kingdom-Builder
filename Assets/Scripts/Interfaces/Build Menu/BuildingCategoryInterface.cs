@@ -19,9 +19,6 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
     [Header("Prefabs")]
     [SerializeField] GameObject buildingCategoryButtonPrefab;
     [SerializeField] GameObject buildingCategoryScreenPrefab;
-    [SerializeField] GameObject buildingTypeButtonPrefab;
-    [SerializeField] GameObject buildingTypeScreenPrefab;
-    [SerializeField] GameObject buildingTypeGridHolderPrefab;
 
     protected override void OnAwake()
     {
@@ -31,7 +28,7 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
         {
             GameObject button = Instantiate(buildingCategoryButtonPrefab, buildingCategoryButtonPrefab.transform.position, buildingCategoryButtonPrefab.transform.rotation, transform);
             GameObject screen = Instantiate(buildingCategoryScreenPrefab, buildingCategoryScreenParent.position, buildingCategoryScreenPrefab.transform.rotation, buildingCategoryScreenParent);
-            string newName = AddSpacesToString(Enum.GetName(typeof(BuildingCategoryTypes), i), true);
+            string newName = RandomUtilStatic.AddSpacesToString(Enum.GetName(typeof(BuildingCategoryTypes), i), true);
             button.GetComponentInChildren<TextMeshProUGUI>().text = newName;
             //screen.GetComponentInChildren<TextMeshProUGUI>().text = newName;
             buttons.Add(new SelectionButtonEntry(button, screen));
@@ -39,7 +36,7 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
             switch((BuildingCategoryTypes) i)
             {
                 case BuildingCategoryTypes.HouseBuilding:
-                    screen.GetComponent<BuildingCategoryScreen>().HouseBuildingInit(houseBuildingPlaceableObjects, buildingTypeButtonPrefab, buildingTypeScreenPrefab, buildingTypeGridHolderPrefab);
+                    screen.GetComponent<BuildingCategoryScreen>().HouseBuildingInit(houseBuildingPlaceableObjects);
                 break;
 
                 case BuildingCategoryTypes.Props:
@@ -107,26 +104,5 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
             button = _button;
             screen = _screen;
         }
-    }
-
-    private string AddSpacesToString(string text, bool preserveAcronyms)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-            return string.Empty;
-
-        StringBuilder newText = new StringBuilder(text.Length * 2);
-        newText.Append(text[0]);
-
-        for(int i = 1; i < text.Length; i++)
-        {
-            if(char.IsUpper(text[i]))
-                if((text[i - 1] != ' ' && !char.IsUpper(text[i - 1])) ||
-                    (preserveAcronyms && char.IsUpper(text[i - 1]) && 
-                    i < text.Length - 1 && !char.IsUpper(text[i + 1])))
-                    newText.Append(' ');
-            newText.Append(text[i]);
-        }
-        
-        return newText.ToString();
     }
 }

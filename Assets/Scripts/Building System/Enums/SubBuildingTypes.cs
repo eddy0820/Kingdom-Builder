@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum SubBuildingTypes
 {
+    None,
     Window,
     WindowBox,
     Support,
     Stair,
-    None,
 }

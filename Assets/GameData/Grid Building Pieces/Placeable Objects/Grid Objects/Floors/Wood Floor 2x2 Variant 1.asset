@@ -19,6 +19,6 @@ MonoBehaviour:
   buildingCategoryType: 1
   materialBuildingType: 0
   buildingType: 0
-  subBuildingType: 4
+  subBuildingType: 0
   width: 2
   height: 2

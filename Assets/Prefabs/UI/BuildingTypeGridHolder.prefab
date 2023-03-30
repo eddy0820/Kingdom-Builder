@@ -116,3 +116,5 @@ MonoBehaviour:
   buttons: []
   defaultButtonColor: {r: 0.17, g: 0.28050002, b: 0.68, a: 1}
   selectedButtonColor: {r: 0.13198264, g: 0.22099414, b: 0.53099996, a: 1}
+  buildingTypeButtonPrefab: {fileID: 4136739644747372593, guid: 332efa38a9607ea419e460586f209892, type: 3}
+  buildingTypeScreenPrefab: {fileID: 6904294768720500882, guid: bf0c5d21158e2954cb422a9ef096fde9, type: 3}

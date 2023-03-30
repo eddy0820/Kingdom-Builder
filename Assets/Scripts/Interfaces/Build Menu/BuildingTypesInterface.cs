@@ -11,7 +11,12 @@ public class BuildingTypesInterface : ButtonInterface<BuildingTypesInterface.Sel
     public Color DefaultButtonColor => defaultButtonColor;
     [SerializeField] Color selectedButtonColor;
 
-    public void Init(List<GridPlaceableObjectSO> placeableObjects, GameObject buildingTypeButtonPrefab, GameObject buildingTypeScreenPrefab, RectTransform subScreensParent)
+    [Header("Prefabs")]
+    [SerializeField] GameObject buildingTypeButtonPrefab;
+    [SerializeField] GameObject buildingTypeScreenPrefab;
+
+
+    public void Init(List<GridPlaceableObjectSO> placeableObjects, RectTransform subScreensParent)
     {
         foreach(BuildingTypesSO buildingTypeSO in PlayerSpawner.Instance.GridBuildingInfo.BuildingTypesDatabase.BuildingTypes)
         {
@@ -19,7 +24,7 @@ public class BuildingTypesInterface : ButtonInterface<BuildingTypesInterface.Sel
             GameObject screen = Instantiate(buildingTypeScreenPrefab, subScreensParent.position, buildingTypeScreenPrefab.transform.rotation, subScreensParent);
 
             button.GetComponentInChildren<TextMeshProUGUI>().text = buildingTypeSO.Name;
-            screen.GetComponentInChildren<TextMeshProUGUI>().text = buildingTypeSO.Name;
+            //screen.GetComponentInChildren<TextMeshProUGUI>().text = buildingTypeSO.Name;
 
             buttons.Add(new SelectionButtonEntry(button, screen, buildingTypeSO.BuildingType));
 

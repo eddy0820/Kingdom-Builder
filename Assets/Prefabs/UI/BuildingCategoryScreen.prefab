@@ -125,3 +125,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   subScreensParent: {fileID: 3860562375263639658}
+  buildingTypeGridHolderPrefab: {fileID: 210274697114813538, guid: 103b7eb1192d4d745bec971d80a025d9, type: 3}

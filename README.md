@@ -32,3 +32,6 @@ https://assetstore.unity.com/packages/tools/utilities/selection-history-184204
 
 Smart Inspector by neon-age
 https://github.com/neon-age/Smart-Inspector
+
+Unity UI Extensions by Unity-UI-Extensions 
+https://github.com/Unity-UI-Extensions/com.unity.uiextensions
