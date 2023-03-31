@@ -118,16 +118,20 @@ public class EdgePosition : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
+        if(Application.isPlaying)
+        {
+            Gizmos.color = Color.yellow;
 
-        Matrix4x4 prevMatrix = Gizmos.matrix;
-        Gizmos.matrix = transform.localToWorldMatrix; 
+            Matrix4x4 prevMatrix = Gizmos.matrix;
+            Gizmos.matrix = transform.localToWorldMatrix; 
 
-        Vector3 positionOffset = GetPositionOffset();
+            Vector3 positionOffset = GetPositionOffset();
 
-        Vector3 pos = transform.position + boxCollider.center - positionOffset;
-        pos = transform.InverseTransformPoint(pos);
-        Gizmos.DrawWireCube(pos, boxCollider.size);
-        Gizmos.matrix = prevMatrix;
+            Vector3 pos = transform.position + boxCollider.center - positionOffset;
+            pos = transform.InverseTransformPoint(pos);
+            Gizmos.DrawWireCube(pos, boxCollider.size);
+            Gizmos.matrix = prevMatrix;
+        }
+        
     }
 }

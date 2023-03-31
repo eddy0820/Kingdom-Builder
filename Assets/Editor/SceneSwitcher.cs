@@ -54,6 +54,11 @@ public class SceneSwitchRightButton
     static void OnToolbarGUI()
     {
         GUILayout.FlexibleSpace();
+        
+        if(GUILayout.Button(new GUIContent("I", "IconCreator"), ToolbarStyles.commandButtonStyle))
+        {
+            SceneHelper.StartScene("IconCreator");
+        }
 
         if(GUILayout.Button(new GUIContent("C", "CharacterCreation"), ToolbarStyles.commandButtonStyle))
         {
