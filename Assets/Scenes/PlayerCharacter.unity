@@ -1059,9 +1059,6 @@ MonoBehaviour:
   buildingCategoryScreenParent: {fileID: 1694428711}
   buildingCategoryButtonPrefab: {fileID: 6873968529562011450, guid: bae0a61adfa302045a94eb87837347a6, type: 3}
   buildingCategoryScreenPrefab: {fileID: 7622598263842517412, guid: a758ffd89e243bb40b722795485b1e0d, type: 3}
-  buildingTypeButtonPrefab: {fileID: 4136739644747372593, guid: 332efa38a9607ea419e460586f209892, type: 3}
-  buildingTypeScreenPrefab: {fileID: 6904294768720500882, guid: bf0c5d21158e2954cb422a9ef096fde9, type: 3}
-  buildingTypeGridHolderPrefab: {fileID: 210274697114813538, guid: 103b7eb1192d4d745bec971d80a025d9, type: 3}
 --- !u!1 &2124958995
 GameObject:
   m_ObjectHideFlags: 0
