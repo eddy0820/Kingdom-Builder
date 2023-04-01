@@ -17,6 +17,7 @@ MonoBehaviour:
   visual: {fileID: 8746400961657561187, guid: d08dbc08ecdb1704bae3db0362d11138, type: 3}
   objectType: 1
   buildingCategoryType: 1
+  UIIcon: {fileID: 21300000, guid: 60320f4936537fe4ca6b9d76c8b1614e, type: 3}
   materialBuildingType: 1
   buildingType: 2
   subBuildingType: 2

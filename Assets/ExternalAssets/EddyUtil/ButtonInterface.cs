@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using NaughtyAttributes;
 
 public abstract class ButtonInterface<T> : AbstractGameInterface where T : ButtonInterface<T>.ButtonEntry
 {   
@@ -11,8 +12,8 @@ public abstract class ButtonInterface<T> : AbstractGameInterface where T : Butto
     {
         foreach(T buttonEntry in buttons)
         {
-            AddEvent(buttonEntry.Button, EventTriggerType.PointerEnter, delegate { OnEnter(buttonEntry.Button); });
-            AddEvent(buttonEntry.Button, EventTriggerType.PointerExit, delegate { OnExit(buttonEntry.Button); });
+            AddEvent(buttonEntry.Button, EventTriggerType.PointerEnter, delegate { OnEnterButton(buttonEntry); });
+            AddEvent(buttonEntry.Button, EventTriggerType.PointerExit, delegate { OnExitButton(buttonEntry); });
             AddEvent(buttonEntry.Button, EventTriggerType.PointerClick, (data) => { OnClick((PointerEventData)data, buttonEntry); });
         }
     }
@@ -21,9 +22,20 @@ public abstract class ButtonInterface<T> : AbstractGameInterface where T : Butto
     
     protected override void UpdateInterface() {}
 
-    protected virtual void OnEnter(GameObject obj) {}
+    private void OnEnterButton(ButtonEntry buttonEntry)
+    {
+        buttonEntry.SetIsHovered(true);
+        OnEnter(buttonEntry);
+    }
 
-    protected virtual void OnExit(GameObject obj) {} 
+    private void OnExitButton(ButtonEntry buttonEntry)
+    {
+        buttonEntry.SetIsHovered(false);
+        OnExit(buttonEntry);
+    }
+    protected virtual void OnEnter(ButtonEntry buttonEntry) {}
+
+    protected virtual void OnExit(ButtonEntry buttonEntry) {} 
 
     protected virtual void OnClick(PointerEventData data, ButtonEntry buttonEntry)
     {
@@ -45,9 +57,23 @@ public abstract class ButtonInterface<T> : AbstractGameInterface where T : Butto
         public GameObject Button => button;
         [SerializeField] ButtonEntryEvent function = new ButtonEntryEvent();
         public ButtonEntryEvent Function => function;
+        [SerializeField, ReadOnly] bool isHovered;
+        public bool IsHovered => isHovered;
+        [SerializeField, ReadOnly] bool isSelected;
+        public bool IsSelected => isSelected;
+
+        public void SetIsHovered(bool b)
+        {
+            isHovered = b;
+        }
+
+        public virtual void SetIsSelected(bool b)
+        {
+            isSelected = b;
+        }
         
         [System.Serializable]
-        public class ButtonEntryEvent : UnityEvent{}
+        public class ButtonEntryEvent : UnityEvent {}
     }
 }
 

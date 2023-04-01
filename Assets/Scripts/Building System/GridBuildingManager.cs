@@ -11,10 +11,6 @@ public class GridBuildingManager : MonoBehaviour
 {
     public static GridBuildingManager Instance { get; private set; }
 
-    [ReadOnly, SerializeField] List<PlaceableObjectSO> placeableObjectSOList;
-
-    [Space(15)]
-
     [ReadOnly, SerializeField] int gridWidth = 10;
     [ReadOnly, SerializeField] int gridLength = 10;
     [ReadOnly, SerializeField] float cellSize = 10f;
@@ -74,9 +70,8 @@ public class GridBuildingManager : MonoBehaviour
         currentDirection = Direction.Down;
     }
 
-    public void Init(List<PlaceableObjectSO> _placeableObjectSOList, int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _stairEdgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
+    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _stairEdgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
     {
-        placeableObjectSOList = _placeableObjectSOList;
         gridWidth = _gridWidth;
         gridLength = _gridLength;
         cellSize = _cellSize;
@@ -103,8 +98,6 @@ public class GridBuildingManager : MonoBehaviour
         }
 
         selectedGrid = gridList[0];
-        
-        SelectPlaceableObject(placeableObjectSOList[0]);
 
         if(enableMouse3DDebug)
         {
@@ -121,16 +114,6 @@ public class GridBuildingManager : MonoBehaviour
         HandleGridSwitch();
 
         HandleLooseObjectRotation();
-
-        if(Input.GetKeyDown(KeyCode.Alpha1)) {SelectPlaceableObject(placeableObjectSOList[0]);}
-        if(Input.GetKeyDown(KeyCode.Alpha2)) {SelectPlaceableObject(placeableObjectSOList[1]);}
-        if(Input.GetKeyDown(KeyCode.Alpha3)) {SelectPlaceableObject(placeableObjectSOList[2]);}
-        if(Input.GetKeyDown(KeyCode.Alpha4)) {SelectPlaceableObject(placeableObjectSOList[3]);}
-        if(Input.GetKeyDown(KeyCode.Alpha5)) {SelectPlaceableObject(placeableObjectSOList[4]);}
-        if(Input.GetKeyDown(KeyCode.Alpha6)) {SelectPlaceableObject(placeableObjectSOList[5]);}
-        if(Input.GetKeyDown(KeyCode.Alpha7)) {SelectPlaceableObject(placeableObjectSOList[6]);}
-        if(Input.GetKeyDown(KeyCode.Alpha8)) {SelectPlaceableObject(placeableObjectSOList[7]);}
-        if(Input.GetKeyDown(KeyCode.Alpha9)) {SelectPlaceableObject(placeableObjectSOList[8]);}
     }
 
     public void Rotate(float value)
@@ -180,7 +163,7 @@ public class GridBuildingManager : MonoBehaviour
     {
         if(!PlayerController.Instance.UICanvas.BuildMenuEnabled && Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.Instance.GetMouseWorldPosition()) <= maxBuildDistance)
         {
-            if(AmILookingAtCollider())
+            if(AmILookingAtCollider() && currentPlaceableObjectSO != null)
             {
                 switch(currentPlaceableObjectSO.ObjectType)
                 {

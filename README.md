@@ -35,3 +35,6 @@ https://github.com/neon-age/Smart-Inspector
 
 Unity UI Extensions by Unity-UI-Extensions 
 https://github.com/Unity-UI-Extensions/com.unity.uiextensions
+
+Thumb Creator by AndreaDev3D
+https://github.com/AndreaDev3D/ThumbCreator

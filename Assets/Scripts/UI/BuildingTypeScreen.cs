@@ -32,7 +32,7 @@ public class BuildingTypeScreen : MonoBehaviour
 
         foreach(SubBuildingTypes subBuildingType in possibleSubBuildingTypesList)
         {
-            BuildingTypeRow buildingTypeRow = Instantiate(buildingTypeRowPrefab, contentParent.position, Quaternion.identity, contentParent).GetComponent<BuildingTypeRow>();
+            BuildingTypeRowInterface buildingTypeRow = Instantiate(buildingTypeRowPrefab, contentParent.position, Quaternion.identity, contentParent).GetComponent<BuildingTypeRowInterface>();
             buildingTypeRow.Init(subBuildingType, GetSubTypePlaceableObjects(subBuildingType));
         }
         

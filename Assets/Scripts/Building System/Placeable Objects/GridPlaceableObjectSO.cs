@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class GridPlaceableObjectSO : PlaceableObjectSO
 {
+    [Space(15)]
     [SerializeField] MaterialBuildingTypes materialBuildingType;
     public MaterialBuildingTypes MaterialBuildingType => materialBuildingType;
     [SerializeField] BuildingTypes buildingType;

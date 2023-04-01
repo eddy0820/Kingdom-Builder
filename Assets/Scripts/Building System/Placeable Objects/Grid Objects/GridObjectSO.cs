@@ -5,8 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Grid Object", menuName = "Building System/Placeable Objects/Grid Object")]
 public class GridObjectSO : GridPlaceableObjectSO
 {
-    public int width;
-    public int height;
+    [Space(15)]
+    [SerializeField] int width;
+    public int Width => width;
+    [SerializeField] int height;
+    public int Height => height;
 
     protected override void SetBuildingCategoryType()
     {

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineTarget
+  - IconsCreationCamera
   layers:
   - Default
   - TransparentFX

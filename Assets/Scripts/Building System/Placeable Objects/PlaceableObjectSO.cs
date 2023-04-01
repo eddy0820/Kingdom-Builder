@@ -11,10 +11,16 @@ public abstract class PlaceableObjectSO : ScriptableObject
     public Transform Prefab => prefab;
     [SerializeField] Transform visual;
     public Transform Visual => visual;
+
+    [Space(15)]
     [ReadOnly, SerializeField] protected PlaceableObjectTypes objectType;
     public PlaceableObjectTypes ObjectType => objectType;
-    [SerializeField] protected BuildingCategoryTypes buildingCategoryType;
+    [ReadOnly, SerializeField] protected BuildingCategoryTypes buildingCategoryType;
     public BuildingCategoryTypes BuildingCategoryType => buildingCategoryType;
+
+    [Space(15)]
+    [SerializeField] Sprite UIIcon;
+    public Sprite UIICon => UIIcon;
 
     private void Awake()
     {

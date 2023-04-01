@@ -2,48 +2,125 @@
     "name": "PlayerControls",
     "maps": [
         {
+            "name": "UI",
+            "id": "e2646380-1b81-4e6f-b300-80c16be85d54",
+            "actions": [
+                {
+                    "name": "Point",
+                    "type": "PassThrough",
+                    "id": "472b3452-dd33-4527-91b4-26f3b15ae7e8",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Click",
+                    "type": "PassThrough",
+                    "id": "8ccc06d1-824f-49c3-bc31-63df342e7533",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ScrollWheel",
+                    "type": "PassThrough",
+                    "id": "fcdac0f1-da6f-4342-98da-3de0786e9c03",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MiddleClick",
+                    "type": "PassThrough",
+                    "id": "cb069d0f-8fe2-4cc3-be02-5625e6c2b74b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightClick",
+                    "type": "PassThrough",
+                    "id": "54cc903d-e4c4-4bc9-95ba-646c4dd51041",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7fe56cdc-06e6-4491-97e6-734620d97318",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "Point",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b66a10a5-bad2-4bd8-a6c0-163a7d3b2919",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48db87c4-ece6-4d6e-bca6-a7947b949b03",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "ScrollWheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "58c56586-714b-4405-8615-90b0a534327a",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "MiddleClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b2bde36a-5c48-4e2c-8585-e3fae3bc25d9",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "GroundMovement",
             "id": "13f97ea6-da82-46eb-8516-1ab019db8717",
             "actions": [
-                {
-                    "name": "MouseX",
-                    "type": "PassThrough",
-                    "id": "ca06ca1b-f092-4ce8-a8a8-6894be6699ed",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "MouseY",
-                    "type": "PassThrough",
-                    "id": "cf0698c1-d9f9-406e-8e47-05a83c672d95",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": ""
-                },
                 {
                     "name": "HorizontalMovement",
                     "type": "PassThrough",
                     "id": "096c913d-7a22-4888-890c-94c8d2ca2f68",
                     "expectedControlType": "Vector3",
                     "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "MouseScroll",
-                    "type": "PassThrough",
-                    "id": "6274699b-8888-43cc-b65d-30f95033ba90",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "CameraSwitch",
-                    "type": "Button",
-                    "id": "4b1c6eee-6e74-4f5e-8ecf-752c6b06728d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Jump",
@@ -51,7 +128,8 @@
                     "id": "4a80ad8f-3859-4230-87d2-1fd6544e4228",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Crouch",
@@ -59,7 +137,8 @@
                     "id": "cc8a7675-c6fa-438d-9110-8df20801ddd2",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Walk",
@@ -67,7 +146,8 @@
                     "id": "d6b30bc4-39b4-4edd-88f4-74b9cc85cf5d",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Sprint",
@@ -75,32 +155,11 @@
                     "id": "dd9ff5b2-d21a-4092-944b-7a63cae316e2",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "95fc3139-ce9a-4992-8779-e9cd02bc9f47",
-                    "path": "<Mouse>/delta/x",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse + Keyboard",
-                    "action": "MouseX",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3d5de099-3cfd-424f-911c-3094510f72c6",
-                    "path": "<Mouse>/delta/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse + Keyboard",
-                    "action": "MouseY",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "WASD",
                     "id": "bb73270e-c869-4794-b6dc-c17a13064bdf",
@@ -158,28 +217,6 @@
                 },
                 {
                     "name": "",
-                    "id": "433d0dc9-7334-4ae2-8ef6-c3093556b62d",
-                    "path": "<Mouse>/scroll/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse + Keyboard",
-                    "action": "MouseScroll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "46cf4e9d-130c-4790-8e94-69dbed289113",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse + Keyboard",
-                    "action": "CameraSwitch",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3a232a77-d7b2-4346-8897-58dbec863f79",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -225,24 +262,314 @@
             ]
         },
         {
+            "name": "PlayerMechanics",
+            "id": "95b5f076-2a3c-4bb0-9462-00cc9a9c7aa7",
+            "actions": [
+                {
+                    "name": "MouseX",
+                    "type": "PassThrough",
+                    "id": "a991e6c0-e66c-4bb7-8401-19f2d5affbdc",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MouseY",
+                    "type": "PassThrough",
+                    "id": "ea774810-ed56-4c5d-967c-66a0c744a5c0",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CameraSwitch",
+                    "type": "Button",
+                    "id": "f88d6419-65e1-4b6a-852b-df7da316c7a4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleBuildMode",
+                    "type": "Button",
+                    "id": "47f5af04-6812-4882-acee-b0066f9b61c5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MouseScroll",
+                    "type": "PassThrough",
+                    "id": "89004766-79fa-4ecb-a8c9-7c53df1d003c",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey1",
+                    "type": "Button",
+                    "id": "a46ad9bf-4fad-40f6-95fc-940d2ffe447d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey2",
+                    "type": "Button",
+                    "id": "ed9c334f-56a9-45db-a7e1-787869cbf53d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey3",
+                    "type": "Button",
+                    "id": "fe2a4374-b634-4ccd-8a42-6aa68b874bbc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey4",
+                    "type": "Button",
+                    "id": "c562fe5b-94ee-4aa8-a5ff-bf6a34702b42",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey5",
+                    "type": "Button",
+                    "id": "d81de83a-8b0d-473b-bd0b-a9e6fbf2e248",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey6",
+                    "type": "Button",
+                    "id": "57a740c3-7f73-4d93-9fe1-4049cc639c03",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey7",
+                    "type": "Button",
+                    "id": "309ade35-f455-4719-a721-36135f1e6820",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey8",
+                    "type": "Button",
+                    "id": "47301c51-5506-47ff-9ec2-90759336e9fd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "NumberKey9",
+                    "type": "Button",
+                    "id": "1a0f74ef-4a7c-4385-a765-0528a97ab6eb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8348e412-617d-409e-8ad5-411756c31ea7",
+                    "path": "<Mouse>/delta/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "MouseX",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cc7f47d0-b80b-454f-a7e1-960c8231f99d",
+                    "path": "<Mouse>/delta/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "MouseY",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4cf66f00-c9b7-4475-8919-2856610b9710",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "CameraSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "848f29e1-931f-4519-8a2a-c39e064dc424",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "ToggleBuildMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9070bd9c-9848-474d-9a43-16fc21810867",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "MouseScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f530b62e-5977-4560-bb75-d0e1333fcf58",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6225071a-039c-41b0-9ebf-a3c8fcfeb913",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a3490aea-b0c8-4c15-8c16-de0fb8108b61",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "22a5dd4c-5691-45a3-9f34-580e14e18a0c",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af53986e-28c6-48b9-9024-b1ad87d3074a",
+                    "path": "<Keyboard>/5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1e86243d-5021-4998-a8ed-434a1ea001ab",
+                    "path": "<Keyboard>/6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey6",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3e0951f8-5a94-4c12-ba04-5106342fa7c3",
+                    "path": "<Keyboard>/7",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey7",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "02aa0148-e43f-4487-935e-04533b127dac",
+                    "path": "<Keyboard>/8",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey8",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "48221d12-bd19-499b-9ffb-75209042a87b",
+                    "path": "<Keyboard>/9",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "NumberKey9",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "GridBuilding",
             "id": "9a7b6c6e-a3df-44e2-acbc-b0359e730ade",
             "actions": [
-                {
-                    "name": "Build",
-                    "type": "Button",
-                    "id": "e3e365cf-f31f-45bb-ab8c-e611b3c9695a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
                 {
                     "name": "Demolish",
                     "type": "Button",
                     "id": "a53dfc1b-5666-4bcb-b6e3-ae22d472d0f0",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Build",
+                    "type": "Button",
+                    "id": "cc16ec99-d2e8-4c2b-8b66-b0f46336412d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Rotate",
@@ -250,29 +577,20 @@
                     "id": "26a930d9-d14f-459f-866c-363605b2cf32",
                     "expectedControlType": "Axis",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
-                    "name": "BuildMenu",
+                    "name": "ToggleBuildMenu",
                     "type": "Button",
                     "id": "528686b1-2033-4f69-ab76-8dca4ddaa921",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "a0baf16c-b7e5-4935-a978-df2d3a05aa54",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse + Keyboard",
-                    "action": "Build",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "3e964024-1f68-4d47-aabe-620c747f4a6c",
@@ -302,34 +620,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse + Keyboard",
-                    "action": "BuildMenu",
+                    "action": "ToggleBuildMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "PlayerMechanics",
-            "id": "95b5f076-2a3c-4bb0-9462-00cc9a9c7aa7",
-            "actions": [
-                {
-                    "name": "ToggleBuildMode",
-                    "type": "Button",
-                    "id": "47f5af04-6812-4882-acee-b0066f9b61c5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "848f29e1-931f-4519-8a2a-c39e064dc424",
-                    "path": "<Keyboard>/b",
+                    "id": "01346685-958d-4a6c-a2c3-bbd04c77ae33",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse + Keyboard",
-                    "action": "ToggleBuildMode",
+                    "action": "Build",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

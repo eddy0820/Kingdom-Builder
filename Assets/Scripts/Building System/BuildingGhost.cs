@@ -139,7 +139,7 @@ public class BuildingGhost : MonoBehaviour {
 
     public void RefreshVisual() 
     {
-        if(PlayerController.Instance.BuildModeEnabled)
+        if(PlayerController.Instance.BuildModeEnabled && GridBuildingManager.Instance.CurrentPlaceableObjectSO != null)
         {
             if(visual != null) 
             {
@@ -307,7 +307,7 @@ public class BuildingGhost : MonoBehaviour {
             Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
             Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
             
-            if(((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).width != ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).height)
+            if(((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width != ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Height)
             {
                 //These are hardcoded but i think they can be derived by diving 0.2 or the whatever the added scale is
                 // Up
@@ -368,7 +368,7 @@ public class BuildingGhost : MonoBehaviour {
             Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
             Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
             
-            if(((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).width != ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).height)
+            if(((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width != ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Height)
             {
                 //These are hardcoded but i think they can be derived by diving 0.2 or the whatever the added scale is
                 // Up

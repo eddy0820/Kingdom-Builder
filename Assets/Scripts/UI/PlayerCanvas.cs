@@ -17,9 +17,27 @@ public class PlayerCanvas : MonoBehaviour
     [ReadOnly, SerializeField] bool buildMenuEnabled = false;
     public bool BuildMenuEnabled => buildMenuEnabled;
 
+    BuildHotbarInterface buildHotbarInterface;
+    public BuildHotbarInterface BuildHotbarInterface => buildHotbarInterface;
+
+    private void Awake()
+    {
+        buildHotbarInterface = buildHotbar.GetComponent<BuildHotbarInterface>();
+    }
+
     public void ToggleBuildMenu()
     {
-        if(buildMenuEnabled)
+        Toggle(buildMenuEnabled);
+    }
+
+    public void ToggleBuildMenu(bool b)
+    {
+        Toggle(!b);
+    }
+
+    private void Toggle(bool b)
+    {
+        if(b)
         {
             buildMenu.SetActive(false);
             crosshair.SetActive(true);
@@ -35,21 +53,4 @@ public class PlayerCanvas : MonoBehaviour
         }
     }
 
-    public void ToggleBuildMenu(bool b)
-    {
-        if(!b)
-        {
-            buildMenu.SetActive(false);
-            crosshair.SetActive(true);
-            Cursor.lockState = CursorLockMode.Locked;
-            buildMenuEnabled = false;
-        }
-        else
-        {
-            buildMenu.SetActive(true);
-            crosshair.SetActive(false);
-            Cursor.lockState = CursorLockMode.None;
-            buildMenuEnabled = true;
-        }
-    }
 }
