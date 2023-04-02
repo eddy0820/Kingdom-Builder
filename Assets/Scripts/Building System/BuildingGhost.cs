@@ -16,6 +16,9 @@ public class BuildingGhost : MonoBehaviour {
 
     [HideInInspector] public bool doOverlapBox;
 
+    Vector3 lastBuildingGhostPos;
+    Quaternion lastBuildingGhostRot;
+
     private void Awake()
     {
         gridBuildingInfo = PlayerSpawner.Instance.GridBuildingInfo;
@@ -134,6 +137,9 @@ public class BuildingGhost : MonoBehaviour {
                     fakeVisual.transform.rotation = visual.transform.rotation;
                 break;
             }
+
+            lastBuildingGhostPos = visual.transform.position;
+            lastBuildingGhostRot = visual.transform.rotation;
         }
     }
 
@@ -152,16 +158,37 @@ public class BuildingGhost : MonoBehaviour {
 
             PlaceableObjectSO placeableObjectSO = GridBuildingManager.Instance.CurrentPlaceableObjectSO;
 
-            visual = Instantiate(placeableObjectSO.Visual, Vector3.zero, Quaternion.identity);
+            Vector3 spawnPos;
+            Quaternion spawnRot;
+
+            if(lastBuildingGhostPos == Vector3.zero)
+            {
+                spawnPos = Vector3.zero;
+            }
+            else
+            {
+                spawnPos = lastBuildingGhostPos;
+            }
+
+            if(lastBuildingGhostRot == Quaternion.identity)
+            {
+                spawnRot = Quaternion.identity;
+            }
+            else
+            {
+                spawnRot = lastBuildingGhostRot;
+            }
+
+            visual = Instantiate(placeableObjectSO.Visual, spawnPos, spawnRot);
             visual.parent = transform;
-            visual.localPosition = Vector3.zero;
-            visual.localEulerAngles = Vector3.zero;
+            visual.localPosition = spawnPos;
+            visual.localEulerAngles = spawnRot.eulerAngles;
             SetLayerAndMatRecursive(visual.gameObject, currentGhostMaterial, ignoreMaskName);
 
             fakeVisual = Instantiate(visual, visual.position, visual.rotation);
             fakeVisual.parent = transform;
-            fakeVisual.localPosition = Vector3.zero;
-            fakeVisual.localEulerAngles = Vector3.zero;
+            fakeVisual.localPosition = spawnPos;
+            fakeVisual.localEulerAngles = spawnRot.eulerAngles;
             DisableMeshRendererRecursive(fakeVisual.gameObject);
             SetLayerRecursive(fakeVisual.gameObject, "Ignore Collision");
         }

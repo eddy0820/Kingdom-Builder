@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 210274697114813550}
   - component: {fileID: 210274697114813545}
   m_Layer: 5
-  m_Name: BuildingTypeGridHolder
+  m_Name: BuildingTypeSubTypeButtonHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

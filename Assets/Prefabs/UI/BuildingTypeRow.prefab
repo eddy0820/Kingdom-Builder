@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6305087459184321499}
   - component: {fileID: 321563831879803421}
   m_Layer: 5
-  m_Name: Building Type Row
+  m_Name: BuildingTypeRow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
