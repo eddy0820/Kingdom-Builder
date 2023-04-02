@@ -38,3 +38,9 @@ https://github.com/Unity-UI-Extensions/com.unity.uiextensions
 
 Thumb Creator by AndreaDev3D
 https://github.com/AndreaDev3D/ThumbCreator
+
+Sprite Sheet Packer by SIDGIN
+https://assetstore.unity.com/packages/tools/sprite-management/sprite-sheet-packer-140285
+
+Universal Rename Tool by KonH
+https://assetstore.unity.com/packages/tools/utilities/universal-rename-tool-84549

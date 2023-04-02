@@ -55,6 +55,45 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
         PlayerController.Instance.UICanvas.BuildHotbarInterface.DeselectAllEntries();
     }
 
+    protected override void OnEnter(ButtonEntry buttonEntry)
+    {
+        base.OnEnter(buttonEntry);
+        BuildingTypeRowButtonEntry entry = (BuildingTypeRowButtonEntry) buttonEntry;
+
+        if(entry.GridPlaceableObjectSO.UIICons.Length > 0)
+        {   
+            entry.currentCoroutine = StartCoroutine(AnimateImage(entry.GridPlaceableObjectSO.UIICons, entry.Button.transform.GetChild(0).GetComponent<Image>()));
+        }
+    }
+
+    protected override void OnExit(ButtonEntry buttonEntry)
+    {
+        base.OnExit(buttonEntry);
+        BuildingTypeRowButtonEntry entry = (BuildingTypeRowButtonEntry) buttonEntry;
+
+        if(entry.GridPlaceableObjectSO.UIICons.Length > 0)
+        { 
+            StopCoroutine(entry.currentCoroutine);
+            entry.Button.transform.GetChild(0).GetComponent<Image>().sprite = entry.GridPlaceableObjectSO.MainIcon;
+        }
+    }
+
+    IEnumerator AnimateImage(Sprite[] icons, Image component)
+    {
+        yield return new WaitForSeconds(GridBuildingManager.Instance.UIIconAnimationDelay);
+
+        for(int i = 0; i < icons.Length; i++)
+        {
+            component.sprite = icons[i];
+            yield return new WaitForSeconds(GridBuildingManager.Instance.UIIconAnimationSpeed);
+
+            if(i == icons.Length - 1)
+            {
+                i = 0;
+            }
+        }
+    }
+
     private void OnNumberKeyPressedCallback(int key)
     {
         if(PlayerController.Instance.UICanvas.BuildMenuEnabled)
@@ -70,13 +109,28 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
         } 
     }
 
+    private void OnDisable()
+    {
+        foreach(BuildingTypeRowButtonEntry entry in buttons)
+        {
+            entry.SetIsHovered(false);
+
+            if(entry.GridPlaceableObjectSO.UIICons.Length > 0)
+            { 
+                if(entry.currentCoroutine != null) StopCoroutine(entry.currentCoroutine);
+                entry.Button.transform.GetChild(0).GetComponent<Image>().sprite = entry.GridPlaceableObjectSO.MainIcon;
+            }
+        }
+    }
+
     [System.Serializable]
     public class BuildingTypeRowButtonEntry : ButtonEntry
     {
         [SerializeField, ReadOnly] GridPlaceableObjectSO gridPlaceableObjectSO;
         public GridPlaceableObjectSO GridPlaceableObjectSO => gridPlaceableObjectSO;
 
-
+        [HideInInspector]
+        public Coroutine currentCoroutine;
 
         public BuildingTypeRowButtonEntry(GameObject _button, GridPlaceableObjectSO _gridPlaceableObjectSO)
         {

@@ -30,6 +30,12 @@ public class GridBuildingManager : MonoBehaviour
     [ReadOnly, SerializeField] LayerMask stairEdgeColliderLayerMask;
     [ReadOnly, SerializeField] LayerMask placeableObjectsColliderLayerMask;
 
+    [Header("UI")]
+    [ReadOnly, SerializeField] float uIIconAnimationDelay;
+    public float UIIconAnimationDelay => uIIconAnimationDelay;
+    [ReadOnly, SerializeField] float uIIconAnimationSpeed;
+    public float UIIconAnimationSpeed => uIIconAnimationSpeed;
+
     [Space(15)]
 
     [ReadOnly, SerializeField] bool debug;
@@ -70,7 +76,7 @@ public class GridBuildingManager : MonoBehaviour
         currentDirection = Direction.Down;
     }
 
-    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _stairEdgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
+    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _stairEdgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, float _uIIconAnimationDelay, float _uIIconAnimationSpeed, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
     {
         gridWidth = _gridWidth;
         gridLength = _gridLength;
@@ -81,6 +87,8 @@ public class GridBuildingManager : MonoBehaviour
         edgeColliderLayerMask = _edgeColliderLayerMask;
         stairEdgeColliderLayerMask = _stairEdgeColliderLayerMask;
         placeableObjectsColliderLayerMask = _placeableObjectsColliderLayerMask;
+        uIIconAnimationDelay = _uIIconAnimationDelay;
+        uIIconAnimationSpeed = _uIIconAnimationSpeed;
         debug = _debug;
         debugFontSize = _debugFontSize;
         enableMouse3DDebug = _enableMouse3DDebug;

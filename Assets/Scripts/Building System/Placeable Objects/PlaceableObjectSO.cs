@@ -19,13 +19,20 @@ public abstract class PlaceableObjectSO : ScriptableObject
     public BuildingCategoryTypes BuildingCategoryType => buildingCategoryType;
 
     [Space(15)]
-    [SerializeField] Sprite UIIcon;
-    public Sprite UIICon => UIIcon;
+    [SerializeField] Sprite[] UIIcons;
+    public Sprite[] UIICons => UIIcons;
+    public Sprite MainIcon => GetFirstIcon();
 
     private void Awake()
     {
         SetObjectType();
         SetBuildingCategoryType();
+    }
+
+    private Sprite GetFirstIcon()
+    {
+        if(UIIcons.Length > 0) return UIIcons[0];
+        return null;
     }
 
     protected abstract void SetObjectType();

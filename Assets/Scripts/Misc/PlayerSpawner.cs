@@ -71,6 +71,8 @@ public class PlayerSpawner : MonoBehaviour
                     gridBuildingInfo.EdgeColliderLayerMask,
                     gridBuildingInfo.StairEdgeColliderLayerMask,
                     gridBuildingInfo.PlaceableObjectsColliderLayerMask,
+                    gridBuildingInfo.UIIconAnimationDelay,
+                    gridBuildingInfo.UIIconAnimationSpeed,
                     gridBuildingInfo.Debug,
                     gridBuildingInfo.DebugFontSize,
                     gridBuildingInfo.EnableMouse3DDebug

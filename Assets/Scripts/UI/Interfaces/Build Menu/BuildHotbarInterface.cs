@@ -87,7 +87,7 @@ public class BuildHotbarInterface : ButtonInterface<BuildHotbarInterface.BuildHo
             
             if(placeableObjectSO != null)
             {
-                subButton.GetComponent<Image>().sprite = placeableObjectSO.UIICon;
+                subButton.GetComponent<Image>().sprite = placeableObjectSO.MainIcon;
                 subButton.SetActive(true);
 
                 if(IsSelected)

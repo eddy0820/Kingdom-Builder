@@ -20,9 +20,9 @@ public class PlaceableObjectEntry : MonoBehaviour
 
         nameText.text = placeableObjectSO.Name;
 
-        if(placeableObjectSO.UIICon != null)
+        if(placeableObjectSO.MainIcon != null)
         {
-            icon.sprite = placeableObjectSO.UIICon;
+            icon.sprite = placeableObjectSO.MainIcon;
         }
     }
 }

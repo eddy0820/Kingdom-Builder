@@ -54,6 +54,13 @@ public class GridBuildingInfo : MonoBehaviour
     [ShowIf("enableBuilding"), SerializeField] LayerMask placeableObjectsColliderLayerMask;
     public LayerMask PlaceableObjectsColliderLayerMask => placeableObjectsColliderLayerMask;
 
+    [Header("UI")]
+
+    [ShowIf("enableBuilding"), SerializeField] float uIIconAnimationDelay = 1;
+    public float UIIconAnimationDelay => uIIconAnimationDelay;
+    [ShowIf("enableBuilding"), SerializeField] float uIconAnimationSpeed = 0.04f;
+    public float UIIconAnimationSpeed => uIconAnimationSpeed;
+
     [Space(15)]
 
     [SerializeField] bool debug;

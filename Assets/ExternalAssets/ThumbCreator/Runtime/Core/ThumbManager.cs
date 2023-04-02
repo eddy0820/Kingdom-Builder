@@ -16,23 +16,27 @@ namespace ThumbCreator.Core
     [ExecuteInEditMode]
     public class ThumbManager : MonoBehaviour
     {
-        [Header("Target Settings")]
+        [Header("Target")]
+        public GameObject Target;
+        public Quaternion TargetRotationAmount;
+        [Header("Camera Settings")]
+
         [Range(0, 360)]
         public int RotationX;
         [Range(0, 360)]
         public int RotationY;
         [Range(0, 360)]
         public int RotationZ;
-        [Header("Camera Settings")]
+        
         public bool isCameraOrthographic;
         //public bool isCameraBackgroundTransparent;
         public Color CameraBackgroundColor;
         [Range(-20, 20)]
-        public int CameraX;
+        public float CameraX;
         [Range(-20, 20)]
-        public int CameraY;
-        [Range(0, -100)]
-        public int CameraZ = -8;
+        public float CameraY;
+        [Range(100, -100)]
+        public float CameraZ = -8;
         [Header("Export Settings")]
         public string Filename = "Image";
         public FileType ExportFile = FileType.Png;
@@ -76,12 +80,15 @@ namespace ThumbCreator.Core
             {
                 var frameCount = 360 / FrameResolution;
                 var count = 0;
-                for (int i = 0; i < 360; i += frameCount)
+                for (int i = ((int) TargetRotationAmount.y); i < (TargetRotationAmount.y + 360); i += frameCount)
                 {
-                    transform.localRotation = Quaternion.Euler(RotationX, i, RotationZ);
+                    //transform.localRotation = Quaternion.Euler(RotationX, i, RotationZ);
+                    Target.transform.localRotation = Quaternion.Euler(Target.transform.rotation.x, i, Target.transform.rotation.z);
                     Screenshot.GeneratePng(Filename, m_width, m_height, false, count);
                     count++;
                 }
+
+                Target.transform.localRotation = TargetRotationAmount;
             }
         }
 
