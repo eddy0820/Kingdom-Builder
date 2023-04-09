@@ -12,9 +12,9 @@ public class PlaceableObjectEntry : MonoBehaviour
 
     [Space(10)]
 
-    [SerializeField, ReadOnly] GridPlaceableObjectSO placeableObjectSO;
+    [SerializeField, ReadOnly] PlaceableGridObjectSO placeableObjectSO;
 
-    public void Init(GridPlaceableObjectSO _placeableObjectSO)
+    public void Init(PlaceableGridObjectSO _placeableObjectSO)
     {
         placeableObjectSO = _placeableObjectSO;
 

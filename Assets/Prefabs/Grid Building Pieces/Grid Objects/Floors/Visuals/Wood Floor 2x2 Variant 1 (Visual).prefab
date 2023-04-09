@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.5, y: 0.075, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5634479509574817099}
   - {fileID: 5629827673606705539}
@@ -42,6 +43,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5629827672070378757}
   - component: {fileID: 4603421539303183554}
+  - component: {fileID: 2636358434783752628}
   m_Layer: 0
   m_Name: Wood Floor 2x2 Variant 1 (Visual)
   m_TagString: Untagged
@@ -59,6 +61,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6886436584158927132}
   m_Father: {fileID: 0}
@@ -77,6 +80,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 0.15, z: 2.5}
   m_Center: {x: 1.25, y: 0.07432, z: 1.25}
+--- !u!114 &2636358434783752628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5629827672070378758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6feed9f52a8ac1f4cbbb27a7c25ad574, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5629827673606705540
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,6 +120,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2.5, y: -0.075, z: 0}
   m_LocalScale: {x: 0.10000002, y: 0.1, z: 0.10000002}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6886436584158927132}
   m_RootOrder: 1
@@ -128,6 +144,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

@@ -16,7 +16,7 @@ public class BuildingTypesInterface : ButtonInterface<BuildingTypesInterface.Sel
     [SerializeField] GameObject buildingTypeScreenPrefab;
 
 
-    public void Init(List<GridPlaceableObjectSO> placeableObjects, RectTransform subScreensParent)
+    public void Init(List<PlaceableGridObjectSO> placeableObjects, RectTransform subScreensParent)
     {
         foreach(BuildingTypesSO buildingTypeSO in PlayerSpawner.Instance.GridBuildingInfo.BuildingTypesDatabase.BuildingTypes)
         {

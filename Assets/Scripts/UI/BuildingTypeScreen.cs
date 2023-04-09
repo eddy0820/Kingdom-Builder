@@ -17,10 +17,10 @@ public class BuildingTypeScreen : MonoBehaviour
     [SerializeField, ReadOnly] BuildingTypes buildingType;
     public BuildingTypes BuildingType => buildingType;
 
-    [SerializeField, ReadOnly] List<GridPlaceableObjectSO> typePlaceableObjects;
+    [SerializeField, ReadOnly] List<PlaceableGridObjectSO> typePlaceableObjects;
     [SerializeField, ReadOnly] SerializableHashSet<SubBuildingTypes> possibleSubBuildingTypes;
 
-    public void Init(BuildingTypes _buildingType, List<GridPlaceableObjectSO> placeableObjects)
+    public void Init(BuildingTypes _buildingType, List<PlaceableGridObjectSO> placeableObjects)
     {
         buildingType = _buildingType;
 
@@ -38,11 +38,11 @@ public class BuildingTypeScreen : MonoBehaviour
         
     }
 
-    private List<GridPlaceableObjectSO> GetTypePlaceableObjects(List<GridPlaceableObjectSO> placeableObjects)
+    private List<PlaceableGridObjectSO> GetTypePlaceableObjects(List<PlaceableGridObjectSO> placeableObjects)
     {
-        List<GridPlaceableObjectSO> newPlaceableObjects = new List<GridPlaceableObjectSO>();
+        List<PlaceableGridObjectSO> newPlaceableObjects = new List<PlaceableGridObjectSO>();
 
-        foreach(GridPlaceableObjectSO gridPlaceableObject in placeableObjects)
+        foreach(PlaceableGridObjectSO gridPlaceableObject in placeableObjects)
         {
             if(gridPlaceableObject.BuildingType == buildingType)
             {
@@ -53,11 +53,11 @@ public class BuildingTypeScreen : MonoBehaviour
         return newPlaceableObjects;
     }
 
-    private List<GridPlaceableObjectSO> GetSubTypePlaceableObjects(SubBuildingTypes subBuildingType)
+    private List<PlaceableGridObjectSO> GetSubTypePlaceableObjects(SubBuildingTypes subBuildingType)
     {
-        List<GridPlaceableObjectSO> newSubTypePlaceableObjects = new List<GridPlaceableObjectSO>();
+        List<PlaceableGridObjectSO> newSubTypePlaceableObjects = new List<PlaceableGridObjectSO>();
 
-        foreach(GridPlaceableObjectSO gridPlaceableObject in typePlaceableObjects)
+        foreach(PlaceableGridObjectSO gridPlaceableObject in typePlaceableObjects)
         {
             if(gridPlaceableObject.SubBuildingType == subBuildingType)
             {
@@ -72,7 +72,7 @@ public class BuildingTypeScreen : MonoBehaviour
     {
         HashSet<SubBuildingTypes> subBuildingTypes = new HashSet<SubBuildingTypes>();
 
-        foreach(GridPlaceableObjectSO gridPlaceableObject in typePlaceableObjects)
+        foreach(PlaceableGridObjectSO gridPlaceableObject in typePlaceableObjects)
         {
             subBuildingTypes.Add(gridPlaceableObject.SubBuildingType);
         }

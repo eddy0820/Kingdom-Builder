@@ -40,6 +40,11 @@ public class SceneSwitchLeftButton
         {
             SceneHelper.StartScene("PlayerCharacter");
         }
+
+        if(GUILayout.Button(new GUIContent("G", "GridBuilding"), ToolbarStyles.commandButtonStyle))
+        {
+            SceneHelper.StartScene("GridBuilding");
+        }
     }
 }
 
@@ -62,7 +67,7 @@ public class SceneSwitchRightButton
 
         if(GUILayout.Button(new GUIContent("C", "CharacterCreation"), ToolbarStyles.commandButtonStyle))
         {
-            SceneHelper.StartScene("PlayerCharacter");
+            SceneHelper.StartScene("CharacterCreation");
         }
     }
 }

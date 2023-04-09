@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class GridPlaceableObjectSO : PlaceableObjectSO
+public abstract class PlaceableGridObjectSO : PlaceableObjectSO
 {
     [Space(15)]
     [SerializeField] MaterialBuildingTypes materialBuildingType;

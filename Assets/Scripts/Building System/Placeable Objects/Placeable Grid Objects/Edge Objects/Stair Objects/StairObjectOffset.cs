@@ -26,11 +26,11 @@ public class StairObjectOffset : EdgeObjectOffset
     [SerializeField] Transform defaultCenterPivot;
     [SerializeField] Transform flippedCenterPivot;
 
-    public override void ChangeOffset(bool offsetMode)
+    public override void ChangeOffset()
     {
-        base.ChangeOffset(offsetMode);
+        base.ChangeOffset();
 
-        if(!offsetMode)
+        if(!GridBuildingManager.Instance.EdgeObjectBuildingManager.CurrentEdgeFlipMode)
         {
             try
             {

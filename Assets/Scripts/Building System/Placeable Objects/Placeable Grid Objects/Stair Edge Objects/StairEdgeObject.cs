@@ -9,6 +9,10 @@ public class StairEdgeObject : PlaceableObject
     public StairObject ParentStairObject => parentStairObject;
     [ReadOnly, SerializeField] StairObject.StairEdge stairEdge;
 
+    protected override PlaceableObjectTypes GetObjectType()
+    {
+        return PlaceableObjectTypes.StairEdgeObject;
+    }
     public void SetParentStairObject(StairObject stairObject, StairObject.StairEdge _stairEdge)
     {
         parentStairObject = stairObject;

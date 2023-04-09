@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Loose Object", menuName = "Building System/Placeable Objects/Loose Object")]
-public class LooseObjectSO : PlaceableObjectSO
+public class PlaceableLooseObjectSO : PlaceableObjectSO
 {
     protected override void SetBuildingCategoryType()
     {

@@ -9,20 +9,34 @@ public class BuildingGhost : MonoBehaviour {
     [SerializeField] Material farAwayGhostMaterial;
     [SerializeField] string ignoreMaskName;
     [SerializeField] string ignoreCollisionMaskName;
-    Transform visual;
-    Transform fakeVisual;
-    Material currentGhostMaterial;
-    GridBuildingInfo gridBuildingInfo;
 
-    [HideInInspector] public bool doOverlapBox;
+    Transform visual;
+    public Transform Visual => visual;
+    Transform fakeVisual;
+    public Transform FakeVisual => fakeVisual;
+
+    Material currentGhostMaterial;
 
     Vector3 lastBuildingGhostPos;
     Quaternion lastBuildingGhostRot;
 
+    GridObjectBuildingGhost gridObjectBuildingGhost;
+    public GridObjectBuildingGhost GridObjectBuildingGhost => gridObjectBuildingGhost;
+    EdgeObjectBuildingGhost edgeObjectBuildingGhost;
+    public EdgeObjectBuildingGhost EdgeObjectBuildingGhost => edgeObjectBuildingGhost;
+    LooseObjectBuildingGhost looseObjectBuildingGhost;
+    public LooseObjectBuildingGhost LooseObjectBuildingGhost => looseObjectBuildingGhost;
+
+    AbstractPlaceableObjectBuildingGhost currentBuildingGhost;
+    public AbstractPlaceableObjectBuildingGhost CurrentBuildingGhost => currentBuildingGhost;
+
     private void Awake()
     {
-        gridBuildingInfo = PlayerSpawner.Instance.GridBuildingInfo;
+        gridObjectBuildingGhost = GetComponentInChildren<GridObjectBuildingGhost>();
+        edgeObjectBuildingGhost = GetComponentInChildren<EdgeObjectBuildingGhost>();
+        looseObjectBuildingGhost = GetComponentInChildren<LooseObjectBuildingGhost>();
     }
+
     private void Start() 
     {
         currentGhostMaterial = validGhostMaterial;
@@ -34,40 +48,49 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(!PlayerController.Instance.UICanvas.BuildMenuEnabled)
         {
-            if(GridBuildingManager.Instance.AmILookingAtCollider())
+            HandleRefreshVisual();
+            HandleGhostValidityState();
+        }
+    }
+
+    private void HandleRefreshVisual()
+    {
+        if(Mouse3D.Instance.AmILookingAtCollider())
+        {
+            if(visual == null)
             {
-                if(visual == null)
-                {
-                    RefreshVisual();
-                }
-                
+                RefreshVisual();
+            }
+            
+        }
+        else
+        {
+            if(visual != null)
+            {
+                Destroy(visual.gameObject);
+                visual = null;
+
+                Destroy(fakeVisual.gameObject);
+                fakeVisual = null;
+            }
+        }
+    }
+
+    private void HandleGhostValidityState()
+    {
+        if(visual != null)
+        {
+            if(!GridBuildingManager.Instance.IsWithinMaxBuildDistance())
+            {
+                SetGhostValidityState(GhostValidityState.FarAway);
+            }
+            else if(!GridBuildingManager.Instance.CurrentBuildingManager.CanPlace())
+            {
+                SetGhostValidityState(GhostValidityState.Invalid);
             }
             else
             {
-                if(visual != null)
-                {
-                    Destroy(visual.gameObject);
-                    visual = null;
-
-                    Destroy(fakeVisual.gameObject);
-                    fakeVisual = null;
-                }
-            }
-
-            if(visual != null)
-            {
-                if(Vector3.Distance(PlayerController.Instance.Character.transform.position, Mouse3D.Instance.GetMouseWorldPosition()) > gridBuildingInfo.MaxBuildDistance)
-                {
-                    SetGhostValidityState(GhostValidityState.FarAway);
-                }
-                else if(!GridBuildingManager.Instance.CanPlaceObject())
-                {
-                    SetGhostValidityState(GhostValidityState.Invalid);
-                }
-                else
-                {
-                    SetGhostValidityState(GhostValidityState.Valid);
-                }
+                SetGhostValidityState(GhostValidityState.Valid);
             }
         }
     }
@@ -76,37 +99,18 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(visual != null && !PlayerController.Instance.UICanvas.BuildMenuEnabled)
         {
-            Vector3 targetPosition = GridBuildingManager.Instance.GetMouseWorldSnappedPosition();
-
             switch(GridBuildingManager.Instance.CurrentPlaceableObjectSO.ObjectType)
             {
                 case PlaceableObjectTypes.GridObject:
                     
-                    visual.transform.position = Vector3.Lerp(visual.transform.position, GridBuildingManager.Instance.GetNewGridObjectPosition(), Time.deltaTime * 15f);
-                    visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, GridBuildingManager.Instance.GetGridObjectRotation(), Time.deltaTime * 15f);
+                    currentBuildingGhost.DoVisibleGhostMovement(visual);
+                    currentBuildingGhost.DoFakeGhostMovement(fakeVisual);
 
-                    fakeVisual.transform.position = Vector3.Lerp(fakeVisual.transform.position, targetPosition, Time.deltaTime * 15f);
-                    fakeVisual.transform.rotation = visual.transform.rotation;
                 break;
 
                 case PlaceableObjectTypes.EdgeObject:
-                    EdgePosition edgePosition = GridBuildingManager.Instance.GetMouseEdgePosition();
-                    if(edgePosition != null) 
-                    {
-                        visual.transform.position = Vector3.Lerp(visual.transform.position, edgePosition.transform.position, Time.deltaTime * 15f);
-                        visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, edgePosition.transform.rotation, Time.deltaTime * 25f);
-
-                        fakeVisual.transform.position = visual.transform.position;
-                        fakeVisual.transform.rotation = visual.transform.rotation;
-                    } 
-                    else
-                    {
-                        visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
-                        visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
-
-                        fakeVisual.transform.position = visual.transform.position;
-                        fakeVisual.transform.rotation = visual.transform.rotation;
-                    }
+                    currentBuildingGhost.DoVisibleGhostMovement(visual);
+                    currentBuildingGhost.DoFakeGhostMovement(fakeVisual);
                 break;
 
                 case PlaceableObjectTypes.StairEdgeObject:
@@ -116,25 +120,22 @@ public class BuildingGhost : MonoBehaviour {
                         visual.transform.position = Vector3.Lerp(visual.transform.position, stairEdgePosition.transform.GetChild(0).position, Time.deltaTime * 15f);
                         visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, stairEdgePosition.transform.GetChild(0).rotation, Time.deltaTime * 25f);
 
-                        fakeVisual.transform.position = visual.transform.position;
-                        fakeVisual.transform.rotation = visual.transform.rotation;
+                        //fakeVisual.transform.position = visual.transform.position;
+                        //fakeVisual.transform.rotation = visual.transform.rotation;
                     } 
                     else
                     {
                         visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
                         visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
 
-                        fakeVisual.transform.position = visual.transform.position;
-                        fakeVisual.transform.rotation = visual.transform.rotation;
+                        //fakeVisual.transform.position = visual.transform.position;
+                        //fakeVisual.transform.rotation = visual.transform.rotation;
                     }
                 break;
 
                 case PlaceableObjectTypes.LooseObject:
-                    visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
-                    visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.Euler(0, GridBuildingManager.Instance.LooseObjectEulerY, 0), Time.deltaTime * 25f);
-
-                    fakeVisual.transform.position = visual.transform.position;
-                    fakeVisual.transform.rotation = visual.transform.rotation;
+                    currentBuildingGhost.DoVisibleGhostMovement(visual);
+                    currentBuildingGhost.DoFakeGhostMovement(fakeVisual);
                 break;
             }
 
@@ -189,8 +190,12 @@ public class BuildingGhost : MonoBehaviour {
             fakeVisual.parent = transform;
             fakeVisual.localPosition = spawnPos;
             fakeVisual.localEulerAngles = spawnRot.eulerAngles;
-            DisableMeshRendererRecursive(fakeVisual.gameObject);
-            SetLayerRecursive(fakeVisual.gameObject, "Ignore Collision");
+            // add more debug stuff
+            //DisableMeshRendererRecursive(fakeVisual.gameObject);
+            SetLayerAndMatRecursive(fakeVisual.gameObject, farAwayGhostMaterial, ignoreMaskName);
+
+            if(currentBuildingGhost == gridObjectBuildingGhost || currentBuildingGhost == edgeObjectBuildingGhost ||
+             currentBuildingGhost == looseObjectBuildingGhost) currentBuildingGhost.RemoveColliderScriptFromVisibleGhost();
         }
         else
         {
@@ -222,17 +227,7 @@ public class BuildingGhost : MonoBehaviour {
         {
             SetLayerAndMatRecursive(child.gameObject, mat, layerName);
         }
-    }
-
-    private void SetLayerRecursive(GameObject targetGameObject, string layerName)
-    {
-        targetGameObject.layer = LayerMask.NameToLayer(layerName);
-
-        foreach(Transform child in targetGameObject.transform) 
-        {
-            SetLayerRecursive(child.gameObject, layerName);
-        }
-    }   
+    }  
 
     private void SetMatRecursive(GameObject targetGameObject, Material mat)
     {
@@ -285,171 +280,29 @@ public class BuildingGhost : MonoBehaviour {
 
         SetMatRecursive(visual.gameObject, currentGhostMaterial);
     }
-
-    public bool GetIfGhostisCollidingLooseObject()
+    
+    public void SwitchBuildingGhost()
     {
-        if(visual != null)
+        switch(GridBuildingManager.Instance.CurrentPlaceableObjectSO.ObjectType)
         {
-            LooseObjectVisual looseObjectVisual = visual.GetComponent<LooseObjectVisual>();
+            case PlaceableObjectTypes.GridObject:
+                currentBuildingGhost = gridObjectBuildingGhost;
+            break;
 
-            if(looseObjectVisual.Colliding)
-            {
-                return true;
-            }
+            case PlaceableObjectTypes.EdgeObject:
+                currentBuildingGhost = edgeObjectBuildingGhost;
+            break;
+
+            case PlaceableObjectTypes.StairEdgeObject:
+                
+            break;
+
+            case PlaceableObjectTypes.LooseObject:
+                currentBuildingGhost = looseObjectBuildingGhost;
+            break;
         }
 
-        return false;
-    }
-
-    public bool GetIfGhostisCollidingEdgeObject()
-    {
-        if(visual != null)
-        {
-            WallColliderVisual edgeObjectVisual = null;
-
-            if(GridBuildingManager.Instance.CurrentPlaceableObjectSO is EdgeObjectSO && ((EdgeObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width == EdgeObjectSO.EdgeWidth.Two)
-            {
-                edgeObjectVisual = visual.GetComponent<WallColliderVisual>();
-            }
-            else if(GridBuildingManager.Instance.CurrentPlaceableObjectSO is StairEdgeObjectSO)
-            {
-                edgeObjectVisual = visual.GetComponentInChildren<WallColliderVisual>();
-            }
-            
-            if(edgeObjectVisual != null && edgeObjectVisual.Colliding)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public bool GhostOverlapBoxEdgeObject()
-    {
-        if(visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is GridObjectSO)
-        {
-            BoxCollider boxCollider = fakeVisual.GetComponent<BoxCollider>();
-
-            Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
-            Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
-            
-            if(((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width != ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Height)
-            {
-                //These are hardcoded but i think they can be derived by diving 0.2 or the whatever the added scale is
-                // Up
-                if(rotationOffsetV2.x > 0 && rotationOffsetV2.y > 0)
-                {
-                    rotationOffsetV2.x = rotationOffsetV2.x + 0.5f;
-                    rotationOffsetV2.y = rotationOffsetV2.y + 0.25f;
-                }
-                // Right
-                else if(rotationOffsetV2.x > 0)
-                {
-                    rotationOffsetV2.x = rotationOffsetV2.x + 0.875f;
-                    rotationOffsetV2.y = rotationOffsetV2.y - 0.625f;
-                }
-                // Left
-                else if(rotationOffsetV2.y > 0)
-                {
-                    rotationOffsetV2.x = rotationOffsetV2.x + 0.625f;
-                    rotationOffsetV2.y = rotationOffsetV2.y - 0.125f;
-
-                }
-            }
-            else
-            {
-                if(rotationOffsetV2.x > 0)
-                {
-                    rotationOffsetV2.x = rotationOffsetV2.x + 0.4f;
-                }
-                if(rotationOffsetV2.y > 0)
-                {
-                    rotationOffsetV2.y = rotationOffsetV2.y + 0.4f;
-                }
-            }
-
-            Vector3 rotationOffsetV3 = new Vector3(rotationOffsetV2.x, 0, rotationOffsetV2.y);
-
-            Collider[] colliders = Physics.OverlapBox(boxCollider.center + fakeVisual.position - rotationOffsetV3, (boxCollider.size / 2) + new Vector3(0.2f, 0.2f, 0.2f), GridBuildingManager.Instance.GetGridObjectRotation(), Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
-            
-            foreach(Collider collider in colliders)
-            {
-                if(collider.GetComponentInParent<EdgeObject>() != null)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    void OnDrawGizmos()
-    {
-        if(PlayerSpawner.Instance.GridBuildingInfo.Debug && visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is GridObjectSO)
-        {
-            BoxCollider boxCollider = fakeVisual.GetComponent<BoxCollider>();
-            Gizmos.color = Color.yellow;
-
-            Vector2Int rotationOffset = ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).GetRotationOffset(GridBuildingManager.Instance.CurrentDirection);
-            Vector2 rotationOffsetV2 = new Vector2(rotationOffset.x, rotationOffset.y);
-            
-            if(((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Width != ((GridObjectSO) GridBuildingManager.Instance.CurrentPlaceableObjectSO).Height)
-            {
-                //These are hardcoded but i think they can be derived by diving 0.2 or the whatever the added scale is
-                // Up
-                if(rotationOffsetV2.x > 0 && rotationOffsetV2.y > 0)
-                {
-                    rotationOffsetV2.x = rotationOffsetV2.x + 0.5f;
-                    rotationOffsetV2.y = rotationOffsetV2.y + 0.25f;
-                }
-                // Right
-                else if(rotationOffsetV2.x > 0)
-                {
-                    rotationOffsetV2.x = rotationOffsetV2.x + 0.875f;
-                    rotationOffsetV2.y = rotationOffsetV2.y - 0.625f;
-                }
-                // Left
-                else if(rotationOffsetV2.y > 0)
-                {
-                    rotationOffsetV2.x = rotationOffsetV2.x + 0.625f;
-                    rotationOffsetV2.y = rotationOffsetV2.y - 0.125f;
-
-                }
-            }
-            else
-            {
-                if(rotationOffsetV2.x > 0)
-                {
-                    rotationOffsetV2.x = rotationOffsetV2.x + 0.4f;
-                }
-                if(rotationOffsetV2.y > 0)
-                {
-                    rotationOffsetV2.y = rotationOffsetV2.y + 0.4f;
-                }
-            }
-            
-            Vector3 rotationOffsetV3 = new Vector3(rotationOffsetV2.x, 0, rotationOffsetV2.y);
-
-            Matrix4x4 prevMatrix = Gizmos.matrix;
-            Gizmos.matrix = transform.localToWorldMatrix; 
-
-            Vector3 pos = boxCollider.center + fakeVisual.position - rotationOffsetV3;
-            pos = transform.InverseTransformPoint(pos);
-
-            Gizmos.DrawCube(pos, boxCollider.size + new Vector3(0.2f, 0.2f, 0.2f));
-
-            Gizmos.matrix = prevMatrix;
-        }
-    }
-
-    public void FlipEdgeObjectGhost(bool currentEdgeFlipMode)
-    {
-        if(visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO is EdgeObjectSO)
-        {
-            visual.GetComponentInChildren<EdgeObjectOffset>().ChangeOffset(currentEdgeFlipMode);
-        }
+        RefreshVisual();
     }
 
     public enum GhostValidityState

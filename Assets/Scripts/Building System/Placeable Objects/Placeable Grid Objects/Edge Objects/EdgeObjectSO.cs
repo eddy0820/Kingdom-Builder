@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Edge Object", menuName = "Building System/Placeable Objects/Edge Object")]
-public class EdgeObjectSO : GridPlaceableObjectSO
+public class EdgeObjectSO : PlaceableGridObjectSO
 {
     [Space(15)]
     [SerializeField] EdgeWidth width;

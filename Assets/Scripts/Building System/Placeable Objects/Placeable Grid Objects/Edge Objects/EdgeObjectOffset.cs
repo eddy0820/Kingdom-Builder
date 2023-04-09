@@ -8,9 +8,9 @@ public class EdgeObjectOffset : MonoBehaviour
     [SerializeField] Offset flippedOffset;
     // flip anchor
 
-    public virtual void ChangeOffset(bool offsetMode)
+    public virtual void ChangeOffset()
     {
-        if(!offsetMode)
+        if(!GridBuildingManager.Instance.EdgeObjectBuildingManager.CurrentEdgeFlipMode)
         {
             transform.localPosition = defaultOffset.Position;
             transform.localRotation = Quaternion.Euler(defaultOffset.Rotation.x, defaultOffset.Rotation.y, defaultOffset.Rotation.z);

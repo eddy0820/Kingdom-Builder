@@ -25,6 +25,11 @@ public class GridObject : PlaceableObject
         return placedObject;
     }
 
+    protected override PlaceableObjectTypes GetObjectType()
+    {
+        return PlaceableObjectTypes.GridObject;
+    }
+
     public List<Vector2Int> GetGridPositionList()
     {
         return gridObjectSO.GetGridPositionList(origin, direction);

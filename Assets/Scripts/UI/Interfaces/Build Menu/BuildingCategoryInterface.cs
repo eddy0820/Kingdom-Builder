@@ -22,7 +22,7 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
 
     protected override void OnAwake()
     {
-        CreatePlaceableObjectsList(out List<GridPlaceableObjectSO> houseBuildingPlaceableObjects, out List<LooseObjectSO> looseObjects);
+        CreatePlaceableObjectsList(out List<PlaceableGridObjectSO> houseBuildingPlaceableObjects, out List<PlaceableLooseObjectSO> looseObjects);
 
         foreach(int i in Enum.GetValues(typeof(BuildingCategoryTypes)))
         {
@@ -57,21 +57,21 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
         OnSelectButton(Buttons[0]);
     }
 
-    private void CreatePlaceableObjectsList(out List<GridPlaceableObjectSO> houseBuildingPlaceableObjects, out List<LooseObjectSO> looseObjects)
+    private void CreatePlaceableObjectsList(out List<PlaceableGridObjectSO> houseBuildingPlaceableObjects, out List<PlaceableLooseObjectSO> looseObjects)
     {
-        houseBuildingPlaceableObjects = new List<GridPlaceableObjectSO>();
-        looseObjects = new List<LooseObjectSO>();
+        houseBuildingPlaceableObjects = new List<PlaceableGridObjectSO>();
+        looseObjects = new List<PlaceableLooseObjectSO>();
 
         foreach(PlaceableObjectSO placeableObjectSO in PlayerSpawner.Instance.GridBuildingInfo.PlaceableObjectsDatabase.PlaceableObjects)
-        {
+        {;
             switch(placeableObjectSO.BuildingCategoryType)
             {
                 case BuildingCategoryTypes.HouseBuilding:
-                    houseBuildingPlaceableObjects.Add((GridPlaceableObjectSO) placeableObjectSO);
+                    houseBuildingPlaceableObjects.Add((PlaceableGridObjectSO) placeableObjectSO);
                 break;
 
                 case BuildingCategoryTypes.Props:
-                    looseObjects.Add((LooseObjectSO) placeableObjectSO);
+                    looseObjects.Add((PlaceableLooseObjectSO) placeableObjectSO);
                 break;
             }
         }

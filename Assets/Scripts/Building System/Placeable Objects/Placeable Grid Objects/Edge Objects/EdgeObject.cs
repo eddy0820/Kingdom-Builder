@@ -12,6 +12,11 @@ public class EdgeObject : PlaceableObject
     [ReadOnly, SerializeField] FloorGridObject.Edge gridEdge;
     [ReadOnly, SerializeField] FloorGridObject.Edge secondaryGridEdge;
 
+    protected override PlaceableObjectTypes GetObjectType()
+    {
+        return PlaceableObjectTypes.EdgeObject;
+    }
+
     public void SetParentGridObject(FloorGridObject gridObject, FloorGridObject.Edge edge)
     {
         parentGridObject = gridObject;

@@ -14,14 +14,14 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
 
     [Header("Debug")]
     [ReadOnly, SerializeField] SubBuildingTypes subBuildingType;
-    [ReadOnly, SerializeField] List<GridPlaceableObjectSO> placeableObjects;
+    [ReadOnly, SerializeField] List<PlaceableGridObjectSO> placeableObjects;
 
     protected override void OnAwake() 
     {
         InputManager.Instance.OnNumberKeyPressed.AddListener(OnNumberKeyPressedCallback);
     }
 
-    public void Init(SubBuildingTypes _subBuildingType, List<GridPlaceableObjectSO> _placeableObjects)
+    public void Init(SubBuildingTypes _subBuildingType, List<PlaceableGridObjectSO> _placeableObjects)
     {
         subBuildingType = _subBuildingType;
         placeableObjects = _placeableObjects;
@@ -35,7 +35,7 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
             titleText.text = RandomUtilStatic.AddSpacesToString(subBuildingType.ToString(), false);
         }
 
-        foreach(GridPlaceableObjectSO gridPlaceableObject in placeableObjects)
+        foreach(PlaceableGridObjectSO gridPlaceableObject in placeableObjects)
         {
             PlaceableObjectEntry placeableObjectEntry = Instantiate(placeableObjectEntryPrefab, objectButtonsParent.position, Quaternion.identity, objectButtonsParent).GetComponent<PlaceableObjectEntry>();
             placeableObjectEntry.Init(gridPlaceableObject);
@@ -50,7 +50,7 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
         BuildingTypeRowButtonEntry entry = (BuildingTypeRowButtonEntry) buttonEntry;
         base.OnSelectButton(buttonEntry);
 
-        GridBuildingManager.Instance.SelectPlaceableObject(entry.GridPlaceableObjectSO);
+        GridBuildingManager.Instance.SelectPlaceableObject(entry.PlaceableGridObjectSO);
         PlayerController.Instance.UICanvas.ToggleBuildMenu(false);
         PlayerController.Instance.UICanvas.BuildHotbarInterface.DeselectAllEntries();
     }
@@ -60,9 +60,9 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
         base.OnEnter(buttonEntry);
         BuildingTypeRowButtonEntry entry = (BuildingTypeRowButtonEntry) buttonEntry;
 
-        if(entry.GridPlaceableObjectSO.UIICons.Length > 0)
+        if(entry.PlaceableGridObjectSO.UIICons.Length > 0)
         {   
-            entry.currentCoroutine = StartCoroutine(AnimateImage(entry.GridPlaceableObjectSO.UIICons, entry.Button.transform.GetChild(0).GetComponent<Image>()));
+            entry.currentCoroutine = StartCoroutine(AnimateImage(entry.PlaceableGridObjectSO.UIICons, entry.Button.transform.GetChild(0).GetComponent<Image>()));
         }
     }
 
@@ -71,10 +71,10 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
         base.OnExit(buttonEntry);
         BuildingTypeRowButtonEntry entry = (BuildingTypeRowButtonEntry) buttonEntry;
 
-        if(entry.GridPlaceableObjectSO.UIICons.Length > 0)
+        if(entry.PlaceableGridObjectSO.UIICons.Length > 0)
         { 
             StopCoroutine(entry.currentCoroutine);
-            entry.Button.transform.GetChild(0).GetComponent<Image>().sprite = entry.GridPlaceableObjectSO.MainIcon;
+            entry.Button.transform.GetChild(0).GetComponent<Image>().sprite = entry.PlaceableGridObjectSO.MainIcon;
         }
     }
 
@@ -103,7 +103,7 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
                 if(entry.IsHovered)
                 {
                     BuildHotbarInterface.BuildHotBarEntry buildHotBarEntry = PlayerController.Instance.UICanvas.BuildHotbarInterface.GetEntryFromNumberKey(key);
-                    buildHotBarEntry.SetPlaceableObjectSO(entry.GridPlaceableObjectSO);
+                    buildHotBarEntry.SetPlaceableObjectSO(entry.PlaceableGridObjectSO);
                 }
             }
         } 
@@ -115,10 +115,10 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
         {
             entry.SetIsHovered(false);
 
-            if(entry.GridPlaceableObjectSO.UIICons.Length > 0)
+            if(entry.PlaceableGridObjectSO.UIICons.Length > 0)
             { 
                 if(entry.currentCoroutine != null) StopCoroutine(entry.currentCoroutine);
-                entry.Button.transform.GetChild(0).GetComponent<Image>().sprite = entry.GridPlaceableObjectSO.MainIcon;
+                entry.Button.transform.GetChild(0).GetComponent<Image>().sprite = entry.PlaceableGridObjectSO.MainIcon;
             }
         }
     }
@@ -126,16 +126,16 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
     [System.Serializable]
     public class BuildingTypeRowButtonEntry : ButtonEntry
     {
-        [SerializeField, ReadOnly] GridPlaceableObjectSO gridPlaceableObjectSO;
-        public GridPlaceableObjectSO GridPlaceableObjectSO => gridPlaceableObjectSO;
+        [SerializeField, ReadOnly] PlaceableGridObjectSO placeableGridObjectSO;
+        public PlaceableGridObjectSO PlaceableGridObjectSO => placeableGridObjectSO;
 
         [HideInInspector]
         public Coroutine currentCoroutine;
 
-        public BuildingTypeRowButtonEntry(GameObject _button, GridPlaceableObjectSO _gridPlaceableObjectSO)
+        public BuildingTypeRowButtonEntry(GameObject _button, PlaceableGridObjectSO _PlaceableGridObjectSO)
         {
             button = _button;
-            gridPlaceableObjectSO = _gridPlaceableObjectSO;
+            placeableGridObjectSO = _PlaceableGridObjectSO;
         }
     }
 }
