@@ -5,43 +5,20 @@ using NaughtyAttributes;
 
 public class EdgeObject : PlaceableObject
 {
-    FloorGridObject parentGridObject;
-    public FloorGridObject ParentGridObject => parentGridObject;
-    FloorGridObject secondaryParentGridObject;
-    public FloorGridObject SecondaryParentGridObject => secondaryParentGridObject;
-    [ReadOnly, SerializeField] FloorGridObject.Edge gridEdge;
-    [ReadOnly, SerializeField] FloorGridObject.Edge secondaryGridEdge;
+    [SerializeField] EdgeObjectParent primaryParent;
+    public EdgeObjectParent PrimaryParent => primaryParent;
+    [SerializeField] EdgeObjectParent secondaryParent;
+    public EdgeObjectParent SecondaryParent => secondaryParent;
 
     protected override PlaceableObjectTypes GetObjectType()
     {
         return PlaceableObjectTypes.EdgeObject;
     }
 
-    public void SetParentGridObject(FloorGridObject gridObject, FloorGridObject.Edge edge)
-    {
-        parentGridObject = gridObject;
-        gridEdge = edge;
-    }
-
-    public void SetSecondaryParentGridObject(FloorGridObject gridObject, FloorGridObject.Edge edge)
-    {
-        secondaryParentGridObject = gridObject;
-        secondaryGridEdge = edge;
-    }
-
-    public void NullifyParent()
-    {
-        parentGridObject = null;
-    }
-    
-    public void NullifySecondaryParent()
-    {
-        secondaryParentGridObject = null;
-    }
-
     public override void DestroySelf()
     {
-        parentGridObject.DestroyEdge(gridEdge);
+        if(primaryParent.PrimaryParentGridObject != null) primaryParent.PrimaryParentGridObject.DestroyEdge(primaryParent.PrimaryGridEdge);
+        if(secondaryParent.SecondaryParentGridObject != null) secondaryParent.SecondaryParentGridObject.DestroyEdge(secondaryParent.SecondaryGridEdge);
         
         Destroy(gameObject);
     }

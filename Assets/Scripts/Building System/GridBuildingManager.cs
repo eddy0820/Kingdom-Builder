@@ -252,24 +252,27 @@ public class GridBuildingManager : MonoBehaviour
             {
                 PlaceableObject hitObject = raycastHit.collider.GetComponentInParent<PlaceableObject>();
 
-                switch(hitObject.ObjectType)
+                if(hitObject != null)
                 {
-                    case PlaceableObjectTypes.GridObject:
-                        GridObjectBuildingManager.Demolish(hitObject);
-                    break;
+                    switch(hitObject.ObjectType)
+                    {
+                        case PlaceableObjectTypes.GridObject:
+                            GridObjectBuildingManager.Demolish(hitObject);
+                        break;
 
-                    case PlaceableObjectTypes.EdgeObject:
-                        EdgeObjectBuildingManager.Demolish(hitObject);
-                    break;
+                        case PlaceableObjectTypes.EdgeObject:
+                            EdgeObjectBuildingManager.Demolish(hitObject);
+                        break;
 
-                    case PlaceableObjectTypes.StairEdgeObject:
-                        StairEdgeObject stairEdgeObject = raycastHit.collider.GetComponentInParent<StairEdgeObject>();
-                        stairEdgeObject.DestroySelf();
-                    break;
+                        case PlaceableObjectTypes.StairEdgeObject:
+                            StairEdgeObject stairEdgeObject = raycastHit.collider.GetComponentInParent<StairEdgeObject>();
+                            stairEdgeObject.DestroySelf();
+                        break;
 
-                    case PlaceableObjectTypes.LooseObject:
-                        LooseObjectBuildingManager.Demolish(hitObject);
-                    break;
+                        case PlaceableObjectTypes.LooseObject:
+                            LooseObjectBuildingManager.Demolish(hitObject);
+                        break;
+                    }
                 }
             }
         } 

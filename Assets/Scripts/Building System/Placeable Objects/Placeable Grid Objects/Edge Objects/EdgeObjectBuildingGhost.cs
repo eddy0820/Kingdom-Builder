@@ -41,7 +41,12 @@ public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
 
     public bool IsFakeGhostCollidingWithEdgeObjectVisual()
     {
-        return BuildingGhost.FakeVisual.GetComponent<EdgeObjectColliderVisual>().IsCollidingWithEdgeObjectVisual;
+        if(BuildingGhost.FakeVisual.TryGetComponent<EdgeObjectColliderVisual>(out EdgeObjectColliderVisual edgeCollider))
+        {
+            return edgeCollider.IsCollidingWithEdgeObjectVisual;
+        }
+
+        return false;
     }
 
     public void FlipEdgeObjectGhost()

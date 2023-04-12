@@ -14,7 +14,7 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
     {
         EdgeObjectSO edgeObjectSO = (EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
 
-        if(CanPlaceObject(edgeObjectSO, out FloorGridObject floorGridObject, out FloorGridObject.Edge edge))
+        if(CanPlaceObject(edgeObjectSO, out FloorGridObject floorGridObject, out Edge edge))
         {
             floorGridObject.PlaceEdge(edge, edgeObjectSO);
         }
@@ -35,10 +35,10 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         GridBuildingManager.BuildingGhost.EdgeObjectBuildingGhost.FlipEdgeObjectGhost();
     }  
 
-    private bool CanPlaceObject(EdgeObjectSO edgeObjectSO, out FloorGridObject floorGridObject, out FloorGridObject.Edge edge)
+    private bool CanPlaceObject(EdgeObjectSO edgeObjectSO, out FloorGridObject floorGridObject, out Edge edge)
     {
         floorGridObject = null;
-        edge = FloorGridObject.Edge.UpWest;
+        edge = Edge.UpWest;
         
         if(Mouse3D.Instance.IsLookingAtEdgePosition(out EdgePosition edgePosition))
         {
@@ -75,7 +75,7 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
     public override bool CanPlace()
     {
         EdgeObjectSO edgeObjectSO = (EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
-        return CanPlaceObject(edgeObjectSO, out FloorGridObject floorGridObject, out FloorGridObject.Edge edge);
+        return CanPlaceObject(edgeObjectSO, out FloorGridObject floorGridObject, out Edge edge);
     }
 
     private bool IsEdgePositionPartOfFloorGridObject(EdgePosition edgePosition, out FloorGridObject floorGridObject)

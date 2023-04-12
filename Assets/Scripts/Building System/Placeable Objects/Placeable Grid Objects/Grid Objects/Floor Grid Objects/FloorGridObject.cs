@@ -1,21 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FloorGridObject : GridObject 
 {
-    public enum Edge 
-    {
-        UpWest,
-        UpEast,
-        DownWest,
-        DownEast,
-        LeftWest,
-        LeftEast,
-        RightWest,
-        RightEast
-    }
-
     [SerializeField] EdgePosition upWestFloorEdgePosition;
     [SerializeField] EdgePosition upEastFloorEdgePosition;
     [SerializeField] EdgePosition downWestFloorEdgePosition;
@@ -45,17 +34,15 @@ public class FloorGridObject : GridObject
 
         EdgeObject edgeObject = edgeObjectTransform.GetComponent<EdgeObject>();
 
-        edgeObject.SetParentGridObject(this, edge);
-        SetEdgeObject(edge, edgeObject); 
+        /*SetEdgeObject(edge, edgeObject); 
 
         if(edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two)
         {
             if(IsWestEdge(edge))
             {
-                edgeObject.SetParentGridObject(this, edge);
                 SetEdgeObject(GetComplimentaryEdge(edge), edgeObject); 
             }
-        }
+        }*/
     }
 
     public bool IsWestEdge(Edge edge)
@@ -156,33 +143,29 @@ public class FloorGridObject : GridObject
 
     public override void DestroySelf() 
     {
-        EdgeObject edgeObject = null;
-
-        if(upWestEdgeObject != null) edgeObject = upWestEdgeObject;
-        if(upEastEdgeObject != null) edgeObject = upEastEdgeObject;
-        if(leftWestEdgeObject != null) edgeObject = leftWestEdgeObject;
-        if(leftEastEdgeObject != null) edgeObject = leftEastEdgeObject;
-        if(downWestEdgeObject != null) edgeObject = downWestEdgeObject;
-        if(downEastEdgeObject != null) edgeObject = downEastEdgeObject;
-        if(rightWestEdgeObject != null) edgeObject = rightWestEdgeObject;
-        if(rightEastEdgeObject != null) edgeObject = rightEastEdgeObject;
-
-        if(edgeObject != null) 
+        foreach(Edge edge in Enum.GetValues(typeof(Edge)))
         {
-            if(edgeObject.ParentGridObject == this)
-            {
-                edgeObject.NullifyParent();
-            }
-            else if(edgeObject.SecondaryParentGridObject == this)
-            {
-                edgeObject.NullifySecondaryParent();
-            }
+            EdgeObject edgeObject = GetEdgeObject(edge);
 
-            if(edgeObject.ParentGridObject == null && edgeObject.SecondaryParentGridObject == null)
+            if(edgeObject != null)
             {
-                Destroy(edgeObject.gameObject);
+
+                if(edgeObject.PrimaryParent.PrimaryParentGridObject == this)
+                {
+                    edgeObject.PrimaryParent.NullifyParent();
+                }
+                else if(edgeObject.SecondaryParent.SecondaryParentGridObject == this)
+                {
+                    edgeObject.SecondaryParent.NullifyParent();
+                }
+
+                if(edgeObject.PrimaryParent.PrimaryParentGridObject == null && edgeObject.SecondaryParent.SecondaryParentGridObject == null)
+                {
+                    Destroy(edgeObject.gameObject);
+                }
             }
-        }    
+            
+        } 
 
         base.DestroySelf();
     }

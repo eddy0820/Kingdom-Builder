@@ -10,7 +10,7 @@ public abstract class PlaceableObject : MonoBehaviour
     protected PlaceableObjectTypes objectType;
     public PlaceableObjectTypes ObjectType => objectType;
 
-    private void Awake()
+    protected void Awake()
     {
         objectType = GetObjectType();
     }
