@@ -12,8 +12,8 @@ public class StairObject : EdgeObject
 
     [Space(15)]
 
-    [SerializeField] StairEdgePosition leftStairEdgePosition;
-    [SerializeField] StairEdgePosition rightStairEdgePosition;
+    StairEdgePosition currentLeftStairEdgePosition;
+    StairEdgePosition currentRightStairEdgePosition;
 
     StairEdgeObject leftStairEdgeObject;
     StairEdgeObject rightStairEdgeObject;
@@ -30,13 +30,19 @@ public class StairObject : EdgeObject
         SetStairEdgeObject(stairEdge,stairEdgeObject); 
     }
 
+    public void SetStairEdgePositions(GameObject left, GameObject right)
+    {
+        currentLeftStairEdgePosition = left.GetComponent<StairEdgePosition>();
+        currentRightStairEdgePosition = right.GetComponent<StairEdgePosition>();
+    }
+
     private StairEdgePosition GetStairEdgePosition(StairEdge stairEdge) 
     {
         switch(stairEdge) 
         {
             default:
-            case StairEdge.Left:       return leftStairEdgePosition;
-            case StairEdge.Right:      return rightStairEdgePosition; 
+            case StairEdge.Left:       return currentLeftStairEdgePosition;
+            case StairEdge.Right:      return currentRightStairEdgePosition; 
         }
     }
 

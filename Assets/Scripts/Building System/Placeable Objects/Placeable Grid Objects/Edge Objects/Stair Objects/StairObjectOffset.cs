@@ -26,13 +26,23 @@ public class StairObjectOffset : EdgeObjectOffset
     [SerializeField] Transform defaultCenterPivot;
     [SerializeField] Transform flippedCenterPivot;
 
+    StairObject parentStairObject;
+
+    private void OnEnable()
+    {
+        if(!IsThisABuildingGhost())
+        {
+            parentStairObject = GetComponentInParent<StairObject>();
+        }
+    }
+
     public override void ChangeOffset()
     {
         base.ChangeOffset();
 
         if(!GridBuildingManager.Instance.EdgeObjectBuildingManager.CurrentEdgeFlipMode)
         {
-            try
+            if(!IsThisABuildingGhost())
             {
                 defaultPlaceableCollider.SetActive(true);
                 flippedPlaceableCollider.SetActive(false);
@@ -42,16 +52,15 @@ public class StairObjectOffset : EdgeObjectOffset
                 flippedStairEdgeLeft.SetActive(false);
                 flippedStairEdgeRight.SetActive(false);
 
-                GetComponentInParent<StairObject>().SetCenterPivot(defaultCenterPivot);
+                parentStairObject.SetStairEdgePositions(defaultStairEdgeLeft, defaultStairEdgeRight);
+                parentStairObject.SetCenterPivot(defaultCenterPivot);
             }
-            catch{}
-            
 
-            visualCollider.center = defaultVisualColliderCenter;    
+            visualCollider.center = defaultVisualColliderCenter; 
         }
         else
         {
-            try
+            if(!IsThisABuildingGhost())
             {
                 defaultPlaceableCollider.SetActive(false);
                 flippedPlaceableCollider.SetActive(true);
@@ -61,12 +70,16 @@ public class StairObjectOffset : EdgeObjectOffset
                 flippedStairEdgeLeft.SetActive(true);
                 flippedStairEdgeRight.SetActive(true);
 
-                GetComponentInParent<StairObject>().SetCenterPivot(flippedCenterPivot);
+                parentStairObject.SetStairEdgePositions(flippedStairEdgeLeft, flippedStairEdgeRight);
+                parentStairObject.SetCenterPivot(flippedCenterPivot);
             }
-            catch{}
             
-
-            visualCollider.center = flippedVisualColliderCenter;   
+            visualCollider.center = flippedVisualColliderCenter; 
         }
+    }
+
+    private bool IsThisABuildingGhost()
+    {
+        return gameObject.layer == LayerMask.NameToLayer("Building Ghost");
     }
 }

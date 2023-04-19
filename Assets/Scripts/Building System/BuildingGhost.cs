@@ -193,9 +193,12 @@ public class BuildingGhost : MonoBehaviour {
             // add more debug stuff
             //DisableMeshRendererRecursive(fakeVisual.gameObject);
             SetLayerAndMatRecursive(fakeVisual.gameObject, farAwayGhostMaterial, ignoreMaskName);
-
+        
             if(currentBuildingGhost == gridObjectBuildingGhost || currentBuildingGhost == edgeObjectBuildingGhost ||
              currentBuildingGhost == looseObjectBuildingGhost) currentBuildingGhost.RemoveColliderScriptFromVisibleGhost();
+
+                // refactor this
+            if(currentBuildingGhost == edgeObjectBuildingGhost) fakeVisual.GetComponentInChildren<MeshRenderer>().gameObject.SetActive(false);
         }
         else
         {

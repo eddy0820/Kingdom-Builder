@@ -54,6 +54,7 @@ public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
         if(BuildingGhost.Visual != null)
         {
             BuildingGhost.Visual.GetComponentInChildren<EdgeObjectOffset>().ChangeOffset();
+            BuildingGhost.FakeVisual.GetComponentInChildren<EdgeObjectOffset>().ChangeOffset();
         }
     }
 }

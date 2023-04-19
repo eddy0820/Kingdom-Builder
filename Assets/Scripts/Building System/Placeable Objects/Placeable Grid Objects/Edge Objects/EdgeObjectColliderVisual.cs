@@ -52,5 +52,6 @@ public class EdgeObjectColliderVisual : MonoBehaviour
     private bool OtherIsEdgeObject(Collider other)
     {
         return other.GetComponentInParent<EdgeObjectColliderVisual>();
+        return other.GetComponent<EdgeObjectColliderVisual>();
     }
 }

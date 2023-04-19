@@ -33,16 +33,6 @@ public class FloorGridObject : GridObject
         edgeObjectOffset.ChangeOffset();
 
         EdgeObject edgeObject = edgeObjectTransform.GetComponent<EdgeObject>();
-
-        /*SetEdgeObject(edge, edgeObject); 
-
-        if(edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two)
-        {
-            if(IsWestEdge(edge))
-            {
-                SetEdgeObject(GetComplimentaryEdge(edge), edgeObject); 
-            }
-        }*/
     }
 
     public bool IsWestEdge(Edge edge)
