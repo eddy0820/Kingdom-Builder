@@ -50,6 +50,7 @@ public class FloorGridObject : GridObject
             case Edge.RightEast:    return false;
         }
     }
+
     private EdgePosition GetEdgePosition(Edge edge) 
     {
         switch(edge) 
@@ -129,7 +130,6 @@ public class FloorGridObject : GridObject
             case Edge.RightEast:    Destroy(rightEastEdgeObject.gameObject); break; 
         }
     }
-
 
     public override void DestroySelf() 
     {
