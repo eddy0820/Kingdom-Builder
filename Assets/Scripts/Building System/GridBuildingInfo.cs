@@ -49,8 +49,6 @@ public class GridBuildingInfo : MonoBehaviour
 
     [ShowIf("enableBuilding"), SerializeField] LayerMask edgeColliderLayerMask;
     public LayerMask EdgeColliderLayerMask => edgeColliderLayerMask;
-    [ShowIf("enableBuilding"), SerializeField] LayerMask stairEdgeColliderLayerMask;
-    public LayerMask StairEdgeColliderLayerMask => stairEdgeColliderLayerMask;
     [ShowIf("enableBuilding"), SerializeField] LayerMask placeableObjectsColliderLayerMask;
     public LayerMask PlaceableObjectsColliderLayerMask => placeableObjectsColliderLayerMask;
 

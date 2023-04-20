@@ -29,7 +29,6 @@ public class GridBuildingManager : MonoBehaviour
 
     [ReadOnly, SerializeField] LayerMask edgeColliderLayerMask;
     public LayerMask EdgeColliderLayerMask => edgeColliderLayerMask;
-    [ReadOnly, SerializeField] LayerMask stairEdgeColliderLayerMask;
     [ReadOnly, SerializeField] LayerMask placeableObjectsColliderLayerMask;
     public LayerMask PlaceableObjectsColliderLayerMask =>placeableObjectsColliderLayerMask;
 
@@ -85,7 +84,7 @@ public class GridBuildingManager : MonoBehaviour
         looseObjectBuildingManager = GetComponentInChildren<LooseObjectBuildingManager>();
     }
 
-    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _stairEdgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, float _uIIconAnimationDelay, float _uIIconAnimationSpeed, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
+    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, float _uIIconAnimationDelay, float _uIIconAnimationSpeed, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
     {
         gridWidth = _gridWidth;
         gridLength = _gridLength;
@@ -94,7 +93,6 @@ public class GridBuildingManager : MonoBehaviour
         gridVerticalCount = _gridVerticalCount;
         maxBuildDistance = _maxBuildDistance;
         edgeColliderLayerMask = _edgeColliderLayerMask;
-        stairEdgeColliderLayerMask = _stairEdgeColliderLayerMask;
         placeableObjectsColliderLayerMask = _placeableObjectsColliderLayerMask;
         uIIconAnimationDelay = _uIIconAnimationDelay;
         uIIconAnimationSpeed = _uIIconAnimationSpeed;
