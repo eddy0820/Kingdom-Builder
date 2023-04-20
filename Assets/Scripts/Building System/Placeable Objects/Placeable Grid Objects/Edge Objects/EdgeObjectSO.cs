@@ -9,6 +9,10 @@ public class EdgeObjectSO : PlaceableGridObjectSO
     [SerializeField] EdgeWidth width;
     public EdgeWidth Width => width;
 
+    [Space(10)]
+    [SerializeField] List<BuildingTypes> compatibleBuildingTypes;
+    public List<BuildingTypes> CompatibleBuildingTypes => compatibleBuildingTypes;
+
     protected override void SetBuildingCategoryType()
     {
         buildingCategoryType = BuildingCategoryTypes.HouseBuilding;

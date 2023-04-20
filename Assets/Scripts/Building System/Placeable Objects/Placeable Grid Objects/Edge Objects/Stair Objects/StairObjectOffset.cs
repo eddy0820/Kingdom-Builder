@@ -52,7 +52,7 @@ public class StairObjectOffset : EdgeObjectOffset
                 flippedStairEdgeLeft.SetActive(false);
                 flippedStairEdgeRight.SetActive(false);
 
-                parentStairObject.SetStairEdgePositions(defaultStairEdgeLeft, defaultStairEdgeRight);
+                parentStairObject.SetEdgePositions(defaultStairEdgeLeft, defaultStairEdgeRight);
                 parentStairObject.SetCenterPivot(defaultCenterPivot);
             }
 
@@ -70,7 +70,7 @@ public class StairObjectOffset : EdgeObjectOffset
                 flippedStairEdgeLeft.SetActive(true);
                 flippedStairEdgeRight.SetActive(true);
 
-                parentStairObject.SetStairEdgePositions(flippedStairEdgeLeft, flippedStairEdgeRight);
+                parentStairObject.SetEdgePositions(flippedStairEdgeLeft, flippedStairEdgeRight);
                 parentStairObject.SetCenterPivot(flippedCenterPivot);
             }
             

@@ -15,6 +15,11 @@ public class EdgeObject : PlaceableObject
         return PlaceableObjectTypes.EdgeObject;
     }
 
+    public void SetPrimaryParentParentObjectStair(StairObject stairObject, Edge edge)
+    {
+        primaryParent.SetEdgeObjectParentStair(stairObject, edge);
+    }
+
     public override void DestroySelf()
     {
         if(primaryParent.PrimaryParentGridObject != null) primaryParent.PrimaryParentGridObject.DestroyEdge(primaryParent.PrimaryGridEdge);

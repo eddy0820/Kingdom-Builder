@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c784b79ce2ca7848a2eb935fd439aa0, type: 3}
+  m_Script: {fileID: 11500000, guid: ecf06de692047344cb4206f67e473d8e, type: 3}
   m_Name: Wood Stair Railing Variant 1
   m_EditorClassIdentifier: 
   name: Wood Stair Railing Variant 1
   prefab: {fileID: 1812151057414715034, guid: 3bae9e75fb097f14fb6678688d58da99, type: 3}
   visual: {fileID: 902933118266952625, guid: 95755e2efc11a694b93338dcac0bcdaf, type: 3}
-  objectType: 2
+  objectType: 1
   buildingCategoryType: 1
   UIIcons:
   - {fileID: -5837784287132177569, guid: 2169ba99dda521e49b4d0978f07f8d9b, type: 3}
@@ -81,3 +81,5 @@ MonoBehaviour:
   materialBuildingType: 0
   buildingType: 3
   subBuildingType: 4
+  width: 0
+  compatibleBuildingTypes: 04000000

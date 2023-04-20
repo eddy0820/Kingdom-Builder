@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloorGridObject : GridObject 
+public class FloorGridObject : GridObject, IHasEdges
 {
     [SerializeField] EdgePosition upWestFloorEdgePosition;
     [SerializeField] EdgePosition upEastFloorEdgePosition;
@@ -32,7 +32,8 @@ public class FloorGridObject : GridObject
         EdgeObjectOffset edgeObjectOffset = edgeObjectTransform.GetComponentInChildren<EdgeObjectOffset>();
         edgeObjectOffset.ChangeOffset();
 
-        EdgeObject edgeObject = edgeObjectTransform.GetComponent<EdgeObject>();
+        EdgeObject edgeObject = edgeObjectTransform.GetComponentInChildren<EdgeObject>();
+        edgeObject.SetBuildingType(edgeObjectSO.BuildingType);
     }
 
     public bool IsWestEdge(Edge edge)
@@ -51,7 +52,7 @@ public class FloorGridObject : GridObject
         }
     }
 
-    private EdgePosition GetEdgePosition(Edge edge) 
+    public EdgePosition GetEdgePosition(Edge edge) 
     {
         switch(edge) 
         {
@@ -140,11 +141,11 @@ public class FloorGridObject : GridObject
             if(edgeObject != null)
             {
 
-                if(edgeObject.PrimaryParent.PrimaryParentGridObject == this)
+                if(edgeObject.PrimaryParent.PrimaryParentGridObject as FloorGridObject == this)
                 {
                     edgeObject.PrimaryParent.NullifyParent();
                 }
-                else if(edgeObject.SecondaryParent.SecondaryParentGridObject == this)
+                else if(edgeObject.SecondaryParent.SecondaryParentGridObject as FloorGridObject == this)
                 {
                     edgeObject.SecondaryParent.NullifyParent();
                 }

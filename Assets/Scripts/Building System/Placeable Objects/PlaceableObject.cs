@@ -10,9 +10,17 @@ public abstract class PlaceableObject : MonoBehaviour
     protected PlaceableObjectTypes objectType;
     public PlaceableObjectTypes ObjectType => objectType;
 
+    BuildingTypes buildingType;
+    public BuildingTypes BuildingType => buildingType;
+
     protected void Awake()
     {
         objectType = GetObjectType();
+    }
+
+    public void SetBuildingType(BuildingTypes _buildingType)
+    {
+        buildingType = _buildingType;
     }
 
     public abstract void DestroySelf();

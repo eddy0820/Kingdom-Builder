@@ -14,9 +14,9 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
     {
         EdgeObjectSO edgeObjectSO = (EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
 
-        if(CanPlaceObject(edgeObjectSO, out FloorGridObject floorGridObject, out Edge edge))
+        if(CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge))
         {
-            floorGridObject.PlaceEdge(edge, edgeObjectSO);
+            iHasEdgesObject.PlaceEdge(edge, edgeObjectSO);
         }
         else
         {
@@ -35,18 +35,20 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         GridBuildingManager.BuildingGhost.EdgeObjectBuildingGhost.FlipEdgeObjectGhost();
     }  
 
-    private bool CanPlaceObject(EdgeObjectSO edgeObjectSO, out FloorGridObject floorGridObject, out Edge edge)
+    private bool CanPlaceObject(EdgeObjectSO edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge)
     {
-        floorGridObject = null;
+        iHasEdgesObject = null;
         edge = Edge.UpWest;
         
         if(Mouse3D.Instance.IsLookingAtEdgePosition(out EdgePosition edgePosition))
         {
-            if(IsEdgePositionPartOfFloorGridObject(edgePosition, out floorGridObject))
+            if(IsEdgePositionPartOfFloorGridObject(edgePosition, out FloorGridObject floorGridObject))
             {
-                if(floorGridObject.GetEdgeObject(edgePosition.edge) == null)
+                iHasEdgesObject = floorGridObject;
+
+                if(floorGridObject.GetEdgeObject(edgePosition.edge) == null && IsCompatibleWithThisObject(edgeObjectSO, floorGridObject.BuildingType))
                 {   
-                    if(IsEdgeTaken(floorGridObject, edgePosition))
+                    if(IsEdgeTaken(floorGridObject, edgePosition)) //  Might not need this check, I think it's a dumbo mistake
                     {
                         return false;
                     }
@@ -67,6 +69,16 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
                     return true;
                 }
             }
+            else if(IsEdgePositionPartOfStairObject(edgePosition, out StairObject stairObject))
+            {
+                iHasEdgesObject = stairObject;
+
+                if(stairObject.GetEdgeObject(edgePosition.edge) == null && IsCompatibleWithThisObject(edgeObjectSO, stairObject.BuildingType))
+                {
+                    edge = edgePosition.edge;
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -75,12 +87,30 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
     public override bool CanPlace()
     {
         EdgeObjectSO edgeObjectSO = (EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
-        return CanPlaceObject(edgeObjectSO, out FloorGridObject floorGridObject, out Edge edge);
+        return CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge);
+    }
+
+    private bool IsCompatibleWithThisObject(EdgeObjectSO edgeObjectSO, BuildingTypes buildingTypeToCheck)
+    {
+        foreach(BuildingTypes buildingType in edgeObjectSO.CompatibleBuildingTypes)
+        {
+            if(buildingType == buildingTypeToCheck)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private bool IsEdgePositionPartOfFloorGridObject(EdgePosition edgePosition, out FloorGridObject floorGridObject)
     {
         return edgePosition.transform.parent.TryGetComponent<FloorGridObject>(out floorGridObject);
+    }
+
+    private bool IsEdgePositionPartOfStairObject(EdgePosition edgePosition, out StairObject stairObject)
+    {
+        return edgePosition.transform.parent.TryGetComponent<StairObject>(out stairObject);
     }
 
     private bool IsEdgeWidthTwo(EdgeObjectSO edgeObjectSO)

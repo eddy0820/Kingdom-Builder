@@ -16,7 +16,7 @@ public class EdgePositionCollider : MonoBehaviour
     {
         if(!IsThisABuildingGhost() && other.TryGetComponent(out EdgeObjectParent edgeObjectParent))
         {
-            edgeObjectParent.SetEdgeObjectParent(parentFloorGridObject, edgePosition.edge);
+            edgeObjectParent.SetEdgeObjectParentFloor(parentFloorGridObject, edgePosition.edge);
         }
     }
 

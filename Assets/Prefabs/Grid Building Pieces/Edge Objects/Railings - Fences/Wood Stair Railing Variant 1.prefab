@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &671260099954674123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2717202005827246130}
+  - component: {fileID: 6676420912400807068}
+  m_Layer: 0
+  m_Name: Primary Parent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2717202005827246130
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671260099954674123}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1812151057414715034}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6676420912400807068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671260099954674123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60b1b8433f7cdfd48bf3ebda54d97cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPrimary: 1
+  primaryGridEdge: 0
+  secondaryGridEdge: 0
 --- !u!1 &1812151057414715032
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,7 +56,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1812151057414715034}
-  - component: {fileID: 1812151057414715035}
+  - component: {fileID: 8364490915339036936}
   m_Layer: 0
   m_Name: Wood Stair Railing Variant 1
   m_TagString: Untagged
@@ -27,12 +74,14 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1812151057365384582}
+  - {fileID: 2717202005827246130}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1812151057414715035
+--- !u!114 &8364490915339036936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,11 +90,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1812151057414715032}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad629c3aecd1cea4980675beae5eb3e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 6927292dfb46d1e4cb42b7a995c45f7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   centerPivot: {fileID: 0}
-  stairEdge: 0
+  primaryParent: {fileID: 6676420912400807068}
+  secondaryParent: {fileID: 0}
+  compatibleBuildingTypes: 04000000
 --- !u!1001 &1558756924627908151
 PrefabInstance:
   m_ObjectHideFlags: 0

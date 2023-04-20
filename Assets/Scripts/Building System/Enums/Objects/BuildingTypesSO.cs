@@ -9,6 +9,6 @@ public class BuildingTypesSO : ScriptableObject
     public string Name => name;
     [SerializeField] BuildingTypes buildingType;
     public BuildingTypes BuildingType => buildingType;
-    [SerializeField] List<SubBuildingTypes> possibleSubTypes;
+    [SerializeField] List<SubBuildingTypes> possibleSubTypes; // YOU DON'T NEED THIS, REFACTOR PLEASE
     public List<SubBuildingTypes> PossibleSubTypes => possibleSubTypes;
 }

@@ -164,81 +164,8 @@ public class GridBuildingManager : MonoBehaviour
         {
             if(Mouse3D.Instance.AmILookingAtCollider() && IsWithinMaxBuildDistance() && currentPlaceableObjectSO != null)
             {
-                switch(currentPlaceableObjectSO.ObjectType)
-                {
-                    case PlaceableObjectTypes.StairEdgeObject:
-                        PlaceStairEdgeObject();
-                    break;
-                }
-
-                if(currentBuildingManager != null) currentBuildingManager.PlaceObject();
-                
+                currentBuildingManager.PlaceObject();
             } 
-        }
-    }
-
-    /*public bool CanPlaceObject()
-    {
-
-            case PlaceableObjectTypes.StairEdgeObject:
-
-                StairEdgeObjectSO stairEdgeObjectSO = (StairEdgeObjectSO) currentPlaceableObjectSO;
-
-                if(Physics.Raycast(ray, out RaycastHit raycastHit2, 999f, stairEdgeColliderLayerMask)) 
-                {
-                    if(raycastHit2.collider.TryGetComponent(out StairEdgePosition stairEdgePosition)) 
-                    {
-                        if(raycastHit2.collider.transform.parent.TryGetComponent(out StairObject stairObject)) 
-                        {
-                            if(stairEdgeObjectSO != null) 
-                            {
-                                StairEdgeObject currentEdgeObject = stairObject.GetStairEdgeObject(stairEdgePosition.stairEdge);
-
-                                if(currentEdgeObject == null)
-                                {
-                                    if(!buildingGhost.GetIfGhostisCollidingEdgeObject())
-                                    {
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return false;
-        
-    }*/
-
-    private void PlaceStairEdgeObject()
-    {
-        StairEdgeObjectSO stairEdgeObjectSO = (StairEdgeObjectSO) currentPlaceableObjectSO;
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, stairEdgeColliderLayerMask)) 
-        {
-            if(raycastHit.collider.TryGetComponent(out StairEdgePosition stairEdgePosition)) 
-            {
-                if(raycastHit.collider.transform.parent.TryGetComponent(out StairObject stairObject)) 
-                {
-                    if(stairEdgeObjectSO != null) 
-                    {
-                        //if(!buildingGhost.GetIfGhostisCollidingEdgeObject())
-                        //{   
-                            stairObject.PlaceStairEdge(stairEdgePosition.stairEdge, stairEdgeObjectSO);
-                        //}
-                        //else
-                        //{
-                            //Debug.Log("Can't Place Stair Edge Object");
-                        //}
-                    }
-                    else
-                    {
-                        Debug.Log("Can't Place Stair Edge Object");
-                    }
-                }
-            }
         }
     }
 
@@ -253,26 +180,8 @@ public class GridBuildingManager : MonoBehaviour
                 PlaceableObject hitObject = raycastHit.collider.GetComponentInParent<PlaceableObject>();
 
                 if(hitObject != null)
-                {
-                    switch(hitObject.ObjectType)
-                    {
-                        case PlaceableObjectTypes.GridObject:
-                            GridObjectBuildingManager.Demolish(hitObject);
-                        break;
-
-                        case PlaceableObjectTypes.EdgeObject:
-                            EdgeObjectBuildingManager.Demolish(hitObject);
-                        break;
-
-                        case PlaceableObjectTypes.StairEdgeObject:
-                            StairEdgeObject stairEdgeObject = raycastHit.collider.GetComponentInParent<StairEdgeObject>();
-                            stairEdgeObject.DestroySelf();
-                        break;
-
-                        case PlaceableObjectTypes.LooseObject:
-                            LooseObjectBuildingManager.Demolish(hitObject);
-                        break;
-                    }
+                { 
+                    currentBuildingManager.Demolish(hitObject);
                 }
             }
         } 
@@ -301,21 +210,5 @@ public class GridBuildingManager : MonoBehaviour
 
             buildingGhost.SwitchBuildingGhost();
         }
-        
-    }
-
-    public StairEdgePosition GetMouseStairEdgePosition() 
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f, stairEdgeColliderLayerMask)) 
-        {
-            if(raycastHit.collider.TryGetComponent(out StairEdgePosition stairEdgePosition)) 
-            {
-                return stairEdgePosition;
-            }
-        }
-
-        return null;
     }
 }

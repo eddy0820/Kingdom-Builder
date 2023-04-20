@@ -51,6 +51,7 @@ MonoBehaviour:
   centerPivot: {fileID: 833967438692042977}
   primaryParent: {fileID: 1548191699098845797}
   secondaryParent: {fileID: 4533092863091985545}
+  compatibleBuildingTypes: 00000000
 --- !u!1 &2901091005465382873
 GameObject:
   m_ObjectHideFlags: 0

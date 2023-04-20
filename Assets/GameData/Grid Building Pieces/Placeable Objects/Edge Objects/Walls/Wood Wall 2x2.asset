@@ -82,3 +82,4 @@ MonoBehaviour:
   buildingType: 2
   subBuildingType: 0
   width: 1
+  compatibleBuildingTypes: 00000000

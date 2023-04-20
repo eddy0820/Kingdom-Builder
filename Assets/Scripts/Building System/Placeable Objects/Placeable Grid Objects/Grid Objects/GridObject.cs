@@ -21,6 +21,7 @@ public class GridObject : PlaceableObject
         placedObject.gridObjectSO = _gridObjectSO;
         placedObject.origin = _origin;
         placedObject.direction = _direction;
+        placedObject.SetBuildingType(_gridObjectSO.BuildingType);
 
         return placedObject;
     }

@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edge: 0
+  pivotTransform: {fileID: 529391034906398611}
 --- !u!1 &1163492334047924303
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,6 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edge: 5
+  pivotTransform: {fileID: 5103515404648796876}
 --- !u!1 &1433698188223208496
 GameObject:
   m_ObjectHideFlags: 0
@@ -270,6 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edge: 3
+  pivotTransform: {fileID: 8294775127608175764}
 --- !u!1 &1741847378477714505
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edge: 2
+  pivotTransform: {fileID: 6063389496557519059}
 --- !u!1 &4948850861398155316
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,6 +439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edge: 1
+  pivotTransform: {fileID: 2792406560328835629}
 --- !u!1 &5142186267957029169
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,6 +500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edge: 6
+  pivotTransform: {fileID: 1446917048186948172}
 --- !u!1 &5602192944234911999
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,6 +561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edge: 7
+  pivotTransform: {fileID: 1877510790423916462}
 --- !u!1 &5785724299158041940
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,6 +766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edge: 4
+  pivotTransform: {fileID: 6961193654781349382}
 --- !u!1001 &452871276969587234
 PrefabInstance:
   m_ObjectHideFlags: 0

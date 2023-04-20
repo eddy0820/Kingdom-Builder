@@ -2,77 +2,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StairObject : EdgeObject
+public class StairObject : EdgeObject, IHasEdges
 {
-    public enum StairEdge 
+    EdgePosition currentLeftStairEdgePosition;
+    EdgePosition currentRightStairEdgePosition;
+
+    EdgeObject leftStairEdgeObject;
+    EdgeObject rightStairEdgeObject;
+
+    public void PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO)
     {
-        Left,
-        Right
+        EdgePosition edgePosition = GetEdgePosition(edge);
+
+        Transform edgeObjectTransform = Instantiate(edgeObjectSO.Prefab, edgePosition.transform.GetChild(0).position, edgePosition.transform.GetChild(0).rotation);
+
+        //StairObjectOffset edgeObjectOffset = edgeObjectTransform.GetComponentInChildren<StairObjectOffset>();
+        //edgeObjectOffset.ChangeOffset();
+
+        EdgeObject edgeObject = edgeObjectTransform.GetComponentInChildren<EdgeObject>();
+        edgeObject.SetBuildingType(edgeObjectSO.BuildingType);
+
+        if(edge == Edge.LeftWest)
+        {
+            leftStairEdgeObject = edgeObject;
+        }
+        else
+        {
+            rightStairEdgeObject = edgeObject;
+        }
+
+        edgeObject.SetPrimaryParentParentObjectStair(this, edge);
     }
 
-    [Space(15)]
-
-    StairEdgePosition currentLeftStairEdgePosition;
-    StairEdgePosition currentRightStairEdgePosition;
-
-    StairEdgeObject leftStairEdgeObject;
-    StairEdgeObject rightStairEdgeObject;
-
-    public void PlaceStairEdge(StairEdge stairEdge, StairEdgeObjectSO stairEdgeObjectSO) 
-    {  
-        StairEdgePosition stairEdgePosition = GetStairEdgePosition(stairEdge);
-
-        Transform stairEdgeObjectTransform = Instantiate(stairEdgeObjectSO.Prefab, stairEdgePosition.transform.GetChild(0).position, stairEdgePosition.transform.GetChild(0).rotation);
-
-        StairEdgeObject stairEdgeObject = stairEdgeObjectTransform.GetComponent<StairEdgeObject>();
-
-        stairEdgeObject.SetParentStairObject(this, stairEdge);
-        SetStairEdgeObject(stairEdge,stairEdgeObject); 
-    }
-
-    public void SetStairEdgePositions(GameObject left, GameObject right)
+    public EdgePosition GetEdgePosition(Edge edge)
     {
-        currentLeftStairEdgePosition = left.GetComponent<StairEdgePosition>();
-        currentRightStairEdgePosition = right.GetComponent<StairEdgePosition>();
-    }
-
-    private StairEdgePosition GetStairEdgePosition(StairEdge stairEdge) 
-    {
-        switch(stairEdge) 
+        switch(edge) 
         {
             default:
-            case StairEdge.Left:       return currentLeftStairEdgePosition;
-            case StairEdge.Right:      return currentRightStairEdgePosition; 
+            case Edge.LeftWest:       return currentLeftStairEdgePosition;
+            case Edge.RightWest:      return currentRightStairEdgePosition; 
         }
     }
 
-    public void SetStairEdgeObject(StairEdge stairEdge, StairEdgeObject stairEdgeObject) 
+    public EdgeObject GetEdgeObject(Edge edge) 
     {
-        switch(stairEdge) 
+        switch(edge) 
         {
             default:
-            case StairEdge.Left:       leftStairEdgeObject = stairEdgeObject; break;
-            case StairEdge.Right:      rightStairEdgeObject = stairEdgeObject; break;
+            case Edge.LeftWest:     return leftStairEdgeObject;
+            case Edge.RightWest:    return rightStairEdgeObject;
         }
     }
 
-    public StairEdgeObject GetStairEdgeObject(StairEdge stairEdge) 
+    public void SetEdgePositions(GameObject left, GameObject right)
     {
-        switch(stairEdge) 
-        {
-            default:
-            case StairEdge.Left:       return leftStairEdgeObject;
-            case StairEdge.Right:      return rightStairEdgeObject;
-        }
+        currentLeftStairEdgePosition = left.GetComponent<EdgePosition>();
+        currentRightStairEdgePosition = right.GetComponent<EdgePosition>();
     }
 
-    public void DestroyStairEdge(StairEdge stairEdge)
+    public void DestroyEdge(Edge edge)
     {
-        switch(stairEdge)
+        switch(edge)
         {
             default:
-            case StairEdge.Left:       Destroy(leftStairEdgeObject.gameObject); break;
-            case StairEdge.Right:      Destroy(rightStairEdgeObject.gameObject); break;
+            case Edge.LeftWest:       Destroy(leftStairEdgeObject.gameObject); break;
+            case Edge.RightWest:      Destroy(rightStairEdgeObject.gameObject); break;
         }
     }
 

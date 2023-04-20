@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4798891695513326550}
-  m_Layer: 12
+  m_Layer: 6
   m_Name: Offset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,8 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1851983180536863328}
   - component: {fileID: 1645640458354599449}
-  - component: {fileID: 2381593819773728366}
-  m_Layer: 12
+  - component: {fileID: 857642114280656669}
+  m_Layer: 6
   m_Name: Stair Edge Right Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 5ef3c6af24bca3f49834d90e73e248e6, type: 3}
---- !u!114 &2381593819773728366
+--- !u!114 &857642114280656669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,10 +88,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2026613177593375109}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24ea85395fbfe664ea36ce1a9328553f, type: 3}
+  m_Script: {fileID: 11500000, guid: e27ee774980ab7044a2d677a3095b093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stairEdge: 1
+  edge: 6
+  pivotTransform: {fileID: 6271163787775666485}
 --- !u!1 &2042785977471531652
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,8 +103,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4146532198993145367}
   - component: {fileID: 415125029371288293}
-  - component: {fileID: 3165310518388762201}
-  m_Layer: 12
+  - component: {fileID: 9217739189899846768}
+  m_Layer: 6
   m_Name: Stair Edge Right Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +141,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 5ef3c6af24bca3f49834d90e73e248e6, type: 3}
---- !u!114 &3165310518388762201
+--- !u!114 &9217739189899846768
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,10 +150,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2042785977471531652}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24ea85395fbfe664ea36ce1a9328553f, type: 3}
+  m_Script: {fileID: 11500000, guid: e27ee774980ab7044a2d677a3095b093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stairEdge: 1
+  edge: 6
+  pivotTransform: {fileID: 6348725315976191782}
 --- !u!1 &2698431759970770093
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,8 +210,8 @@ GameObject:
   m_Component:
   - component: {fileID: 936799920173515276}
   - component: {fileID: 8695625725115760541}
-  - component: {fileID: 6703152318276941542}
-  m_Layer: 12
+  - component: {fileID: 3788155865540851786}
+  m_Layer: 6
   m_Name: Stair Edge Left Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +248,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 5ef3c6af24bca3f49834d90e73e248e6, type: 3}
---- !u!114 &6703152318276941542
+--- !u!114 &3788155865540851786
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -255,10 +257,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2885121997403051307}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24ea85395fbfe664ea36ce1a9328553f, type: 3}
+  m_Script: {fileID: 11500000, guid: e27ee774980ab7044a2d677a3095b093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stairEdge: 0
+  edge: 4
+  pivotTransform: {fileID: 6642245206762890981}
 --- !u!1 &3082629885353036981
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6348725315976191782}
-  m_Layer: 12
+  m_Layer: 6
   m_Name: Offset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +439,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6642245206762890981}
-  m_Layer: 12
+  m_Layer: 6
   m_Name: Offset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -516,6 +519,7 @@ MonoBehaviour:
   centerPivot: {fileID: 8387368542860414305}
   primaryParent: {fileID: 1638670761225661818}
   secondaryParent: {fileID: 2408208153844381774}
+  compatibleBuildingTypes: 00000000
 --- !u!1 &6879688444280633768
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,7 +529,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6271163787775666485}
-  m_Layer: 12
+  m_Layer: 6
   m_Name: Offset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -557,8 +561,8 @@ GameObject:
   m_Component:
   - component: {fileID: 161567844583336009}
   - component: {fileID: 1740206310790725646}
-  - component: {fileID: 2078395887418511487}
-  m_Layer: 12
+  - component: {fileID: 4271527624377540916}
+  m_Layer: 6
   m_Name: Stair Edge Left Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -595,7 +599,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 5ef3c6af24bca3f49834d90e73e248e6, type: 3}
---- !u!114 &2078395887418511487
+--- !u!114 &4271527624377540916
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -604,10 +608,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6992050953622981701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24ea85395fbfe664ea36ce1a9328553f, type: 3}
+  m_Script: {fileID: 11500000, guid: e27ee774980ab7044a2d677a3095b093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stairEdge: 0
+  edge: 4
+  pivotTransform: {fileID: 4798891695513326550}
 --- !u!1 &7101915443493664604
 GameObject:
   m_ObjectHideFlags: 0

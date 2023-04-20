@@ -7,10 +7,10 @@ public class EdgeObjectParent : MonoBehaviour
 {
     [SerializeField] bool isPrimary;
 
-    FloorGridObject primaryParentGridObject;
-    public FloorGridObject PrimaryParentGridObject => primaryParentGridObject;
-    FloorGridObject secondaryParentGridObject;
-    public FloorGridObject SecondaryParentGridObject => secondaryParentGridObject;
+    IHasEdges primaryParentGridObject;
+    public IHasEdges PrimaryParentGridObject => primaryParentGridObject;
+    IHasEdges secondaryParentGridObject;
+    public IHasEdges SecondaryParentGridObject => secondaryParentGridObject;
 
     [ShowIf("isPrimary")]
     [ReadOnly, SerializeField] Edge primaryGridEdge;
@@ -20,7 +20,7 @@ public class EdgeObjectParent : MonoBehaviour
     [ReadOnly, SerializeField] Edge secondaryGridEdge;
     public Edge SecondaryGridEdge => secondaryGridEdge;
 
-    public void SetEdgeObjectParent(FloorGridObject floorGridObject, Edge edge)
+    public void SetEdgeObjectParentFloor(FloorGridObject floorGridObject, Edge edge)
     {
         if(isPrimary)
         {
@@ -35,6 +35,12 @@ public class EdgeObjectParent : MonoBehaviour
         }
 
         floorGridObject.SetEdgeObject(edge, GetComponentInParent<EdgeObject>());
+    }
+
+    public void SetEdgeObjectParentStair(StairObject stairObject, Edge edge)
+    {
+        primaryParentGridObject = stairObject;
+        primaryGridEdge = edge;
     }
 
     public void NullifyParent()

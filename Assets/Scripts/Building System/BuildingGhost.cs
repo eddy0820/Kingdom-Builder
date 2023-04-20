@@ -99,45 +99,8 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(visual != null && !PlayerController.Instance.UICanvas.BuildMenuEnabled)
         {
-            switch(GridBuildingManager.Instance.CurrentPlaceableObjectSO.ObjectType)
-            {
-                case PlaceableObjectTypes.GridObject:
-                    
-                    currentBuildingGhost.DoVisibleGhostMovement(visual);
-                    currentBuildingGhost.DoFakeGhostMovement(fakeVisual);
-
-                break;
-
-                case PlaceableObjectTypes.EdgeObject:
-                    currentBuildingGhost.DoVisibleGhostMovement(visual);
-                    currentBuildingGhost.DoFakeGhostMovement(fakeVisual);
-                break;
-
-                case PlaceableObjectTypes.StairEdgeObject:
-                    StairEdgePosition stairEdgePosition = GridBuildingManager.Instance.GetMouseStairEdgePosition();
-                    if(stairEdgePosition != null) 
-                    {
-                        visual.transform.position = Vector3.Lerp(visual.transform.position, stairEdgePosition.transform.GetChild(0).position, Time.deltaTime * 15f);
-                        visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, stairEdgePosition.transform.GetChild(0).rotation, Time.deltaTime * 25f);
-
-                        //fakeVisual.transform.position = visual.transform.position;
-                        //fakeVisual.transform.rotation = visual.transform.rotation;
-                    } 
-                    else
-                    {
-                        visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
-                        visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
-
-                        //fakeVisual.transform.position = visual.transform.position;
-                        //fakeVisual.transform.rotation = visual.transform.rotation;
-                    }
-                break;
-
-                case PlaceableObjectTypes.LooseObject:
-                    currentBuildingGhost.DoVisibleGhostMovement(visual);
-                    currentBuildingGhost.DoFakeGhostMovement(fakeVisual);
-                break;
-            }
+            currentBuildingGhost.DoVisibleGhostMovement(visual);
+            currentBuildingGhost.DoFakeGhostMovement(fakeVisual);
 
             lastBuildingGhostPos = visual.transform.position;
             lastBuildingGhostRot = visual.transform.rotation;
@@ -294,10 +257,6 @@ public class BuildingGhost : MonoBehaviour {
 
             case PlaceableObjectTypes.EdgeObject:
                 currentBuildingGhost = edgeObjectBuildingGhost;
-            break;
-
-            case PlaceableObjectTypes.StairEdgeObject:
-                
             break;
 
             case PlaceableObjectTypes.LooseObject:
