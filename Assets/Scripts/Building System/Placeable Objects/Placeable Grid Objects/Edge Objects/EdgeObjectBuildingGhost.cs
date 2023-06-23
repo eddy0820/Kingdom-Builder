@@ -8,7 +8,7 @@ public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
 
     public override void DoVisibleGhostMovement(Transform visual)
     {
-        if(Mouse3D.Instance.IsLookingAtEdgePosition(out EdgePosition edgePosition))
+        if(GridBuildingManager.Instance.EdgeObjectBuildingManager.ShouldBuildingGhostSnapToEdgePosition(out EdgePosition edgePosition))
         {
             visual.transform.position = Vector3.Lerp(visual.transform.position, edgePosition.PivotTransform.position, Time.deltaTime * 15f);
             visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, edgePosition.PivotTransform.rotation, Time.deltaTime * 25f);
@@ -22,7 +22,7 @@ public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
 
     public override void DoFakeGhostMovement(Transform fakeVisual)
     {
-        if(Mouse3D.Instance.IsLookingAtEdgePosition(out EdgePosition edgePosition))
+        if(GridBuildingManager.Instance.EdgeObjectBuildingManager.ShouldBuildingGhostSnapToEdgePosition(out EdgePosition edgePosition))
         {
             fakeVisual.transform.position = edgePosition.PivotTransform.position;
             fakeVisual.transform.rotation = edgePosition.PivotTransform.rotation;

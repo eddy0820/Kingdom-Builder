@@ -14,13 +14,13 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
     {
         EdgeObjectSO edgeObjectSO = (EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
 
-        if(CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge))
+        if(CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge, out string debugString))
         {
             iHasEdgesObject.PlaceEdge(edge, edgeObjectSO);
         }
         else
         {
-            Debug.Log("Can't place Edge Object!");
+            Debug.Log("Can't place Edge Object!" + debugString);
         }
     }
     
@@ -35,7 +35,7 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         GridBuildingManager.BuildingGhost.EdgeObjectBuildingGhost.FlipEdgeObjectGhost();
     }  
 
-    private bool CanPlaceObject(EdgeObjectSO edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge)
+    private bool CanPlaceObject(EdgeObjectSO edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge, out string debugString)
     {
         iHasEdgesObject = null;
         edge = Edge.UpWest;
@@ -50,6 +50,7 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
                 {   
                     if(IsEdgeTaken(floorGridObject, edgePosition)) //  Might not need this check, I think it's a dumbo mistake
                     {
+                        debugString = "Edge Is Taken.";
                         return false;
                     }
 
@@ -57,15 +58,18 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
                        IsTargetingWestEdge(floorGridObject, edgePosition) && 
                        IsEastEdgeTaken(floorGridObject, edgePosition))
                     {
+                        debugString = "Complimentary Edge Is Taken.";
                         return false;
                     }
 
                     if(GridBuildingManager.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
                     {
+                        debugString = "Is Colliding With Other Edge Object";
                         return false;
                     }
 
                     edge = edgePosition.edge;
+                    debugString = "";
                     return true;
                 }
             }
@@ -76,18 +80,20 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
                 if(stairObject.GetEdgeObject(edgePosition.edge) == null && IsCompatibleWithThisObject(edgeObjectSO, stairObject.BuildingType))
                 {
                     edge = edgePosition.edge;
+                    debugString = "";
                     return true;
                 }
             }
         }
 
+        debugString = "Not Looking at Edge Position";
         return false;
     }
 
     public override bool CanPlace()
     {
         EdgeObjectSO edgeObjectSO = (EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
-        return CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge);
+        return CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge, out string debugString);
     }
 
     private bool IsCompatibleWithThisObject(EdgeObjectSO edgeObjectSO, BuildingTypes buildingTypeToCheck)
@@ -98,6 +104,25 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
             {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public bool ShouldBuildingGhostSnapToEdgePosition(out EdgePosition edgePosition)
+    {
+        if(!Mouse3D.Instance.IsLookingAtEdgePosition(out edgePosition))
+        {
+            return false;
+        }
+
+        if(IsEdgePositionPartOfFloorGridObject(edgePosition, out FloorGridObject floorGridObject))
+        {
+            return IsCompatibleWithThisObject((EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO, floorGridObject.BuildingType);
+        }
+        else if(IsEdgePositionPartOfStairObject(edgePosition, out StairObject stairObject))
+        {
+            return IsCompatibleWithThisObject((EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO, stairObject.BuildingType);
         }
 
         return false;
