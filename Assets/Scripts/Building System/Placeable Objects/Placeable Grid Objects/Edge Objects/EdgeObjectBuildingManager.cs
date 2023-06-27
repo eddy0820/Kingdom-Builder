@@ -79,6 +79,12 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
 
                 if(stairObject.GetEdgeObject(edgePosition.edge) == null && IsCompatibleWithThisObject(edgeObjectSO, stairObject.BuildingType))
                 {
+                    if(GridBuildingManager.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
+                    {
+                        debugString = "Is Colliding With Other Edge Object";
+                        return false;
+                    }
+
                     edge = edgePosition.edge;
                     debugString = "";
                     return true;

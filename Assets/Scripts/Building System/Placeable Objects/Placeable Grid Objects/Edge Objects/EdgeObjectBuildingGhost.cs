@@ -36,14 +36,56 @@ public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
 
     public override void RemoveColliderScriptFromVisibleGhost()
     {
-        Destroy(BuildingGhost.Visual.GetComponent<EdgeObjectColliderVisual>());
+        RemoveColliderScriptFromVisibleGhostRecursive(BuildingGhost.Visual.gameObject);
+        //Destroy(BuildingGhost.Visual.GetComponent<EdgeObjectColliderVisual>());
+    }
+
+    private void RemoveColliderScriptFromVisibleGhostRecursive(GameObject targetGameObject)
+    {
+        if(targetGameObject.TryGetComponent<EdgeObjectColliderVisual>(out EdgeObjectColliderVisual edgeCollider))
+        {
+            Destroy(edgeCollider);
+        }
+        else
+        {
+            foreach(Transform child in targetGameObject.transform)
+            {
+                if(child.gameObject != targetGameObject)
+                {
+                    RemoveColliderScriptFromVisibleGhostRecursive(child.gameObject);
+                }
+            }
+        }
     }
 
     public bool IsFakeGhostCollidingWithEdgeObjectVisual()
     {
-        if(BuildingGhost.FakeVisual.TryGetComponent<EdgeObjectColliderVisual>(out EdgeObjectColliderVisual edgeCollider))
+        /*if(BuildingGhost.FakeVisual.TryGetComponent<EdgeObjectColliderVisual>(out EdgeObjectColliderVisual edgeCollider))
         {
             return edgeCollider.IsCollidingWithEdgeObjectVisual;
+        }
+
+        return false;*/
+
+        return IsFakeGhostCollidingWithEdgeObjectVisualRecursive(BuildingGhost.FakeVisual.gameObject);
+    }
+
+    private bool IsFakeGhostCollidingWithEdgeObjectVisualRecursive(GameObject targetGameObject)
+    {
+        if(targetGameObject.TryGetComponent<EdgeObjectColliderVisual>(out EdgeObjectColliderVisual edgeCollider))
+        {
+            if(edgeCollider.IsCollidingWithEdgeObjectVisual)
+            {
+                return true;
+            }
+        }
+
+        foreach(Transform child in targetGameObject.transform)
+        {
+            if(IsFakeGhostCollidingWithEdgeObjectVisualRecursive(child.gameObject))
+            {
+                return true;
+            }
         }
 
         return false;

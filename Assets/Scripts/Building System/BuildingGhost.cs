@@ -161,7 +161,7 @@ public class BuildingGhost : MonoBehaviour {
              currentBuildingGhost == looseObjectBuildingGhost) currentBuildingGhost.RemoveColliderScriptFromVisibleGhost();
 
                 // refactor this
-            if(currentBuildingGhost == edgeObjectBuildingGhost) fakeVisual.GetComponentInChildren<MeshRenderer>().gameObject.SetActive(false);
+            //if(currentBuildingGhost == edgeObjectBuildingGhost) fakeVisual.GetComponentInChildren<MeshRenderer>().gameObject.SetActive(false);
         }
         else
         {

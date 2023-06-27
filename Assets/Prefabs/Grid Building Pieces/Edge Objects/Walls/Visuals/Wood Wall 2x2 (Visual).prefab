@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 8204883268392208325}
   - component: {fileID: 8018072950609460534}
   - component: {fileID: 2435022259196108987}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Wood Wall 2x2 (Visual)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
