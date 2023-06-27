@@ -23,7 +23,7 @@ public class EdgeObject : PlaceableObject
     public override void DestroySelf()
     {
         if(primaryParent.PrimaryParentGridObject != null) primaryParent.PrimaryParentGridObject.DestroyEdge(primaryParent.PrimaryGridEdge);
-        if(secondaryParent.SecondaryParentGridObject != null) secondaryParent.SecondaryParentGridObject.DestroyEdge(secondaryParent.SecondaryGridEdge);
+        if(secondaryParent != null && secondaryParent.SecondaryParentGridObject != null) secondaryParent.SecondaryParentGridObject.DestroyEdge(secondaryParent.SecondaryGridEdge);
         
         Destroy(gameObject);
     }

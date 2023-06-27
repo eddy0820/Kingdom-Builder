@@ -20,7 +20,7 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         }
         else
         {
-            Debug.Log("Can't place Edge Object!" + debugString);
+            Debug.Log("Can't place Edge Object! " + debugString);
         }
     }
     
