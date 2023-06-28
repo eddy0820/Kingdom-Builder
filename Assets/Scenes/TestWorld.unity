@@ -792,11 +792,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: debug
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: enableBuilding
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: enableGridDebug
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: gridVerticalCount
@@ -805,6 +809,10 @@ PrefabInstance:
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: enableMouse3DDebug
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: enableFakeVisualDebug
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: enableStrictPlacement
@@ -838,6 +846,22 @@ PrefabInstance:
       propertyPath: placeableObjectSOList.Array.data[8]
       value: 
       objectReference: {fileID: 11400000, guid: c5a7e9ca313cacd46b04b03eac8d3a71, type: 2}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: buildingTypesFakeVisualBlacklist.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: buildingTypesFakeVisualBlacklist.Array.data[0]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: placeableObjectTypesFakeVisualBlacklist.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 859870556, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
+      propertyPath: placeableObjectTypesFakeVisualBlacklist.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5665706729618475040, guid: 6fd19b0653d0d074c89c55734f5214ae, type: 3}
       propertyPath: m_Enabled
       value: 1

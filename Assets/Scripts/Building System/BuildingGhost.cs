@@ -20,6 +20,8 @@ public class BuildingGhost : MonoBehaviour {
     Vector3 lastBuildingGhostPos;
     Quaternion lastBuildingGhostRot;
 
+    GridBuildingManager gridBuildingManager;
+
     GridObjectBuildingGhost gridObjectBuildingGhost;
     public GridObjectBuildingGhost GridObjectBuildingGhost => gridObjectBuildingGhost;
     EdgeObjectBuildingGhost edgeObjectBuildingGhost;
@@ -30,8 +32,16 @@ public class BuildingGhost : MonoBehaviour {
     AbstractPlaceableObjectBuildingGhost currentBuildingGhost;
     public AbstractPlaceableObjectBuildingGhost CurrentBuildingGhost => currentBuildingGhost;
 
+    bool debug;
+    bool enableFakeVisualDebug;
+    Material fakeVisualMaterial;
+    List<PlaceableObjectTypes> placeableObjectTypesFakeVisualBlacklist;
+    List<BuildingTypes> buildingTypesFakeVisualBlacklist;
+
     private void Awake()
     {
+        gridBuildingManager = GridBuildingManager.Instance;
+
         gridObjectBuildingGhost = GetComponentInChildren<GridObjectBuildingGhost>();
         edgeObjectBuildingGhost = GetComponentInChildren<EdgeObjectBuildingGhost>();
         looseObjectBuildingGhost = GetComponentInChildren<LooseObjectBuildingGhost>();
@@ -39,6 +49,9 @@ public class BuildingGhost : MonoBehaviour {
 
     private void Start() 
     {
+        // This has to be in Start() because it needs to take place after Init() in the GridBuildingManager
+        gridBuildingManager.GetFakeVisualDebugInfo(out debug, out enableFakeVisualDebug, out fakeVisualMaterial, out placeableObjectTypesFakeVisualBlacklist, out buildingTypesFakeVisualBlacklist);
+        
         currentGhostMaterial = validGhostMaterial;
 
         RefreshVisual();
@@ -80,11 +93,11 @@ public class BuildingGhost : MonoBehaviour {
     {
         if(visual != null)
         {
-            if(!GridBuildingManager.Instance.IsWithinMaxBuildDistance())
+            if(!gridBuildingManager.IsWithinMaxBuildDistance())
             {
                 SetGhostValidityState(GhostValidityState.FarAway);
             }
-            else if(!GridBuildingManager.Instance.CurrentBuildingManager.CanPlace())
+            else if(!gridBuildingManager.CurrentBuildingManager.CanPlace())
             {
                 SetGhostValidityState(GhostValidityState.Invalid);
             }
@@ -109,7 +122,7 @@ public class BuildingGhost : MonoBehaviour {
 
     public void RefreshVisual() 
     {
-        if(PlayerController.Instance.BuildModeEnabled && GridBuildingManager.Instance.CurrentPlaceableObjectSO != null)
+        if(PlayerController.Instance.BuildModeEnabled && gridBuildingManager.CurrentPlaceableObjectSO != null)
         {
             if(visual != null) 
             {
@@ -120,7 +133,7 @@ public class BuildingGhost : MonoBehaviour {
                 fakeVisual = null;
             }
 
-            PlaceableObjectSO placeableObjectSO = GridBuildingManager.Instance.CurrentPlaceableObjectSO;
+            PlaceableObjectSO placeableObjectSO = gridBuildingManager.CurrentPlaceableObjectSO;
 
             Vector3 spawnPos;
             Quaternion spawnRot;
@@ -153,15 +166,9 @@ public class BuildingGhost : MonoBehaviour {
             fakeVisual.parent = transform;
             fakeVisual.localPosition = spawnPos;
             fakeVisual.localEulerAngles = spawnRot.eulerAngles;
-            // add more debug stuff
-            //DisableMeshRendererRecursive(fakeVisual.gameObject);
-            SetLayerAndMatRecursive(fakeVisual.gameObject, farAwayGhostMaterial, ignoreMaskName);
+            SetupFakeVisualDebug();
         
-            if(currentBuildingGhost == gridObjectBuildingGhost || currentBuildingGhost == edgeObjectBuildingGhost ||
-             currentBuildingGhost == looseObjectBuildingGhost) currentBuildingGhost.RemoveColliderScriptFromVisibleGhost();
-
-                // refactor this
-            //if(currentBuildingGhost == edgeObjectBuildingGhost) fakeVisual.GetComponentInChildren<MeshRenderer>().gameObject.SetActive(false);
+            currentBuildingGhost.RemoveColliderScriptFromVisibleGhost();
         }
         else
         {
@@ -249,7 +256,7 @@ public class BuildingGhost : MonoBehaviour {
     
     public void SwitchBuildingGhost()
     {
-        switch(GridBuildingManager.Instance.CurrentPlaceableObjectSO.ObjectType)
+        switch(gridBuildingManager.CurrentPlaceableObjectSO.ObjectType)
         {
             case PlaceableObjectTypes.GridObject:
                 currentBuildingGhost = gridObjectBuildingGhost;
@@ -265,6 +272,45 @@ public class BuildingGhost : MonoBehaviour {
         }
 
         RefreshVisual();
+    }
+
+    private void SetupFakeVisualDebug()
+    {
+        if(debug && enableFakeVisualDebug)
+        {
+            bool doDebug = true;
+
+            foreach(PlaceableObjectTypes placeableObjectType in placeableObjectTypesFakeVisualBlacklist)
+            {
+                if(gridBuildingManager.CurrentPlaceableObjectSO.ObjectType == placeableObjectType)
+                {
+                    doDebug = false;
+                    break;
+                }
+            }
+
+            if(doDebug && gridBuildingManager.CurrentPlaceableObjectSO is PlaceableGridObjectSO)
+            {
+                PlaceableGridObjectSO currentPlaceableGridObjectSO = gridBuildingManager.CurrentPlaceableObjectSO as PlaceableGridObjectSO;
+
+                foreach(BuildingTypes buildingType in buildingTypesFakeVisualBlacklist)
+                {
+                    if(currentPlaceableGridObjectSO.BuildingType == buildingType)
+                    {
+                        doDebug = false;
+                        break;
+                    }
+                }
+            }
+
+            if(doDebug) 
+            {
+                SetLayerAndMatRecursive(fakeVisual.gameObject, fakeVisualMaterial, ignoreMaskName);
+                return;
+            }
+        }
+
+        DisableMeshRendererRecursive(fakeVisual.gameObject);
     }
 
     public enum GhostValidityState

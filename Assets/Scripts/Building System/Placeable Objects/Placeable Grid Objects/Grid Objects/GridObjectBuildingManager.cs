@@ -76,8 +76,8 @@ public class GridObjectBuildingManager : AbstractPlaceableObjectBuildingManager
             return false;
         }
         
-        Vector3 firstHitPos = Mouse3D.Instance.GetRaycastHitPosWithLayerMask(Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
-        Vector3 secondHitPos = Mouse3D.Instance.GetRaycastHitPosWithLayerMask(Mouse3D.Instance.PlaceableColliderLayer);
+        Vector3 firstHitPos = Mouse3D.Instance.GetMouseWorldPosition(Mouse3D.Instance.MouseColliderLayerMaskNoPlaceableCollider);
+        Vector3 secondHitPos = Mouse3D.Instance.GetMouseWorldPosition(Mouse3D.Instance.PlaceableColliderLayer);
 
         // The distance between 
         //

@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5665706731287517939}
   - {fileID: 2775792612204882374}
@@ -67,12 +68,6 @@ MonoBehaviour:
   gridBuildingScene: GridBuilding
   gridOriginPoint: {fileID: 2775792612204882374}
   enableBuilding: 1
-  placeableObjectSOList:
-  - {fileID: 11400000, guid: 06c2699624260554783f26e0a4bd5089, type: 2}
-  - {fileID: 11400000, guid: 957c0cbd64114ba4caac277016b5388f, type: 2}
-  - {fileID: 11400000, guid: 20c17af2423551642bbeb9da282c84f2, type: 2}
-  - {fileID: 11400000, guid: 3835de30719849848acacd4b0f5d6f98, type: 2}
-  - {fileID: 11400000, guid: 6fe785846e21f1247bd7c4668f42f27c, type: 2}
   placeableObjectsDatabase: {fileID: 11400000, guid: 83771edb819104347aa5ba092e8a3bef, type: 2}
   buildingTypesDatabase: {fileID: 11400000, guid: 296fe3535b84bf34b9c465457bff8f5d, type: 2}
   gridWidth: 80
@@ -84,15 +79,20 @@ MonoBehaviour:
   edgeColliderLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  stairEdgeColliderLayerMask:
-    serializedVersion: 2
-    m_Bits: 4096
   placeableObjectsColliderLayerMask:
     serializedVersion: 2
     m_Bits: 256
+  uIIconAnimationDelay: 1
+  uIconAnimationSpeed: 0.04
   debug: 0
+  enableGridDebug: 0
   debugFontSize: 12
   enableMouse3DDebug: 0
+  mouse3DDebugMaterial: {fileID: 2100000, guid: a6881a2036061ce4487ea1d2054d795d, type: 2}
+  enableFakeVisualDebug: 0
+  fakeVisualMaterial: {fileID: 2100000, guid: b733cd5d4650b49428cf1d39dce9f7ad, type: 2}
+  placeableObjectTypesFakeVisualBlacklist: 
+  buildingTypesFakeVisualBlacklist: 
 --- !u!1 &5665706731287517932
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,6 +119,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5665706729618475041}
   m_RootOrder: 0
@@ -149,6 +150,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -50, y: 0, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5665706729618475041}
   m_RootOrder: 1

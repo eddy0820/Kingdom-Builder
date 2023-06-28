@@ -16,7 +16,7 @@ public class GridBuildingInfo : MonoBehaviour
     [SerializeField] bool enableBuilding = true;
     public bool EnableBuilding => enableBuilding;
 
-    [Space(15)]
+    [HorizontalLine]
 
     [ShowIf("enableBuilding"), SerializeField] PlaceableObjectsDatabaseSO placeableObjectsDatabase;
     public PlaceableObjectsDatabaseSO PlaceableObjectsDatabase => placeableObjectsDatabase;
@@ -61,10 +61,29 @@ public class GridBuildingInfo : MonoBehaviour
 
     [Space(15)]
 
-    [SerializeField] bool debug;
+    [ShowIf("enableBuilding"), SerializeField] bool debug;
     public bool Debug => debug;
-    [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] int debugFontSize = 100;
+
+    [HorizontalLine]
+
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] bool enableGridDebug;
+    public bool EnableGridDebug => enableGridDebug;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableGridDebug"), SerializeField] int debugFontSize = 100;
     public int DebugFontSize => debugFontSize;
+    [Space(5)]
     [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] bool enableMouse3DDebug;
     public bool EnableMouse3DDebug => enableMouse3DDebug;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableMouse3DDebug"), SerializeField] Material mouse3DDebugMaterial;
+    public Material Mouse3DDebugMaterial => mouse3DDebugMaterial;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] bool enableFakeVisualDebug;
+    public bool EnableFakeVisualDebug => enableFakeVisualDebug;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableFakeVisualDebug"), SerializeField] Material fakeVisualMaterial;
+    public Material FakeVisualMaterial => fakeVisualMaterial;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableFakeVisualDebug"), SerializeField] List<PlaceableObjectTypes> placeableObjectTypesFakeVisualBlacklist;
+    public List<PlaceableObjectTypes> PlaceableObjectTypesFakeVisualBlacklist => placeableObjectTypesFakeVisualBlacklist;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableFakeVisualDebug"), SerializeField] List<BuildingTypes> buildingTypesFakeVisualBlacklist;
+    public List<BuildingTypes> BuildingTypesFakeVisualBlacklist => buildingTypesFakeVisualBlacklist;
+
+
+
 }

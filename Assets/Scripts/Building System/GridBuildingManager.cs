@@ -41,11 +41,17 @@ public class GridBuildingManager : MonoBehaviour
     [Space(15)]
 
     [ReadOnly, SerializeField] bool debug;
+    [ReadOnly, SerializeField] bool enableGridDebug;
     [ReadOnly, SerializeField] int debugFontSize = 100;
+    [ReadOnly, SerializeField] bool enableMouse3DDebug;
+    Material mouse3DDebugMaterial;
+    [ReadOnly, SerializeField] bool enableFakeVisualDebug;
+    Material fakeVisualMaterial;
+    [ReadOnly, SerializeField] List<PlaceableObjectTypes> placeableObjectTypesFakeVisualBlacklist;
+    [ReadOnly, SerializeField] List<BuildingTypes> buildingTypesFakeVisualBlacklist;
 
     [SerializeField] GameObject debugHolder;
-    public GameObject DebugHolder => debugHolder;
-    bool enableMouse3DDebug;
+    public GameObject DebugHolder => debugHolder; 
 
     List<GridXZ<GridBuildingCell>> gridList;
 
@@ -84,7 +90,7 @@ public class GridBuildingManager : MonoBehaviour
         looseObjectBuildingManager = GetComponentInChildren<LooseObjectBuildingManager>();
     }
 
-    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, float _uIIconAnimationDelay, float _uIIconAnimationSpeed, bool _debug, int _debugFontSize, bool _enableMouse3DDebug)
+    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, float _uIIconAnimationDelay, float _uIIconAnimationSpeed, bool _debug, bool _enableGridDebug, int _debugFontSize, bool _enableMouse3DDebug, Material _mouse3DDebugMaterial, bool _enableFakeVisualDebug, Material _fakeVisualMaterial, List<PlaceableObjectTypes> _placeableObjectTypesFakeVisualBlacklist, List<BuildingTypes> _buildingTypesFakeVisualBlacklist)
     {
         gridWidth = _gridWidth;
         gridLength = _gridLength;
@@ -97,26 +103,36 @@ public class GridBuildingManager : MonoBehaviour
         uIIconAnimationDelay = _uIIconAnimationDelay;
         uIIconAnimationSpeed = _uIIconAnimationSpeed;
         debug = _debug;
+        enableGridDebug = _enableGridDebug;
         debugFontSize = _debugFontSize;
         enableMouse3DDebug = _enableMouse3DDebug;
+        mouse3DDebugMaterial = _mouse3DDebugMaterial;
+        enableFakeVisualDebug = _enableFakeVisualDebug;
+        fakeVisualMaterial = _fakeVisualMaterial;
+        placeableObjectTypesFakeVisualBlacklist = _placeableObjectTypesFakeVisualBlacklist;
+        buildingTypesFakeVisualBlacklist = _buildingTypesFakeVisualBlacklist;
     }
 
     public void Setup(Vector3 origin)
     {
+        bool doGridDebug = false;
+        if(debug && enableGridDebug) doGridDebug = true;
+
         gridList = new List<GridXZ<GridBuildingCell>>();
         
         for(int i = 0; i < gridVerticalCount; i++)
         {
             Vector3 originPos = new Vector3(origin.x, origin.y + gridHeight * i, origin.z);
-            GridXZ<GridBuildingCell> grid = new GridXZ<GridBuildingCell>(gridWidth, gridLength, cellSize, originPos, (GridXZ<GridBuildingCell> g, int x, int z) => new GridBuildingCell(g, x, z), debug, debugFontSize);
+            GridXZ<GridBuildingCell> grid = new GridXZ<GridBuildingCell>(gridWidth, gridLength, cellSize, originPos, (GridXZ<GridBuildingCell> g, int x, int z) => new GridBuildingCell(g, x, z), doGridDebug, debugFontSize);
             gridList.Add(grid);
         }
 
         selectedGrid = gridList[0];
 
-        if(enableMouse3DDebug)
+        if(debug && enableMouse3DDebug)
         {
             Mouse3D.Instance.debugVisual.gameObject.SetActive(true);
+            Mouse3D.Instance.debugVisual.GetComponent<MeshRenderer>().material = mouse3DDebugMaterial;
         }
         else
         {
@@ -208,5 +224,14 @@ public class GridBuildingManager : MonoBehaviour
 
             buildingGhost.SwitchBuildingGhost();
         }
+    }
+
+    public void GetFakeVisualDebugInfo(out bool _debug, out bool _enableFakeVisualDebug, out Material _fakeVisualMaterial, out List<PlaceableObjectTypes> _placeableObjectTypesFakeVisualBlacklist, out List<BuildingTypes> _buildingTypesFakeVisualBlacklist)
+    {
+        _debug = debug;
+        _enableFakeVisualDebug = enableFakeVisualDebug;
+        _fakeVisualMaterial = fakeVisualMaterial;
+        _placeableObjectTypesFakeVisualBlacklist = placeableObjectTypesFakeVisualBlacklist;
+        _buildingTypesFakeVisualBlacklist = buildingTypesFakeVisualBlacklist;
     }
 }

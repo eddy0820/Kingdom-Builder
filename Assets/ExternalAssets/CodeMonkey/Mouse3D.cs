@@ -101,15 +101,6 @@ public class Mouse3D : MonoBehaviour {
         }
     }
 
-    public Vector3 GetRaycastHitPosWithLayerMask(LayerMask mask) 
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        Physics.Raycast(ray, out RaycastHit raycastHit, 999f, mask);
-
-        return raycastHit.point;
-    }
-
     public GameObject GetMouseGameObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -161,7 +152,7 @@ public class Mouse3D : MonoBehaviour {
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(ray, out RaycastHit raycastHit, 999f, currentLayerMask);
+        if(!Physics.Raycast(ray, out RaycastHit raycastHit, 999f, currentLayerMask)) return false;
 
         if(raycastHit.collider.gameObject.layer == LayerMask.NameToLayer(layerName))
         {

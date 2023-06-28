@@ -73,8 +73,14 @@ public class PlayerSpawner : MonoBehaviour
                     gridBuildingInfo.UIIconAnimationDelay,
                     gridBuildingInfo.UIIconAnimationSpeed,
                     gridBuildingInfo.Debug,
+                    gridBuildingInfo.EnableGridDebug,
                     gridBuildingInfo.DebugFontSize,
-                    gridBuildingInfo.EnableMouse3DDebug
+                    gridBuildingInfo.EnableMouse3DDebug,
+                    gridBuildingInfo.Mouse3DDebugMaterial,
+                    gridBuildingInfo.EnableFakeVisualDebug,
+                    gridBuildingInfo.FakeVisualMaterial,
+                    gridBuildingInfo.PlaceableObjectTypesFakeVisualBlacklist,
+                    gridBuildingInfo.BuildingTypesFakeVisualBlacklist
                 );
 
             GridBuildingManager.Instance.Setup(gridBuildingInfo.GridOriginPoint.position);

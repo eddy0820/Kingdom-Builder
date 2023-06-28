@@ -36,9 +36,9 @@ public class LooseObjectBuildingManager : AbstractPlaceableObjectBuildingManager
 
     private bool CanPlaceObject(out Vector3 pos)
     {   
-        pos = Mouse3D.Instance.GetRaycastHitPosWithLayerMask(GridBuildingManager.PlaceableObjectsColliderLayerMask);
+        pos = Mouse3D.Instance.GetMouseWorldPosition(GridBuildingManager.PlaceableObjectsColliderLayerMask);
 
-        if(pos != null)
+        if(pos != Vector3.zero)
         {
             if(!GridBuildingManager.BuildingGhost.LooseObjectBuildingGhost.IsFakeGhostCollidingWithAnything())
             {
