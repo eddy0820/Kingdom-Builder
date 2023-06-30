@@ -23,7 +23,7 @@ public class FloorGridObject : GridObject, IHasEdges
     EdgeObject rightWestEdgeObject;
     EdgeObject rightEastEdgeObject;
 
-    public void PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO) 
+    public GameObject PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO) 
     {  
         EdgePosition edgePosition = GetEdgePosition(edge);
 
@@ -34,6 +34,8 @@ public class FloorGridObject : GridObject, IHasEdges
 
         EdgeObject edgeObject = edgeObjectTransform.GetComponentInChildren<EdgeObject>();
         edgeObject.SetBuildingType(edgeObjectSO.BuildingType);
+
+        return edgeObjectTransform.gameObject;
     }
 
     public bool IsWestEdge(Edge edge)

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - IconsCreationCamera
+  - AnchorDebugVisual
   layers:
   - Default
   - TransparentFX

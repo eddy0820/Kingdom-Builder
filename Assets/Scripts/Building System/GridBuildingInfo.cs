@@ -70,11 +70,16 @@ public class GridBuildingInfo : MonoBehaviour
     public bool EnableGridDebug => enableGridDebug;
     [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableGridDebug"), SerializeField] int debugFontSize = 100;
     public int DebugFontSize => debugFontSize;
-    [Space(5)]
+
+    [Space(10)]
+
     [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] bool enableMouse3DDebug;
     public bool EnableMouse3DDebug => enableMouse3DDebug;
     [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableMouse3DDebug"), SerializeField] Material mouse3DDebugMaterial;
     public Material Mouse3DDebugMaterial => mouse3DDebugMaterial;
+
+    [Space(10)]
+
     [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] bool enableFakeVisualDebug;
     public bool EnableFakeVisualDebug => enableFakeVisualDebug;
     [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableFakeVisualDebug"), SerializeField] Material fakeVisualMaterial;
@@ -84,6 +89,13 @@ public class GridBuildingInfo : MonoBehaviour
     [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableFakeVisualDebug"), SerializeField] List<BuildingTypes> buildingTypesFakeVisualBlacklist;
     public List<BuildingTypes> BuildingTypesFakeVisualBlacklist => buildingTypesFakeVisualBlacklist;
 
+    [Space(10)]
 
-
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding"), SerializeField] bool enableVisualAnchorDebug;
+    public bool EnableVisualAnchorDebug => enableVisualAnchorDebug;
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableVisualAnchorDebug"), SerializeField] Material visualAnchorDebugMaterial;
+    public Material VisualAnchorDebugMaterial => visualAnchorDebugMaterial;
+    [Tag]
+    [ShowIf(EConditionOperator.And, "debug", "enableBuilding", "enableVisualAnchorDebug"), SerializeField] string identifierTag;
+    public string IdentifierTag => identifierTag;
 }

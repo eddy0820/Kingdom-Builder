@@ -93,6 +93,9 @@ MonoBehaviour:
   fakeVisualMaterial: {fileID: 2100000, guid: b733cd5d4650b49428cf1d39dce9f7ad, type: 2}
   placeableObjectTypesFakeVisualBlacklist: 
   buildingTypesFakeVisualBlacklist: 
+  enableVisualAnchorDebug: 0
+  visualAnchorDebugMaterial: {fileID: 2100000, guid: e87db38db5b07394182d0ae274a34b23, type: 2}
+  identifierTag: AnchorDebugVisual
 --- !u!1 &5665706731287517932
 GameObject:
   m_ObjectHideFlags: 0

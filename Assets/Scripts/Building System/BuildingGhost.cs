@@ -37,6 +37,9 @@ public class BuildingGhost : MonoBehaviour {
     Material fakeVisualMaterial;
     List<PlaceableObjectTypes> placeableObjectTypesFakeVisualBlacklist;
     List<BuildingTypes> buildingTypesFakeVisualBlacklist;
+    bool enableVisualAnchorDebug;
+    Material visualAnchorDebugMaterial;
+    string identifierTag;
 
     private void Awake()
     {
@@ -50,7 +53,7 @@ public class BuildingGhost : MonoBehaviour {
     private void Start() 
     {
         // This has to be in Start() because it needs to take place after Init() in the GridBuildingManager
-        gridBuildingManager.GetFakeVisualDebugInfo(out debug, out enableFakeVisualDebug, out fakeVisualMaterial, out placeableObjectTypesFakeVisualBlacklist, out buildingTypesFakeVisualBlacklist);
+        gridBuildingManager.GetFakeVisualDebugInfo(out debug, out enableFakeVisualDebug, out fakeVisualMaterial, out placeableObjectTypesFakeVisualBlacklist, out buildingTypesFakeVisualBlacklist, out enableVisualAnchorDebug, out visualAnchorDebugMaterial, out identifierTag);
         
         currentGhostMaterial = validGhostMaterial;
 
@@ -160,13 +163,15 @@ public class BuildingGhost : MonoBehaviour {
             visual.parent = transform;
             visual.localPosition = spawnPos;
             visual.localEulerAngles = spawnRot.eulerAngles;
-            SetLayerAndMatRecursive(visual.gameObject, currentGhostMaterial, ignoreMaskName);
+            GridBuildingUtil.SetLayerAndMatRecursive(visual.gameObject, currentGhostMaterial, ignoreMaskName);
 
             fakeVisual = Instantiate(visual, visual.position, visual.rotation);
             fakeVisual.parent = transform;
             fakeVisual.localPosition = spawnPos;
             fakeVisual.localEulerAngles = spawnRot.eulerAngles;
             SetupFakeVisualDebug();
+
+            SetupVisualAnchorDebug();
         
             currentBuildingGhost.RemoveColliderScriptFromVisibleGhost();
         }
@@ -182,56 +187,6 @@ public class BuildingGhost : MonoBehaviour {
             }
         }
         
-    }
-
-    private void SetLayerAndMatRecursive(GameObject targetGameObject, Material mat, string layerName) 
-    {
-        MeshRenderer meshRenderer;
-        targetGameObject.TryGetComponent<MeshRenderer>(out meshRenderer);
-
-        if(meshRenderer != null)
-        {
-            meshRenderer.material = mat;
-        }
-
-        targetGameObject.layer = LayerMask.NameToLayer(layerName);
-        
-        foreach(Transform child in targetGameObject.transform) 
-        {
-            SetLayerAndMatRecursive(child.gameObject, mat, layerName);
-        }
-    }  
-
-    private void SetMatRecursive(GameObject targetGameObject, Material mat)
-    {
-        MeshRenderer meshRenderer;
-        targetGameObject.TryGetComponent<MeshRenderer>(out meshRenderer);
-
-        if(meshRenderer != null)
-        {
-            meshRenderer.material = mat;
-        }
-
-        foreach(Transform child in targetGameObject.transform) 
-        {
-            SetMatRecursive(child.gameObject, mat);
-        }
-    }
-
-    private void DisableMeshRendererRecursive(GameObject targetGameObject)
-    {
-        MeshRenderer meshRenderer;
-        targetGameObject.TryGetComponent<MeshRenderer>(out meshRenderer);
-
-        if(meshRenderer != null)
-        {
-            meshRenderer.enabled = false;
-        }
-
-        foreach(Transform child in targetGameObject.transform) 
-        {
-            DisableMeshRendererRecursive(child.gameObject);
-        }
     }
 
     private void SetGhostValidityState(GhostValidityState state)
@@ -251,7 +206,7 @@ public class BuildingGhost : MonoBehaviour {
             break;
         }
 
-        SetMatRecursive(visual.gameObject, currentGhostMaterial);
+        GridBuildingUtil.SetMatRecursive(visual.gameObject, currentGhostMaterial);
     }
     
     public void SwitchBuildingGhost()
@@ -305,12 +260,20 @@ public class BuildingGhost : MonoBehaviour {
 
             if(doDebug) 
             {
-                SetLayerAndMatRecursive(fakeVisual.gameObject, fakeVisualMaterial, ignoreMaskName);
+                GridBuildingUtil.SetLayerAndMatRecursive(fakeVisual.gameObject, fakeVisualMaterial, ignoreMaskName);
                 return;
             }
         }
 
-        DisableMeshRendererRecursive(fakeVisual.gameObject);
+        GridBuildingUtil.DisableMeshRendererRecursive(fakeVisual.gameObject);
+    }
+
+    private void SetupVisualAnchorDebug()
+    {
+        if(debug && enableVisualAnchorDebug) return;
+
+        GridBuildingUtil.DisableMeshRendererRecursive(visual.gameObject, identifierTag);
+        GridBuildingUtil.DisableMeshRendererRecursive(fakeVisual.gameObject, identifierTag);
     }
 
     public enum GhostValidityState

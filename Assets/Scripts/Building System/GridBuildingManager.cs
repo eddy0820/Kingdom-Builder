@@ -49,6 +49,9 @@ public class GridBuildingManager : MonoBehaviour
     Material fakeVisualMaterial;
     [ReadOnly, SerializeField] List<PlaceableObjectTypes> placeableObjectTypesFakeVisualBlacklist;
     [ReadOnly, SerializeField] List<BuildingTypes> buildingTypesFakeVisualBlacklist;
+    [ReadOnly, SerializeField] bool enableVisualAnchorDebug;
+    Material visualAnchorDebugMaterial;
+    string identifierTag;
 
     [SerializeField] GameObject debugHolder;
     public GameObject DebugHolder => debugHolder; 
@@ -90,7 +93,7 @@ public class GridBuildingManager : MonoBehaviour
         looseObjectBuildingManager = GetComponentInChildren<LooseObjectBuildingManager>();
     }
 
-    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, float _uIIconAnimationDelay, float _uIIconAnimationSpeed, bool _debug, bool _enableGridDebug, int _debugFontSize, bool _enableMouse3DDebug, Material _mouse3DDebugMaterial, bool _enableFakeVisualDebug, Material _fakeVisualMaterial, List<PlaceableObjectTypes> _placeableObjectTypesFakeVisualBlacklist, List<BuildingTypes> _buildingTypesFakeVisualBlacklist)
+    public void Init(int _gridWidth, int _gridLength, float _cellSize, float _gridHeight, int _gridVerticalCount, float _maxBuildDistance, LayerMask _edgeColliderLayerMask, LayerMask _placeableObjectsColliderLayerMask, float _uIIconAnimationDelay, float _uIIconAnimationSpeed, bool _debug, bool _enableGridDebug, int _debugFontSize, bool _enableMouse3DDebug, Material _mouse3DDebugMaterial, bool _enableFakeVisualDebug, Material _fakeVisualMaterial, List<PlaceableObjectTypes> _placeableObjectTypesFakeVisualBlacklist, List<BuildingTypes> _buildingTypesFakeVisualBlacklist, bool _enableVisualAnchorDebug, Material _visualAnchorDebugMaterial, string _identifierTag)
     {
         gridWidth = _gridWidth;
         gridLength = _gridLength;
@@ -111,6 +114,9 @@ public class GridBuildingManager : MonoBehaviour
         fakeVisualMaterial = _fakeVisualMaterial;
         placeableObjectTypesFakeVisualBlacklist = _placeableObjectTypesFakeVisualBlacklist;
         buildingTypesFakeVisualBlacklist = _buildingTypesFakeVisualBlacklist;
+        enableVisualAnchorDebug = _enableVisualAnchorDebug;
+        visualAnchorDebugMaterial = _visualAnchorDebugMaterial;
+        identifierTag = _identifierTag;
     }
 
     public void Setup(Vector3 origin)
@@ -178,7 +184,8 @@ public class GridBuildingManager : MonoBehaviour
         {
             if(Mouse3D.Instance.AmILookingAtCollider() && IsWithinMaxBuildDistance() && currentPlaceableObjectSO != null)
             {
-                currentBuildingManager.PlaceObject();
+                GameObject placedObject = currentBuildingManager.PlaceObject();
+                HandleVisualAnchorDebug(placedObject);
             } 
         }
     }
@@ -226,12 +233,28 @@ public class GridBuildingManager : MonoBehaviour
         }
     }
 
-    public void GetFakeVisualDebugInfo(out bool _debug, out bool _enableFakeVisualDebug, out Material _fakeVisualMaterial, out List<PlaceableObjectTypes> _placeableObjectTypesFakeVisualBlacklist, out List<BuildingTypes> _buildingTypesFakeVisualBlacklist)
+    public void GetFakeVisualDebugInfo(out bool _debug, out bool _enableFakeVisualDebug, out Material _fakeVisualMaterial, out List<PlaceableObjectTypes> _placeableObjectTypesFakeVisualBlacklist, out List<BuildingTypes> _buildingTypesFakeVisualBlacklist, out bool _enableVisualAnchorDebug, out Material _visualAnchorDebugMaterial, out string _identifierTag)
     {
         _debug = debug;
         _enableFakeVisualDebug = enableFakeVisualDebug;
         _fakeVisualMaterial = fakeVisualMaterial;
         _placeableObjectTypesFakeVisualBlacklist = placeableObjectTypesFakeVisualBlacklist;
         _buildingTypesFakeVisualBlacklist = buildingTypesFakeVisualBlacklist;
+        _enableVisualAnchorDebug = enableVisualAnchorDebug;
+        _visualAnchorDebugMaterial = visualAnchorDebugMaterial;
+        _identifierTag = identifierTag;
+    }
+
+    private void HandleVisualAnchorDebug(GameObject gameObj)
+    {
+        if(gameObj == null) return;
+
+        if(debug && enableVisualAnchorDebug)
+        {
+            GridBuildingUtil.SetMatRecursive(gameObj, visualAnchorDebugMaterial, identifierTag);
+            return;
+        }
+
+        GridBuildingUtil.DisableMeshRendererRecursive(gameObj, identifierTag);
     }
 }

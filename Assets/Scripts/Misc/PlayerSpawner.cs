@@ -80,7 +80,10 @@ public class PlayerSpawner : MonoBehaviour
                     gridBuildingInfo.EnableFakeVisualDebug,
                     gridBuildingInfo.FakeVisualMaterial,
                     gridBuildingInfo.PlaceableObjectTypesFakeVisualBlacklist,
-                    gridBuildingInfo.BuildingTypesFakeVisualBlacklist
+                    gridBuildingInfo.BuildingTypesFakeVisualBlacklist,
+                    gridBuildingInfo.EnableVisualAnchorDebug,
+                    gridBuildingInfo.VisualAnchorDebugMaterial,
+                    gridBuildingInfo.IdentifierTag
                 );
 
             GridBuildingManager.Instance.Setup(gridBuildingInfo.GridOriginPoint.position);

@@ -10,7 +10,7 @@ public class StairObject : EdgeObject, IHasEdges
     EdgeObject leftStairEdgeObject;
     EdgeObject rightStairEdgeObject;
 
-    public void PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO)
+    public GameObject PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO)
     {
         EdgePosition edgePosition = GetEdgePosition(edge);
 
@@ -32,6 +32,8 @@ public class StairObject : EdgeObject, IHasEdges
         }
 
         edgeObject.SetPrimaryParentParentObjectStair(this, edge);
+
+        return edgeObjectTransform.gameObject;
     }
 
     public EdgePosition GetEdgePosition(Edge edge)

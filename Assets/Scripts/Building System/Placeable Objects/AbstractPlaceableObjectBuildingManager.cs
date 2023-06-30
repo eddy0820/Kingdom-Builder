@@ -15,7 +15,7 @@ public abstract class AbstractPlaceableObjectBuildingManager : MonoBehaviour
 
     protected abstract void OnAwake();
 
-    public abstract void PlaceObject();
+    public abstract GameObject PlaceObject();
     public abstract bool CanPlace();
 
     public abstract void Rotate();
