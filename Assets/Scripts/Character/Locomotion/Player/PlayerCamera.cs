@@ -87,6 +87,9 @@ public class PlayerCamera : MonoBehaviour
         _targetVerticalAngle = 0f;
 
         PlanarDirection = Vector3.forward;
+
+        PlayerController.Instance.OnEnterFirstPerson += OnEnterFirstPerson;
+        PlayerController.Instance.OnExitFirstPerson += OnExitFirstPerson;
     }
 
     // Set the transform that the camera will orbit around
@@ -198,6 +201,7 @@ public class PlayerCamera : MonoBehaviour
     public void DoBuildModeCamera(bool enabled)
     {
         StopAllCoroutines();
+        if(inFirstPerson) return;
 
         if(enabled)
         {
@@ -207,6 +211,24 @@ public class PlayerCamera : MonoBehaviour
         {
             StartCoroutine(DoCameraLerp(BuildModeFollowPointFraming, DefaultFollowPointFraming));
         }
+    }
+
+    private void OnEnterFirstPerson()
+    {
+        if(!PlayerController.Instance.BuildModeEnabled) return;
+
+        //StopAllCoroutines();
+        
+        StartCoroutine(DoCameraLerp(BuildModeFollowPointFraming, DefaultFollowPointFraming));
+    }
+
+    private void OnExitFirstPerson()
+    {
+        if(!PlayerController.Instance.BuildModeEnabled) return;
+
+        //StopAllCoroutines();
+
+        StartCoroutine(DoCameraLerp(DefaultFollowPointFraming, BuildModeFollowPointFraming));
     }
 
     IEnumerator DoCameraLerp(Vector2 startPosition, Vector2 targetPosition)

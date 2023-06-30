@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
@@ -22,6 +23,9 @@ public class PlayerController : MonoBehaviour
 
     bool buildModeEnabled;
     public bool BuildModeEnabled => buildModeEnabled;
+
+    public Action OnEnterFirstPerson;
+    public Action OnExitFirstPerson;
 
     private void Awake()
     {
@@ -124,17 +128,23 @@ public class PlayerController : MonoBehaviour
 
     private void CheckIfFirstPerson()
     {
+        bool lastFrameFirstPersonState = characterCamera.inFirstPerson;
+
         if(characterCamera.TargetDistance == 0f)
         {
             characterCamera.inFirstPerson = true;
             character.OrientationMethod = OrientationMethod.TowardsCamera;
             character.MeshRoot.gameObject.SetActive(false);
+
+            if(lastFrameFirstPersonState != characterCamera.inFirstPerson) OnEnterFirstPerson?.Invoke();
         }
         else
         {
             characterCamera.inFirstPerson = false;
             character.OrientationMethod = OrientationMethod.TowardsMovement;
             character.MeshRoot.gameObject.SetActive(true);
+            
+            if(lastFrameFirstPersonState != characterCamera.inFirstPerson) OnExitFirstPerson?.Invoke();
         }
     }
 
