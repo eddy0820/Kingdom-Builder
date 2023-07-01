@@ -80,6 +80,29 @@ public class StairObject : EdgeObject, IHasEdges
         base.DestroySelf();
     }
 
+    // you were here debuging this
+    public bool CanPlaceObjectInternal(EdgeObjectSO edgeObjectSO, EdgePosition edgePosition, out Edge edge, out string debugString)
+    {
+        edge = Edge.UpWest;
+        debugString = "";
+
+        if(GetEdgeObject(edgePosition.edge) == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, BuildingType))
+        {
+            if(GridBuildingManager.Instance.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
+            {
+                debugString = "Is Colliding With Other Edge Object";
+                return false;
+            }
+
+            edge = edgePosition.edge;
+            debugString = "";
+            return true;
+        }
+
+        debugString = "This Is Not A Stair Object";
+        return false;
+    }
+
     public void SetCenterPivot(Transform trans)
     {
         centerPivot = trans;

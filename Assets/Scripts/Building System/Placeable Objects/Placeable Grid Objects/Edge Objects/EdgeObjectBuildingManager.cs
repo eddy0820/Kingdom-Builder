@@ -41,54 +41,9 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         
         if(Mouse3D.Instance.IsLookingAtEdgePosition(out EdgePosition edgePosition))
         {
-            if(IsEdgePositionPartOfFloorGridObject(edgePosition, out FloorGridObject floorGridObject))
-            {
-                iHasEdgesObject = floorGridObject;
+            edgePosition.transform.parent.TryGetComponent<IHasEdges>(out iHasEdgesObject);
 
-                if(floorGridObject.GetEdgeObject(edgePosition.edge) == null && IsCompatibleWithThisObject(edgeObjectSO, floorGridObject.BuildingType))
-                {   
-                    if(IsEdgeTaken(floorGridObject, edgePosition)) //  Might not need this check, I think it's a dumbo mistake
-                    {
-                        debugString = "Edge Is Taken.";
-                        return false;
-                    }
-
-                    if(IsEdgeWidthTwo(edgeObjectSO) && 
-                       IsTargetingWestEdge(floorGridObject, edgePosition) && 
-                       IsEastEdgeTaken(floorGridObject, edgePosition))
-                    {
-                        debugString = "Complimentary Edge Is Taken.";
-                        return false;
-                    }
-
-                    if(GridBuildingManager.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
-                    {
-                        debugString = "Is Colliding With Other Edge Object";
-                        return false;
-                    }
-
-                    edge = edgePosition.edge;
-                    debugString = "";
-                    return true;
-                }
-            }
-            else if(IsEdgePositionPartOfStairObject(edgePosition, out StairObject stairObject))
-            {
-                iHasEdgesObject = stairObject;
-
-                if(stairObject.GetEdgeObject(edgePosition.edge) == null && IsCompatibleWithThisObject(edgeObjectSO, stairObject.BuildingType))
-                {
-                    if(GridBuildingManager.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
-                    {
-                        debugString = "Is Colliding With Other Edge Object";
-                        return false;
-                    }
-
-                    edge = edgePosition.edge;
-                    debugString = "";
-                    return true;
-                }
-            }
+            return iHasEdgesObject.CanPlaceObjectInternal(edgeObjectSO, edgePosition, out edge, out debugString);
         }
 
         debugString = "Not Looking at Edge Position";
@@ -101,36 +56,15 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         return CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge, out string debugString);
     }
 
-    private bool IsCompatibleWithThisObject(EdgeObjectSO edgeObjectSO, BuildingTypes buildingTypeToCheck)
-    {
-        foreach(BuildingTypes buildingType in edgeObjectSO.CompatibleBuildingTypes)
-        {
-            if(buildingType == buildingTypeToCheck)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    
 
     public bool ShouldBuildingGhostSnapToEdgePosition(out EdgePosition edgePosition)
     {
-        if(!Mouse3D.Instance.IsLookingAtEdgePosition(out edgePosition))
-        {
-            return false;
-        }
+        if(!Mouse3D.Instance.IsLookingAtEdgePosition(out edgePosition)) return false;
 
-        if(IsEdgePositionPartOfFloorGridObject(edgePosition, out FloorGridObject floorGridObject))
-        {
-            return IsCompatibleWithThisObject((EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO, floorGridObject.BuildingType);
-        }
-        else if(IsEdgePositionPartOfStairObject(edgePosition, out StairObject stairObject))
-        {
-            return IsCompatibleWithThisObject((EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO, stairObject.BuildingType);
-        }
+        edgePosition.transform.parent.TryGetComponent<IHasEdges>(out IHasEdges iHasEdgesObject);
 
-        return false;
+        return iHasEdgesObject.CanPlaceObjectInternal((EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO, edgePosition, out Edge dummyEdge, out string dumymDebugString);
     }
 
     private bool IsEdgePositionPartOfFloorGridObject(EdgePosition edgePosition, out FloorGridObject floorGridObject)
@@ -143,25 +77,16 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         return edgePosition.transform.parent.TryGetComponent<StairObject>(out stairObject);
     }
 
-    private bool IsEdgeWidthTwo(EdgeObjectSO edgeObjectSO)
+    public static bool IsCompatibleWithEdgeObject(EdgeObjectSO edgeObjectSO, BuildingTypes buildingTypeToCheck)
     {
-        return edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two;
-    }
+        foreach(BuildingTypes buildingType in edgeObjectSO.CompatibleBuildingTypes)
+        {
+            if(buildingType == buildingTypeToCheck)
+            {
+                return true;
+            }
+        }
 
-    private bool IsTargetingWestEdge(FloorGridObject floorGridObject, EdgePosition edgePosition)
-    {
-        return floorGridObject.IsWestEdge(edgePosition.edge);
+        return false;
     }
-
-    private bool IsEastEdgeTaken(FloorGridObject floorGridObject, EdgePosition edgePosition)
-    {
-        return floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null;
-    }
-
-    private bool IsEdgeTaken(FloorGridObject floorGridObject, EdgePosition edgePosition)
-    {
-        return floorGridObject.GetEdgeObject(edgePosition.edge) != null;
-    }
-
-    
 }

@@ -134,6 +134,42 @@ public class FloorGridObject : GridObject, IHasEdges
         }
     }
 
+    public bool CanPlaceObjectInternal(EdgeObjectSO edgeObjectSO, EdgePosition edgePosition, out Edge edge, out string debugString)
+    {
+        edge = Edge.UpWest;
+        debugString = "";
+
+        if(GetEdgeObject(edgePosition.edge) == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, BuildingType))
+        {   
+            if(IsEdgeTaken(this, edgePosition)) //  Might not need this check, I think it's a dumbo mistake
+            {
+                debugString = "Edge Is Taken.";
+                return false;
+            }
+
+            if(IsEdgeWidthTwo(edgeObjectSO) && 
+                IsTargetingWestEdge(this, edgePosition) && 
+                IsEastEdgeTaken(this, edgePosition))
+            {
+                debugString = "Complimentary Edge Is Taken.";
+                return false;
+            }
+
+            if(GridBuildingManager.Instance.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
+            {
+                debugString = "Is Colliding With Other Edge Object";
+                return false;
+            }
+
+            edge = edgePosition.edge;
+            debugString = "";
+            return true;
+        }
+
+        debugString = "This Is Not A Floor Grid Object";
+        return false;
+    }
+
     public override void DestroySelf() 
     {
         foreach(Edge edge in Enum.GetValues(typeof(Edge)))
@@ -161,5 +197,25 @@ public class FloorGridObject : GridObject, IHasEdges
         } 
 
         base.DestroySelf();
+    }
+
+    public static bool IsEdgeWidthTwo(EdgeObjectSO edgeObjectSO)
+    {
+        return edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two;
+    }
+
+    public static bool IsTargetingWestEdge(FloorGridObject floorGridObject, EdgePosition edgePosition)
+    {
+        return floorGridObject.IsWestEdge(edgePosition.edge);
+    }
+
+    public static bool IsEastEdgeTaken(FloorGridObject floorGridObject, EdgePosition edgePosition)
+    {
+        return floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null;
+    }
+
+    public static bool IsEdgeTaken(FloorGridObject floorGridObject, EdgePosition edgePosition)
+    {
+        return floorGridObject.GetEdgeObject(edgePosition.edge) != null;
     }
 }
