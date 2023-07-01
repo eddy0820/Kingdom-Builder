@@ -18,11 +18,6 @@ public class GridObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
         fakeVisual.transform.rotation = GridBuildingManager.Instance.GridObjectBuildingManager.GetGridObjectRotation();
     }
 
-    public override void RemoveColliderScriptFromVisibleGhost()
-    {
-        Destroy(BuildingGhost.Visual.GetComponent<GridObjectColliderVisual>());
-    }
-
     public bool IsFakeGhostCollidingWithEdgeObject()
     {
         return BuildingGhost.FakeVisual.GetComponent<GridObjectColliderVisual>().IsCollidingWithEdgeObject;

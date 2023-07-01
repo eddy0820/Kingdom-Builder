@@ -169,11 +169,21 @@ public class BuildingGhost : MonoBehaviour {
             fakeVisual.parent = transform;
             fakeVisual.localPosition = spawnPos;
             fakeVisual.localEulerAngles = spawnRot.eulerAngles;
-            SetupFakeVisualDebug();
 
+            SetupFakeVisualDebug();
             SetupVisualAnchorDebug();
         
-            currentBuildingGhost.RemoveColliderScriptFromVisibleGhost();
+            RemoveColliderScriptFromVisibleGhostRecursive(visual.gameObject);
+
+            // Refactor this in future if mother objecttypes have issues with intersecting placements?
+            // (Reason why this is here because gridobject placing on edgeobjects doesn't work correctly
+            //  because the edgeobject looks for the gridobjects's compound collider to do placement)
+            if(currentBuildingGhost == edgeObjectBuildingGhost)
+            {
+                RemoveNonEdgeColliderScriptCollidersFromGhostRecursive(visual.gameObject);
+                RemoveNonEdgeColliderScriptCollidersFromGhostRecursive(fakeVisual.gameObject);
+            }
+            
         }
         else
         {
@@ -274,6 +284,43 @@ public class BuildingGhost : MonoBehaviour {
 
         GridBuildingUtil.DisableMeshRendererRecursive(visual.gameObject, identifierTag);
         GridBuildingUtil.DisableMeshRendererRecursive(fakeVisual.gameObject, identifierTag);
+    }
+
+    private void RemoveColliderScriptFromVisibleGhostRecursive(GameObject targetGameObject)
+    {
+        if(targetGameObject.TryGetComponent<AbstractColliderVisual>(out AbstractColliderVisual colliderVisual))
+        {
+            Destroy(colliderVisual);
+        }
+        else
+        {
+            foreach(Transform child in targetGameObject.transform)
+            {
+                if(child.gameObject != targetGameObject)
+                {
+                    RemoveColliderScriptFromVisibleGhostRecursive(child.gameObject);
+                }
+            }
+        }
+    }
+
+    private void RemoveNonEdgeColliderScriptCollidersFromGhostRecursive(GameObject targetGameObject)
+    {
+        // If has collider but also DOES NOT have Collider Visual Script, then Destroy
+        if(targetGameObject.TryGetComponent<Collider>(out Collider collider) && !targetGameObject.TryGetComponent<AbstractColliderVisual>(out AbstractColliderVisual colliderVisual))
+        {
+            Destroy(collider);
+        }
+        else
+        {
+            foreach(Transform child in targetGameObject.transform)
+            {
+                if(child.gameObject != targetGameObject)
+                {
+                    RemoveNonEdgeColliderScriptCollidersFromGhostRecursive(child.gameObject);
+                }
+            }
+        }
     }
 
     public enum GhostValidityState

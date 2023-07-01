@@ -34,30 +34,6 @@ public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
         }
     }
 
-    public override void RemoveColliderScriptFromVisibleGhost()
-    {
-        RemoveColliderScriptFromVisibleGhostRecursive(BuildingGhost.Visual.gameObject);
-        //Destroy(BuildingGhost.Visual.GetComponent<EdgeObjectColliderVisual>());
-    }
-
-    private void RemoveColliderScriptFromVisibleGhostRecursive(GameObject targetGameObject)
-    {
-        if(targetGameObject.TryGetComponent<EdgeObjectColliderVisual>(out EdgeObjectColliderVisual edgeCollider))
-        {
-            Destroy(edgeCollider);
-        }
-        else
-        {
-            foreach(Transform child in targetGameObject.transform)
-            {
-                if(child.gameObject != targetGameObject)
-                {
-                    RemoveColliderScriptFromVisibleGhostRecursive(child.gameObject);
-                }
-            }
-        }
-    }
-
     public bool IsFakeGhostCollidingWithEdgeObjectVisual()
     {
         /*if(BuildingGhost.FakeVisual.TryGetComponent<EdgeObjectColliderVisual>(out EdgeObjectColliderVisual edgeCollider))

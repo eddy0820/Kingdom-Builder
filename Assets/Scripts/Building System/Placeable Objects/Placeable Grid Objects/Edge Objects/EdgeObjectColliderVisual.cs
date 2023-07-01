@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class EdgeObjectColliderVisual : MonoBehaviour
+public class EdgeObjectColliderVisual : AbstractColliderVisual
 {
     [SerializeField, ReadOnly] bool isCollidingWithEdgeObjectVisual;
     public bool IsCollidingWithEdgeObjectVisual => isCollidingWithEdgeObjectVisual;
@@ -36,21 +36,12 @@ public class EdgeObjectColliderVisual : MonoBehaviour
             currentOtherCollider = other;
         }
     }
+    
     private void OnTriggerExit(Collider other)
     {
         if(IsThisABuildingGhost() && OtherIsEdgeObject(other))
         {
             isCollidingWithEdgeObjectVisual = false;
         }
-    }
-
-    private bool IsThisABuildingGhost()
-    {
-        return gameObject.layer == LayerMask.NameToLayer("Building Ghost");
-    }
-
-    private bool OtherIsEdgeObject(Collider other)
-    {
-        return other.GetComponent<EdgeObjectColliderVisual>();
     }
 }

@@ -18,7 +18,4 @@ public abstract class AbstractPlaceableObjectBuildingGhost : MonoBehaviour
     public abstract void DoVisibleGhostMovement(Transform visual);
 
     public abstract void DoFakeGhostMovement(Transform fakeVisual);
-
-    public abstract void RemoveColliderScriptFromVisibleGhost();
-    
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class LooseObjectColliderVisual : MonoBehaviour
+public class LooseObjectColliderVisual : AbstractColliderVisual
 {
     [SerializeField, ReadOnly] bool colliding;
     public bool Colliding => colliding;
@@ -27,20 +27,5 @@ public class LooseObjectColliderVisual : MonoBehaviour
         if(IsThisABuildingGhost() && (OtherIsPlaceableObjectsCollider(other) || OtherIsPlaceableCollider(other))) return;
 
         colliding = false;
-    }
-
-    private bool IsThisABuildingGhost()
-    {
-        return gameObject.layer == LayerMask.NameToLayer("Building Ghost");
-    }
-
-    private bool OtherIsPlaceableCollider(Collider other)
-    {
-        return other.gameObject.layer == LayerMask.NameToLayer("Placeable Collider");
-    }
-
-    private bool OtherIsPlaceableObjectsCollider(Collider other)
-    {
-        return other.gameObject.layer == LayerMask.NameToLayer("Placeable Objects Collider");
     }
 }

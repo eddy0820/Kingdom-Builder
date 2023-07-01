@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class GridObjectColliderVisual : MonoBehaviour
+public class GridObjectColliderVisual : AbstractColliderVisual
 {
     [SerializeField, ReadOnly] bool isCollidingWithEdgeObject;
     public bool IsCollidingWithEdgeObject => isCollidingWithEdgeObject;
@@ -42,15 +42,5 @@ public class GridObjectColliderVisual : MonoBehaviour
         {
             isCollidingWithEdgeObject = false;
         }
-    }
-
-    private bool IsThisABuildingGhost()
-    {
-        return gameObject.layer == LayerMask.NameToLayer("Building Ghost");
-    }
-
-    private bool OtherIsEdgeObject(Collider other)
-    {
-        return other.GetComponentInParent<EdgeObject>();
     }
 }
