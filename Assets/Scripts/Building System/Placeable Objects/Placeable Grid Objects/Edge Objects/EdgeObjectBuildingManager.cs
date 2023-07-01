@@ -62,19 +62,9 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
     {
         if(!Mouse3D.Instance.IsLookingAtEdgePosition(out edgePosition)) return false;
 
-        edgePosition.transform.parent.TryGetComponent<IHasEdges>(out IHasEdges iHasEdgesObject);
+        edgePosition.transform.parent.TryGetComponent<PlaceableObject>(out PlaceableObject placeableObject);
 
-        return iHasEdgesObject.CanPlaceObjectInternal((EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO, edgePosition, out Edge dummyEdge, out string dumymDebugString);
-    }
-
-    private bool IsEdgePositionPartOfFloorGridObject(EdgePosition edgePosition, out FloorGridObject floorGridObject)
-    {
-        return edgePosition.transform.parent.TryGetComponent<FloorGridObject>(out floorGridObject);
-    }
-
-    private bool IsEdgePositionPartOfStairObject(EdgePosition edgePosition, out StairObject stairObject)
-    {
-        return edgePosition.transform.parent.TryGetComponent<StairObject>(out stairObject);
+        return IsCompatibleWithEdgeObject((EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO, placeableObject.BuildingType);
     }
 
     public static bool IsCompatibleWithEdgeObject(EdgeObjectSO edgeObjectSO, BuildingTypes buildingTypeToCheck)
