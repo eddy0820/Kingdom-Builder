@@ -75,6 +75,38 @@ public class GridObjectSO : PlaceableGridObjectSO
         return gridPositionList;
     }
 
+    public List<Vector2Int> GetGridPositionListAroundPoint(Vector2Int offset, Direction dir)
+    {
+        List<Vector2Int> gridPositionList = new List<Vector2Int>();
+
+        switch(dir) 
+        {
+            default:
+            case Direction.Down:
+            case Direction.Up:
+                for(int x = 0; x < width; x++) 
+                {
+                    for(int y = 0; y < height; y++) 
+                    {
+                        gridPositionList.Add(offset + new Vector2Int(x, y));
+                    }
+                }
+                break;
+            case Direction.Left:
+            case Direction.Right:
+                for(int x = 0; x < height; x++) 
+                {
+                    for(int y = 0; y < width; y++) 
+                    {
+                        gridPositionList.Add(offset + new Vector2Int(x, y));
+                    }
+                }
+                break;
+        }
+
+        return gridPositionList;
+    }
+
     public List<Vector2Int> GetGridAdjacentPositionList(List<Vector2Int> gridPositionList)
     {
         List<Vector2Int> gridAdjacentPositionList = new List<Vector2Int>();

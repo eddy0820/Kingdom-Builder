@@ -15,7 +15,10 @@ public class GridObjectBuildingManager : AbstractPlaceableObjectBuildingManager
 
     public override GameObject PlaceObject()
     {
-        if(CanPlaceObject(out GridObjectSO currentGridObjectSO, out GridXZ<GridBuildingCell> selectedGrid, out List<Vector2Int> gridObjectPositionList, out int x, out int z))
+        GridXZ<GridBuildingCell> selectedGrid = GridBuildingManager.SelectedGrid;
+        GridObjectSO currentGridObjectSO = (GridObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
+
+        if(CanPlaceObject(currentGridObjectSO, selectedGrid, out List<Vector2Int> gridObjectPositionList, out int x, out int z))
         {
             // Get actual World Position with rotation direction accounted for
             Vector2Int rotationOffset = currentGridObjectSO.GetRotationOffset(currentDirection);
@@ -199,6 +202,17 @@ public class GridObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         return selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
     }
 
+    public Vector3 GetClosestMouseWorldSnappedPosition()
+    {
+        GridXZ<GridBuildingCell> selectedGrid = GridBuildingManager.SelectedGrid;
+        GridObjectSO currentGridObjectSO = (GridObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
+
+        selectedGrid.GetClosestXZ(Mouse3D.Instance.GetMouseWorldPosition(), out int x, out int z);
+
+        Vector2Int rotationOffset = currentGridObjectSO.GetRotationOffset(currentDirection);
+        return selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
+    }
+
     public Vector3 GetGridObjectPosition()
     {
         GridXZ<GridBuildingCell> selectedGrid = GridBuildingManager.SelectedGrid;
@@ -222,17 +236,38 @@ public class GridObjectBuildingManager : AbstractPlaceableObjectBuildingManager
 
         return selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
     }
+
+    public Vector3 GetClosestGridObjectPosition()
+    {
+        GridXZ<GridBuildingCell> selectedGrid = GridBuildingManager.SelectedGrid;
+        GridObjectSO currentGridObjectSO = (GridObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
+        
+        // Get the Grid XZ
+        int x = 0, z = 0;
+        selectedGrid.GetClosestXZ(Mouse3D.Instance.GetMouseWorldPosition(), out x, out z);
+
+        // Get Grid Positions List in given Grid XZ
+        List<Vector2Int> gridObjectPositionList = currentGridObjectSO.GetGridPositionList(new Vector2Int(x, z), currentDirection);
+        // Get Adjacent Grid Positons List
+        List<Vector2Int> gridObjectAdjacentPositionList = currentGridObjectSO.GetGridAdjacentPositionList(gridObjectPositionList); 
+
+        if(IsFloatingPlacement(gridObjectAdjacentPositionList))
+        {
+            ShiftGridObjectToNewSpot(gridObjectPositionList, x, z, out x, out z);
+        }
+
+        Vector2Int rotationOffset = currentGridObjectSO.GetRotationOffset(currentDirection);
+
+        return selectedGrid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * selectedGrid.GetCellSize();
+    }
     
     public Quaternion GetGridObjectRotation() 
     {
         return Quaternion.Euler(0, ((GridObjectSO) GridBuildingManager.CurrentPlaceableObjectSO).GetRotationAngle(currentDirection), 0);
     }
 
-    private bool CanPlaceObject(out GridObjectSO currentGridObjectSO, out GridXZ<GridBuildingCell> selectedGrid, out List<Vector2Int> gridObjectPositionList, out int x, out int z)
+    private bool CanPlaceObject(GridObjectSO currentGridObjectSO, GridXZ<GridBuildingCell> selectedGrid, out List<Vector2Int> gridObjectPositionList, out int x, out int z)
     {
-        selectedGrid = GridBuildingManager.SelectedGrid;
-        currentGridObjectSO = (GridObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
-
         x = 0;
         z = 0;
         selectedGrid.GetXZ(Mouse3D.Instance.GetMouseWorldPosition(), out x, out z);
@@ -252,7 +287,10 @@ public class GridObjectBuildingManager : AbstractPlaceableObjectBuildingManager
 
     public override bool CanPlace()
     {
-        return CanPlaceObject(out GridObjectSO currentGridObjectSO, out GridXZ<GridBuildingCell> selectedGrid, out List<Vector2Int> gridObjectPositionList, out int x, out int z);
+        GridXZ<GridBuildingCell> selectedGrid = GridBuildingManager.SelectedGrid;
+        GridObjectSO currentGridObjectSO = (GridObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
+
+        return CanPlaceObject(currentGridObjectSO, selectedGrid, out List<Vector2Int> gridObjectPositionList, out int x, out int z);
     }
 
 }

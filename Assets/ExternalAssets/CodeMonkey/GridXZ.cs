@@ -85,6 +85,13 @@ public class GridXZ<TGridObject> {
         z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
     }
 
+    public void GetClosestXZ(Vector3 worldPosition, out int x, out int z)
+    {
+        Vector3 relativePosition = worldPosition - originPosition;
+        x = Mathf.RoundToInt(relativePosition.x / cellSize);
+        z = Mathf.RoundToInt(relativePosition.z / cellSize);
+    }
+
     public void SetGridObject(int x, int z, TGridObject value) {
         if (x >= 0 && z >= 0 && x < width && z < height) {
             gridArray[x, z] = value;
