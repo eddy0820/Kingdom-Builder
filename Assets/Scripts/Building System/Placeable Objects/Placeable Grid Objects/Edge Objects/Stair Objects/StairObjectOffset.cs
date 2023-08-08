@@ -27,7 +27,7 @@ public class StairObjectOffset : EdgeObjectOffset
         base.ChangeOffset();
 
         bool b = GridBuildingManager.Instance.EdgeObjectBuildingManager.CurrentEdgeFlipMode;
-        GetCorrectStairEdgeParameters(b, out EdgePosition leftEdgePosition, out EdgePosition rightEdgePosition, out Vector3 visualColliderCenter);
+        GetCorrectParameters(b, out EdgePosition leftEdgePosition, out EdgePosition rightEdgePosition, out Vector3 visualColliderCenter);
 
         if(!GridBuildingUtil.IsThisABuildingGhost(gameObject))
         {
@@ -45,7 +45,7 @@ public class StairObjectOffset : EdgeObjectOffset
         visualCollider.center = visualColliderCenter;
     }
 
-    private void GetCorrectStairEdgeParameters(bool b, out EdgePosition leftEdgePosition, out EdgePosition rightEdgePosition, out Vector3 visualColliderCenter)
+    private void GetCorrectParameters(bool b, out EdgePosition leftEdgePosition, out EdgePosition rightEdgePosition, out Vector3 visualColliderCenter)
     {
         StairOffsetPreset stairOffsetPreset = null;
         
@@ -60,7 +60,7 @@ public class StairObjectOffset : EdgeObjectOffset
     }
 
     [System.Serializable]
-    public class StairOffsetPreset
+    private class StairOffsetPreset
     {
         [SerializeField] GameObject placeableCollider;
         public GameObject PlaceableCollider => placeableCollider;
