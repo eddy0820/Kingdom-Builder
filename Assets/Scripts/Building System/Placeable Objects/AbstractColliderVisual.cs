@@ -6,29 +6,24 @@ public abstract class AbstractColliderVisual : MonoBehaviour
 {
     protected bool IsThisABuildingGhost()
     {
-        return gameObject.layer == LayerMask.NameToLayer("Building Ghost");
+        return GridBuildingUtil.IsThisABuildingGhost(gameObject);
     }
 
     protected bool OtherIsEdgeObject(Collider other)
     {
-        return !CheckForEdgeObjectUpRecursive(other.gameObject) && !CheckForEdgeObjectDownRecursive(other.gameObject);
+        return CheckForEdgeObjectUpRecursive(other.gameObject) || CheckForEdgeObjectDownRecursive(other.gameObject);
     }
 
     private bool CheckForEdgeObjectUpRecursive(GameObject targetGameObject)
     {
-        if(targetGameObject.GetComponent<PlaceableObject>() != null)
-        {
-            return false;
-        }
-
-        if(targetGameObject.GetComponent<EdgeObjectColliderVisual>() != null)
+        if(targetGameObject.GetComponent<EdgeObject>() != null)
         {
             return true;
         }
 
         if(targetGameObject.transform.parent != null)
         {
-            return CheckForEdgeObjectUpRecursive(gameObject.transform.parent.gameObject);
+            return CheckForEdgeObjectUpRecursive(targetGameObject.transform.parent.gameObject);
         }
 
         return false;
@@ -36,12 +31,7 @@ public abstract class AbstractColliderVisual : MonoBehaviour
 
     private bool CheckForEdgeObjectDownRecursive(GameObject targetGameObject)
     {
-        if(targetGameObject.GetComponent<PlaceableObject>() != null)
-        {
-            return false;
-        }
-
-        if(targetGameObject.GetComponent<EdgeObjectColliderVisual>() != null)
+        if(targetGameObject.GetComponent<EdgeObject>() != null)
         {
             return true;
         }

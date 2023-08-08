@@ -13,6 +13,10 @@ public abstract class PlaceableObjectSO : ScriptableObject
     public Transform Visual => visual;
 
     [Space(15)]
+    [SerializeField] bool rotateable;
+    public bool Rotateable => rotateable;
+
+    [Space(15)]
     [ReadOnly, SerializeField] protected PlaceableObjectTypes objectType;
     public PlaceableObjectTypes ObjectType => objectType;
     [ReadOnly, SerializeField] protected BuildingCategoryTypes buildingCategoryType;

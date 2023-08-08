@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2717202005827246130}
   - component: {fileID: 6676420912400807068}
+  - component: {fileID: 2362119127123175777}
   m_Layer: 0
-  m_Name: Primary Parent
+  m_Name: Parent Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 671260099954674123}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.27059805, y: -0.6532815, z: 0.27059805, w: 0.6532815}
+  m_LocalPosition: {x: 1.305, y: 1.255, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1812151057414715034}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: -90, z: 0}
 --- !u!114 &6676420912400807068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,9 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b1b8433f7cdfd48bf3ebda54d97cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPrimary: 1
-  primaryGridEdge: 0
-  secondaryGridEdge: 0
+--- !u!65 &2362119127123175777
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671260099954674123}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1, y: 0.1, z: 3.625}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1812151057414715032
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,9 +105,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPivot: {fileID: 0}
-  primaryParent: {fileID: 6676420912400807068}
-  secondaryParent: {fileID: 0}
-  compatibleBuildingTypes: 04000000
+  parentHolders:
+  - {fileID: 6676420912400807068}
 --- !u!1001 &1558756924627908151
 PrefabInstance:
   m_ObjectHideFlags: 0

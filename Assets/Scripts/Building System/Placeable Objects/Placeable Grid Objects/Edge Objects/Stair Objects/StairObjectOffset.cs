@@ -4,33 +4,19 @@ using UnityEngine;
 
 public class StairObjectOffset : EdgeObjectOffset
 {
-    [Space(10)]
-
-    [SerializeField] GameObject defaultPlaceableCollider;
-    [SerializeField] GameObject flippedPlaceableCollider;
-
-    [Space(10)]
-
+    [Header("Stair Object")]
     [SerializeField] BoxCollider visualCollider;
-    [SerializeField] Vector3 defaultVisualColliderCenter;
-    [SerializeField] Vector3 flippedVisualColliderCenter;
 
     [Space(10)]
 
-    [SerializeField] GameObject defaultStairEdgeLeft;
-    [SerializeField] GameObject defaultStairEdgeRight;
-    [SerializeField] GameObject flippedStairEdgeLeft;
-    [SerializeField] GameObject flippedStairEdgeRight;
-
-    [Space(10)]
-    [SerializeField] Transform defaultCenterPivot;
-    [SerializeField] Transform flippedCenterPivot;
+    [SerializeField] StairOffsetPreset defaultOffsetPreset;
+    [SerializeField] StairOffsetPreset flippedOffsetPreset;
 
     StairObject parentStairObject;
 
     private void OnEnable()
     {
-        if(!IsThisABuildingGhost())
+        if(!GridBuildingUtil.IsThisABuildingGhost(gameObject))
         {
             parentStairObject = GetComponentInParent<StairObject>();
         }
@@ -40,46 +26,49 @@ public class StairObjectOffset : EdgeObjectOffset
     {
         base.ChangeOffset();
 
-        if(!GridBuildingManager.Instance.EdgeObjectBuildingManager.CurrentEdgeFlipMode)
+        bool b = GridBuildingManager.Instance.EdgeObjectBuildingManager.CurrentEdgeFlipMode;
+        GetCorrectStairEdgeParameters(b, out EdgePosition leftEdgePosition, out EdgePosition rightEdgePosition, out Vector3 visualColliderCenter);
+
+        if(!GridBuildingUtil.IsThisABuildingGhost(gameObject))
         {
-            if(!IsThisABuildingGhost())
-            {
-                defaultPlaceableCollider.SetActive(true);
-                flippedPlaceableCollider.SetActive(false);
+            defaultOffsetPreset.PlaceableCollider.SetActive(!b);
+            flippedOffsetPreset.PlaceableCollider.SetActive(b);
 
-                defaultStairEdgeLeft.SetActive(true);
-                defaultStairEdgeRight.SetActive(true);
-                flippedStairEdgeLeft.SetActive(false);
-                flippedStairEdgeRight.SetActive(false);
+            defaultOffsetPreset.LeftEdgePosition.gameObject.SetActive(!b);
+            defaultOffsetPreset.RightEdgePosition.gameObject.SetActive(!b);
+            flippedOffsetPreset.LeftEdgePosition.gameObject.SetActive(b);
+            flippedOffsetPreset.RightEdgePosition.gameObject.SetActive(b);
 
-                parentStairObject.SetEdgePositions(defaultStairEdgeLeft, defaultStairEdgeRight);
-                parentStairObject.SetCenterPivot(defaultCenterPivot);
-            }
-
-            visualCollider.center = defaultVisualColliderCenter; 
+            parentStairObject.SetEdgePositions(leftEdgePosition.Edge, leftEdgePosition.gameObject, rightEdgePosition.Edge, rightEdgePosition.gameObject);
         }
-        else
-        {
-            if(!IsThisABuildingGhost())
-            {
-                defaultPlaceableCollider.SetActive(false);
-                flippedPlaceableCollider.SetActive(true);
 
-                defaultStairEdgeLeft.SetActive(false);
-                defaultStairEdgeRight.SetActive(false);
-                flippedStairEdgeLeft.SetActive(true);
-                flippedStairEdgeRight.SetActive(true);
-
-                parentStairObject.SetEdgePositions(flippedStairEdgeLeft, flippedStairEdgeRight);
-                parentStairObject.SetCenterPivot(flippedCenterPivot);
-            }
-            
-            visualCollider.center = flippedVisualColliderCenter; 
-        }
+        visualCollider.center = visualColliderCenter;
     }
 
-    private bool IsThisABuildingGhost()
+    private void GetCorrectStairEdgeParameters(bool b, out EdgePosition leftEdgePosition, out EdgePosition rightEdgePosition, out Vector3 visualColliderCenter)
     {
-        return gameObject.layer == LayerMask.NameToLayer("Building Ghost");
+        StairOffsetPreset stairOffsetPreset = null;
+        
+        if(!b) // Default
+            stairOffsetPreset = defaultOffsetPreset;
+        else // Flipped
+            stairOffsetPreset = flippedOffsetPreset;
+    
+        leftEdgePosition = stairOffsetPreset.LeftEdgePosition;
+        rightEdgePosition = stairOffsetPreset.RightEdgePosition;
+        visualColliderCenter = stairOffsetPreset.VisualColliderCenter;
+    }
+
+    [System.Serializable]
+    public class StairOffsetPreset
+    {
+        [SerializeField] GameObject placeableCollider;
+        public GameObject PlaceableCollider => placeableCollider;
+        [SerializeField] EdgePosition leftEdgePosition;
+        public EdgePosition LeftEdgePosition => leftEdgePosition;
+        [SerializeField] EdgePosition rightEdgePosition;
+        public EdgePosition RightEdgePosition => rightEdgePosition;
+        [SerializeField] Vector3 visualColliderCenter;
+        public Vector3 VisualColliderCenter => visualColliderCenter; 
     }
 }

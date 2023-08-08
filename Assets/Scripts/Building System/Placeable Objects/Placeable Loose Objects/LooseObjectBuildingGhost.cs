@@ -18,6 +18,8 @@ public class LooseObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
         fakeVisual.transform.rotation = Quaternion.Euler(0, GridBuildingManager.Instance.LooseObjectBuildingManager.LooseObjectEulerY, 0);
     }
 
+    public override void OnRefresh() {}
+
     public bool IsFakeGhostCollidingWithAnything()
     {
         return BuildingGhost.FakeVisual.GetComponent<LooseObjectColliderVisual>().Colliding;

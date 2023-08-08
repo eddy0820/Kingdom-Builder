@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EdgeObjectOffset : MonoBehaviour
 {
+    [Header("Edge Object Offset")]
     [SerializeField] Offset defaultOffset;
     [SerializeField] Offset flippedOffset;
     // flip anchor

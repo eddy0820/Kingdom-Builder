@@ -22,4 +22,6 @@ public class GridObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
     {
         return BuildingGhost.FakeVisual.GetComponent<GridObjectColliderVisual>().IsCollidingWithEdgeObject;
     }
+
+    public override void OnRefresh() {}
 }

@@ -49,9 +49,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPivot: {fileID: 833967438692042977}
-  primaryParent: {fileID: 1548191699098845797}
-  secondaryParent: {fileID: 4533092863091985545}
-  compatibleBuildingTypes: 00000000
+  parentHolders:
+  - {fileID: 1548191699098845797}
+  - {fileID: 4533092863091985545}
 --- !u!1 &2901091005465382873
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 1969285766489289176}
   - component: {fileID: 4533092863091985545}
   m_Layer: 0
-  m_Name: Edge Collider Secondary
+  m_Name: Parent Holder Secondary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,9 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b1b8433f7cdfd48bf3ebda54d97cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPrimary: 0
-  primaryGridEdge: 0
-  secondaryGridEdge: 0
+  edge: 0
 --- !u!1 &5590400218563733479
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,7 +154,7 @@ GameObject:
   - component: {fileID: 3245155080022998979}
   - component: {fileID: 1548191699098845797}
   m_Layer: 0
-  m_Name: Edge Collider Primary
+  m_Name: Parent Holder Primary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,9 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b1b8433f7cdfd48bf3ebda54d97cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPrimary: 1
-  primaryGridEdge: 0
-  secondaryGridEdge: 0
+  edge: 0
 --- !u!1001 &675242619938230083
 PrefabInstance:
   m_ObjectHideFlags: 0

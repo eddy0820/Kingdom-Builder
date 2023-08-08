@@ -42,7 +42,7 @@ public class Mouse3D : MonoBehaviour {
     {
         GameObject mouseObj = GetMouseGameObject(placeableColliderLayer);
 
-        if(GridBuildingManager.Instance.CurrentPlaceableObjectSO is PlaceableLooseObjectSO 
+        if(!(GridBuildingManager.Instance.CurrentPlaceableObjectSO is GridObjectSO)
         || (mouseObj != null && CheckIfLookingAtTopOrSides(placeableColliderLayer) && 
             PlayerController.Instance.Character.transform.position.y + PlayerController.Instance.Character.Motor.Capsule.height < GetMouseWorldPosition(placeableColliderLayer).y))
         {

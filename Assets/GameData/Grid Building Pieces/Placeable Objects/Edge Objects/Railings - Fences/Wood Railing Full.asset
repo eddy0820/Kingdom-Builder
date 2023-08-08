@@ -15,6 +15,7 @@ MonoBehaviour:
   name: Wood Railing Full
   prefab: {fileID: 2890035069137964083, guid: 22c3998fde3d039409bbccc77859a3bf, type: 3}
   visual: {fileID: 2397469715340118094, guid: ec384a3c3df69564cbafbb33a9840e5e, type: 3}
+  rotateable: 1
   objectType: 1
   buildingCategoryType: 1
   UIIcons:

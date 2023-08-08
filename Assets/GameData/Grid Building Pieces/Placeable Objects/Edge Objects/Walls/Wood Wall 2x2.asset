@@ -15,6 +15,7 @@ MonoBehaviour:
   name: Wood Wall 2x2
   prefab: {fileID: 8538997225677848771, guid: 4c75d717607ec0e40bd511444ee64b92, type: 3}
   visual: {fileID: 2832740655321918605, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
+  rotateable: 1
   objectType: 1
   buildingCategoryType: 1
   UIIcons:

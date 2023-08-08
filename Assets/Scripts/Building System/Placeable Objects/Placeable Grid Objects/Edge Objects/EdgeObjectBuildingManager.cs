@@ -31,6 +31,7 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
     public override void Rotate()
     {
         currentEdgeFlipMode = !currentEdgeFlipMode;
+
         GridBuildingManager.BuildingGhost.EdgeObjectBuildingGhost.FlipEdgeObjectGhost();
     }  
 
@@ -55,8 +56,6 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         EdgeObjectSO edgeObjectSO = (EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
         return CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge, out string debugString);
     }
-
-    
 
     public bool ShouldBuildingGhostSnapToEdgePosition(out EdgePosition edgePosition)
     {

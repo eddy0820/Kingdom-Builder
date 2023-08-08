@@ -183,6 +183,8 @@ public class BuildingGhost : MonoBehaviour {
                 RemoveNonEdgeColliderScriptCollidersFromGhostRecursive(visual.gameObject);
                 RemoveNonEdgeColliderScriptCollidersFromGhostRecursive(fakeVisual.gameObject);
             }
+
+            currentBuildingGhost.OnRefresh();
             
         }
         else

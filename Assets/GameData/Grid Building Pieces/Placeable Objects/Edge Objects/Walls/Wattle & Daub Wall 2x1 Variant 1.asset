@@ -15,6 +15,7 @@ MonoBehaviour:
   name: Wattle & Daub Wall 2x1 Variant 1
   prefab: {fileID: 6456869666786929887, guid: b025946a0e28d3047b1527b4f100fccc, type: 3}
   visual: {fileID: 8914321079817113199, guid: 9e7701e3d4295af47a8c22a9036a39c4, type: 3}
+  rotateable: 1
   objectType: 1
   buildingCategoryType: 1
   UIIcons:

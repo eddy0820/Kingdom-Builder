@@ -34,15 +34,13 @@ public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
         }
     }
 
+    public override void OnRefresh()
+    {
+        FlipEdgeObjectGhost();
+    }
+
     public bool IsFakeGhostCollidingWithEdgeObjectVisual()
     {
-        /*if(BuildingGhost.FakeVisual.TryGetComponent<EdgeObjectColliderVisual>(out EdgeObjectColliderVisual edgeCollider))
-        {
-            return edgeCollider.IsCollidingWithEdgeObjectVisual;
-        }
-
-        return false;*/
-
         return IsFakeGhostCollidingWithEdgeObjectVisualRecursive(BuildingGhost.FakeVisual.gameObject);
     }
 
@@ -69,7 +67,7 @@ public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
 
     public void FlipEdgeObjectGhost()
     {
-        if(BuildingGhost.Visual != null)
+        if(BuildingGhost.Visual != null && GridBuildingManager.Instance.CurrentPlaceableObjectSO.Rotateable)
         {
             BuildingGhost.Visual.GetComponentInChildren<EdgeObjectOffset>().ChangeOffset();
             BuildingGhost.FakeVisual.GetComponentInChildren<EdgeObjectOffset>().ChangeOffset();

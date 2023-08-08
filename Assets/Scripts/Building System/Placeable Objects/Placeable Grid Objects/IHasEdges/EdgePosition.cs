@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EdgePosition : MonoBehaviour 
 {
-    public Edge edge;
+    [SerializeField] Edge edge;
+    public Edge Edge => edge;
 
     [SerializeField] Transform pivotTransform;
     public Transform PivotTransform => pivotTransform;

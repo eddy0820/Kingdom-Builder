@@ -2,30 +2,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class FloorGridObject : GridObject, IHasEdges
 {
-    [SerializeField] EdgePosition upWestFloorEdgePosition;
-    [SerializeField] EdgePosition upEastFloorEdgePosition;
-    [SerializeField] EdgePosition downWestFloorEdgePosition;
-    [SerializeField] EdgePosition downEastFloorEdgePosition;
-    [SerializeField] EdgePosition leftWestFloorEdgePosition;
-    [SerializeField] EdgePosition leftEastFloorEdgePosition;
-    [SerializeField] EdgePosition rightWestFloorEdgePosition;
-    [SerializeField] EdgePosition rightEastFloorEdgePosition;
+    [SerializeField] List<EdgePosition> edgePositions;
 
-    EdgeObject upWestEdgeObject;
-    EdgeObject upEastEdgeObject;
-    EdgeObject downWestEdgeObject;
-    EdgeObject downEastEdgeObject;
-    EdgeObject leftWestEdgeObject;
-    EdgeObject leftEastEdgeObject;
-    EdgeObject rightWestEdgeObject;
-    EdgeObject rightEastEdgeObject;
+    Dictionary<Edge, EdgeObject> edgeObjectDictionary;
+
+    protected override void OnAwake()
+    {
+        edgeObjectDictionary = new Dictionary<Edge, EdgeObject>();
+
+        foreach(EdgePosition edgePosition in edgePositions)
+        {
+            edgeObjectDictionary.Add(edgePosition.Edge, null);
+        }
+    }
+
+    Dictionary<Edge, EdgeObject> IHasEdges.EdgeObjectDictionary()
+    {
+        return edgeObjectDictionary;
+    }
 
     public GameObject PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO) 
     {  
-        EdgePosition edgePosition = GetEdgePosition(edge);
+        EdgePosition edgePosition = edgePositions.Find(x => x.Edge == edge);
 
         Transform edgeObjectTransform = Instantiate(edgeObjectSO.Prefab, edgePosition.transform.position, edgePosition.transform.rotation);
 
@@ -38,7 +40,74 @@ public class FloorGridObject : GridObject, IHasEdges
         return edgeObjectTransform.gameObject;
     }
 
-    public bool IsWestEdge(Edge edge)
+    public bool CanPlaceObjectInternal(EdgeObjectSO edgeObjectSO, EdgePosition edgePosition, out Edge edge, out string debugString)
+    {
+        edge = Edge.UpWest;
+        debugString = "";
+
+        if(edgeObjectDictionary[edgePosition.Edge] == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, BuildingType))
+        {   
+            if(IsEdgeTaken(edgePosition)) //  Might not need this check, I think it's a dumbo mistake
+            {
+                debugString = "Edge Is Taken.";
+                return false;
+            }
+
+            if(IsEdgeWidthTwo(edgeObjectSO) && 
+                IsWestEdge(edgePosition.Edge) && 
+                IsEastEdgeTaken(edgePosition))
+            {
+                debugString = "Complimentary Edge Is Taken.";
+                return false;
+            }
+
+            if(GridBuildingManager.Instance.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
+            {
+                debugString = "Is Colliding With Other Edge Object";
+                return false;
+            }
+
+            edge = edgePosition.Edge;
+            debugString = "";
+            return true;
+        }
+
+        debugString = "This Is Not A Floor Grid Object";
+        return false;
+    }
+
+    public override void DestroySelf() 
+    {
+        foreach(KeyValuePair<Edge, EdgeObject> edgeObjectDictionaryEntry in edgeObjectDictionary)
+        {
+            if(edgeObjectDictionaryEntry.Value != null)
+            {
+                if(edgeObjectDictionaryEntry.Value.NullifyParentsThatMatch(this))
+                {
+                    edgeObjectDictionary[edgeObjectDictionaryEntry.Key].DestroySelf();
+                }
+            }
+        }
+
+        base.DestroySelf();
+    }
+
+    public static bool IsEdgeWidthTwo(EdgeObjectSO edgeObjectSO)
+    {
+        return edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two;
+    }
+
+    public bool IsEastEdgeTaken(EdgePosition edgePosition)
+    {
+        return edgeObjectDictionary[GetComplimentaryEdge(edgePosition.Edge)] != null;
+    }
+
+    public bool IsEdgeTaken(EdgePosition edgePosition)
+    {
+        return edgeObjectDictionary[edgePosition.Edge] != null;
+    }
+
+    public static bool IsWestEdge(Edge edge)
     {
         switch(edge) 
         {
@@ -54,55 +123,7 @@ public class FloorGridObject : GridObject, IHasEdges
         }
     }
 
-    public EdgePosition GetEdgePosition(Edge edge) 
-    {
-        switch(edge) 
-        {
-            default:
-            case Edge.UpWest:       return upWestFloorEdgePosition;
-            case Edge.UpEast:       return upEastFloorEdgePosition;
-            case Edge.DownWest:     return downWestFloorEdgePosition;
-            case Edge.DownEast:     return downEastFloorEdgePosition;
-            case Edge.LeftWest:     return leftWestFloorEdgePosition;
-            case Edge.LeftEast:     return leftEastFloorEdgePosition;
-            case Edge.RightWest:    return rightWestFloorEdgePosition;
-            case Edge.RightEast:    return rightEastFloorEdgePosition;
-        }
-    }
-
-    public void SetEdgeObject(Edge edge, EdgeObject edgeObject) 
-    {
-        switch(edge) 
-        {
-            default:
-            case Edge.UpWest:       upWestEdgeObject = edgeObject; break;
-            case Edge.UpEast:       upEastEdgeObject = edgeObject; break;
-            case Edge.DownWest:     downWestEdgeObject = edgeObject; break;
-            case Edge.DownEast:     downEastEdgeObject = edgeObject; break;
-            case Edge.LeftWest:     leftWestEdgeObject = edgeObject; break;
-            case Edge.LeftEast:     leftEastEdgeObject = edgeObject; break;
-            case Edge.RightWest:    rightWestEdgeObject = edgeObject; break;
-            case Edge.RightEast:    rightEastEdgeObject = edgeObject; break;
-        }
-    }
-
-    public EdgeObject GetEdgeObject(Edge edge) 
-    {
-        switch(edge) 
-        {
-            default:
-            case Edge.UpWest:       return upWestEdgeObject;
-            case Edge.UpEast:       return upEastEdgeObject;
-            case Edge.DownWest:     return downWestEdgeObject;
-            case Edge.DownEast:     return downEastEdgeObject;
-            case Edge.LeftWest:     return leftWestEdgeObject;
-            case Edge.LeftEast:     return leftEastEdgeObject;
-            case Edge.RightWest:    return rightWestEdgeObject;
-            case Edge.RightEast:    return rightEastEdgeObject;
-        }
-    }
-
-    public Edge GetComplimentaryEdge(Edge edge)
+    public static Edge GetComplimentaryEdge(Edge edge)
     {
         switch(edge) 
         {
@@ -116,106 +137,5 @@ public class FloorGridObject : GridObject, IHasEdges
             case Edge.RightWest:    return Edge.RightEast;
             case Edge.RightEast:    return Edge.RightWest;
         }
-    }
-
-    public void DestroyEdge(Edge edge)
-    {
-        switch(edge)
-        {
-            default:
-            case Edge.UpWest:       Destroy(upWestEdgeObject.gameObject); break;
-            case Edge.UpEast:       Destroy(upEastEdgeObject.gameObject); break;
-            case Edge.DownWest:     Destroy(downWestEdgeObject.gameObject); break;
-            case Edge.DownEast:     Destroy(downEastEdgeObject.gameObject); break;
-            case Edge.LeftWest:     Destroy(leftWestEdgeObject.gameObject); break;
-            case Edge.LeftEast:     Destroy(leftEastEdgeObject.gameObject); break;
-            case Edge.RightWest:    Destroy(rightWestEdgeObject.gameObject); break;
-            case Edge.RightEast:    Destroy(rightEastEdgeObject.gameObject); break; 
-        }
-    }
-
-    public bool CanPlaceObjectInternal(EdgeObjectSO edgeObjectSO, EdgePosition edgePosition, out Edge edge, out string debugString)
-    {
-        edge = Edge.UpWest;
-        debugString = "";
-
-        if(GetEdgeObject(edgePosition.edge) == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, BuildingType))
-        {   
-            if(IsEdgeTaken(this, edgePosition)) //  Might not need this check, I think it's a dumbo mistake
-            {
-                debugString = "Edge Is Taken.";
-                return false;
-            }
-
-            if(IsEdgeWidthTwo(edgeObjectSO) && 
-                IsTargetingWestEdge(this, edgePosition) && 
-                IsEastEdgeTaken(this, edgePosition))
-            {
-                debugString = "Complimentary Edge Is Taken.";
-                return false;
-            }
-
-            if(GridBuildingManager.Instance.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
-            {
-                debugString = "Is Colliding With Other Edge Object";
-                return false;
-            }
-
-            edge = edgePosition.edge;
-            debugString = "";
-            return true;
-        }
-
-        debugString = "This Is Not A Floor Grid Object";
-        return false;
-    }
-
-    public override void DestroySelf() 
-    {
-        foreach(Edge edge in Enum.GetValues(typeof(Edge)))
-        {
-            EdgeObject edgeObject = GetEdgeObject(edge);
-
-            if(edgeObject != null)
-            {
-
-                if(edgeObject.PrimaryParent.PrimaryParentGridObject as FloorGridObject == this)
-                {
-                    edgeObject.PrimaryParent.NullifyParent();
-                }
-                else if(edgeObject.SecondaryParent.SecondaryParentGridObject as FloorGridObject == this)
-                {
-                    edgeObject.SecondaryParent.NullifyParent();
-                }
-
-                if(edgeObject.PrimaryParent.PrimaryParentGridObject == null && edgeObject.SecondaryParent.SecondaryParentGridObject == null)
-                {
-                    Destroy(edgeObject.gameObject);
-                }
-            }
-            
-        } 
-
-        base.DestroySelf();
-    }
-
-    public static bool IsEdgeWidthTwo(EdgeObjectSO edgeObjectSO)
-    {
-        return edgeObjectSO.Width == EdgeObjectSO.EdgeWidth.Two;
-    }
-
-    public static bool IsTargetingWestEdge(FloorGridObject floorGridObject, EdgePosition edgePosition)
-    {
-        return floorGridObject.IsWestEdge(edgePosition.edge);
-    }
-
-    public static bool IsEastEdgeTaken(FloorGridObject floorGridObject, EdgePosition edgePosition)
-    {
-        return floorGridObject.GetEdgeObject(floorGridObject.GetComplimentaryEdge(edgePosition.edge)) != null;
-    }
-
-    public static bool IsEdgeTaken(FloorGridObject floorGridObject, EdgePosition edgePosition)
-    {
-        return floorGridObject.GetEdgeObject(edgePosition.edge) != null;
     }
 }

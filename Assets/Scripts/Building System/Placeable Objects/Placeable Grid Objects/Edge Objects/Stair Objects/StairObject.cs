@@ -1,92 +1,79 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 public class StairObject : EdgeObject, IHasEdges
 {
-    EdgePosition currentLeftStairEdgePosition;
-    EdgePosition currentRightStairEdgePosition;
+    [Header("IHasEdges")]
+    [SerializeField] List<EdgePosition> defaultEdgePositions;
+    [ReadOnly, SerializeField] List<EdgePosition> edgePositions;
 
-    EdgeObject leftStairEdgeObject;
-    EdgeObject rightStairEdgeObject;
+    Dictionary<Edge, EdgeObject> edgeObjectDictionary;
+
+    protected override void OnAwake()
+    {
+        edgeObjectDictionary = new Dictionary<Edge, EdgeObject>();
+        edgePositions = defaultEdgePositions;
+
+        foreach(EdgePosition edgePosition in edgePositions)
+        {
+            edgeObjectDictionary.Add(edgePosition.Edge, null);
+        }
+    }
+
+    Dictionary<Edge, EdgeObject> IHasEdges.EdgeObjectDictionary()
+    {
+        return edgeObjectDictionary;
+    }
 
     public GameObject PlaceEdge(Edge edge, EdgeObjectSO edgeObjectSO)
     {
-        EdgePosition edgePosition = GetEdgePosition(edge);
+        EdgePosition edgePosition = edgePositions.Find(x => x.Edge == edge);
 
         Transform edgeObjectTransform = Instantiate(edgeObjectSO.Prefab, edgePosition.transform.GetChild(0).position, edgePosition.transform.GetChild(0).rotation);
 
-        //StairObjectOffset edgeObjectOffset = edgeObjectTransform.GetComponentInChildren<StairObjectOffset>();
-        //edgeObjectOffset.ChangeOffset();
-
+        EdgeObjectOffset edgeObjectOffset = edgeObjectTransform.GetComponentInChildren<EdgeObjectOffset>();
+        edgeObjectOffset.ChangeOffset();
+        
         EdgeObject edgeObject = edgeObjectTransform.GetComponentInChildren<EdgeObject>();
         edgeObject.SetBuildingType(edgeObjectSO.BuildingType);
-
-        if(edge == Edge.LeftWest)
-        {
-            leftStairEdgeObject = edgeObject;
-        }
-        else
-        {
-            rightStairEdgeObject = edgeObject;
-        }
-
-        edgeObject.SetPrimaryParentParentObjectStair(this, edge);
 
         return edgeObjectTransform.gameObject;
     }
 
-    public EdgePosition GetEdgePosition(Edge edge)
+    public void SetEdgePositions(Edge leftEdge, GameObject left, Edge rightEdge, GameObject right)
     {
-        switch(edge) 
-        {
-            default:
-            case Edge.LeftWest:       return currentLeftStairEdgePosition;
-            case Edge.RightWest:      return currentRightStairEdgePosition; 
-        }
-    }
+        EdgePosition leftEdgePosition = edgePositions.Find(x => x.Edge == leftEdge);
+        leftEdgePosition = left.GetComponent<EdgePosition>();
 
-    public EdgeObject GetEdgeObject(Edge edge) 
-    {
-        switch(edge) 
-        {
-            default:
-            case Edge.LeftWest:     return leftStairEdgeObject;
-            case Edge.RightWest:    return rightStairEdgeObject;
-        }
-    }
-
-    public void SetEdgePositions(GameObject left, GameObject right)
-    {
-        currentLeftStairEdgePosition = left.GetComponent<EdgePosition>();
-        currentRightStairEdgePosition = right.GetComponent<EdgePosition>();
-    }
-
-    public void DestroyEdge(Edge edge)
-    {
-        switch(edge)
-        {
-            default:
-            case Edge.LeftWest:       Destroy(leftStairEdgeObject.gameObject); break;
-            case Edge.RightWest:      Destroy(rightStairEdgeObject.gameObject); break;
-        }
+        EdgePosition rightEdgePosition = edgePositions.Find(x => x.Edge == rightEdge);
+        rightEdgePosition = right.GetComponent<EdgePosition>();
     }
 
     public override void DestroySelf() 
     {
-        if(leftStairEdgeObject != null)     Destroy(leftStairEdgeObject.gameObject);
-        if(rightStairEdgeObject != null)    Destroy(rightStairEdgeObject.gameObject);
+        foreach(KeyValuePair<Edge, EdgeObject> edgeObjectDictionaryEntry in edgeObjectDictionary)
+        {
+            if(edgeObjectDictionaryEntry.Value != null)
+            {
+                if(edgeObjectDictionaryEntry.Value.NullifyParentsThatMatch(this))
+                {
+                    edgeObjectDictionary[edgeObjectDictionaryEntry.Key].DestroySelf();
+                }
+            }
+        }
 
         base.DestroySelf();
     }
 
-    // you were here debuging this
     public bool CanPlaceObjectInternal(EdgeObjectSO edgeObjectSO, EdgePosition edgePosition, out Edge edge, out string debugString)
     {
         edge = Edge.UpWest;
         debugString = "";
 
-        if(GetEdgeObject(edgePosition.edge) == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, BuildingType))
+        if(edgeObjectDictionary.ContainsKey(edgePosition.Edge) && edgeObjectDictionary[edgePosition.Edge] == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, BuildingType))
         {
             if(GridBuildingManager.Instance.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
             {
@@ -94,17 +81,12 @@ public class StairObject : EdgeObject, IHasEdges
                 return false;
             }
 
-            edge = edgePosition.edge;
+            edge = edgePosition.Edge;
             debugString = "";
             return true;
         }
 
         debugString = "This Is Not A Stair Object";
         return false;
-    }
-
-    public void SetCenterPivot(Transform trans)
-    {
-        centerPivot = trans;
     }
 }

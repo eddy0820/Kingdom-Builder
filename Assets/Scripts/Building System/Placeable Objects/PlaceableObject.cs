@@ -16,6 +16,8 @@ public abstract class PlaceableObject : MonoBehaviour
     protected void Awake()
     {
         objectType = GetObjectType();
+
+        OnAwake();
     }
 
     public void SetBuildingType(BuildingTypes _buildingType)
@@ -26,4 +28,6 @@ public abstract class PlaceableObject : MonoBehaviour
     public abstract void DestroySelf();
 
     protected abstract PlaceableObjectTypes GetObjectType();
+
+    protected virtual void OnAwake() {}
 }

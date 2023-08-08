@@ -58,14 +58,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   centerPivot: {fileID: 5576418837367068933}
   direction: 0
-  upWestFloorEdgePosition: {fileID: 702567018305626577}
-  upEastFloorEdgePosition: {fileID: 1830880874681501629}
-  downWestFloorEdgePosition: {fileID: 702567019364132412}
-  downEastFloorEdgePosition: {fileID: 3741678621106764942}
-  leftWestFloorEdgePosition: {fileID: 702567019032729078}
-  leftEastFloorEdgePosition: {fileID: 0}
-  rightWestFloorEdgePosition: {fileID: 702567019764927557}
-  rightEastFloorEdgePosition: {fileID: 0}
+  edgePositions:
+  - {fileID: 702567019364132412}
+  - {fileID: 3741678621106764942}
+  - {fileID: 702567019764927557}
+  - {fileID: 702567018305626577}
+  - {fileID: 1830880874681501629}
+  - {fileID: 702567019032729078}
 --- !u!1 &702567018305626579
 GameObject:
   m_ObjectHideFlags: 0

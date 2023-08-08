@@ -155,7 +155,7 @@ public class GridBuildingManager : MonoBehaviour
 
     public void Rotate(float value)
     {
-        if(!PlayerController.Instance.UICanvas.BuildMenuEnabled && value > 0.1f)
+        if(!PlayerController.Instance.UICanvas.BuildMenuEnabled && (currentPlaceableObjectSO != null && currentPlaceableObjectSO.Rotateable) && value > 0.1f)
         {
             currentBuildingManager.Rotate();
         }
@@ -202,7 +202,7 @@ public class GridBuildingManager : MonoBehaviour
 
                 if(hitObject != null)
                 { 
-                    currentBuildingManager.Demolish(hitObject);
+                    GetBuildingManagerFromPlaceableObjectSO(hitObject.ObjectType).Demolish(hitObject);
                 }
             }
         } 
@@ -214,22 +214,27 @@ public class GridBuildingManager : MonoBehaviour
         {
             currentPlaceableObjectSO = placeableObject;
 
-            switch(placeableObject.ObjectType)
-            {
-                case PlaceableObjectTypes.GridObject:
-                    currentBuildingManager = gridObjectBuildingManager;
-                break;
-
-                case PlaceableObjectTypes.EdgeObject:
-                    currentBuildingManager = edgeObjectBuildingManager;
-                break;
-
-                case PlaceableObjectTypes.LooseObject:
-                    currentBuildingManager = looseObjectBuildingManager;
-                break;
-            }
+            currentBuildingManager = GetBuildingManagerFromPlaceableObjectSO(currentPlaceableObjectSO.ObjectType);
 
             buildingGhost.SwitchBuildingGhost();
+        }
+    }
+
+    private AbstractPlaceableObjectBuildingManager GetBuildingManagerFromPlaceableObjectSO(PlaceableObjectTypes placeableObjectType)
+    {
+        switch(placeableObjectType)
+        {
+            case PlaceableObjectTypes.GridObject:
+                return gridObjectBuildingManager;
+
+            case PlaceableObjectTypes.EdgeObject:
+                return edgeObjectBuildingManager;
+
+            case PlaceableObjectTypes.LooseObject:
+                return looseObjectBuildingManager;
+            
+            default:
+                return null;
         }
     }
 

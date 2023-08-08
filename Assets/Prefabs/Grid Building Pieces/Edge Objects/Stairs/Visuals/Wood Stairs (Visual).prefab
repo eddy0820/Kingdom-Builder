@@ -52,17 +52,17 @@ MonoBehaviour:
   flippedOffset:
     position: {x: 2.5, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
-  defaultPlaceableCollider: {fileID: 0}
-  flippedPlaceableCollider: {fileID: 0}
   visualCollider: {fileID: 1833649404645147191}
-  defaultVisualColliderCenter: {x: 1.25, y: 1.25, z: 1.25}
-  flippedVisualColliderCenter: {x: 1.25, y: 1.25, z: -1.25}
-  defaultStairEdgeLeft: {fileID: 0}
-  defaultStairEdgeRight: {fileID: 0}
-  flippedStairEdgeLeft: {fileID: 0}
-  flippedStairEdgeRight: {fileID: 0}
-  defaultCenterPivot: {fileID: 0}
-  flippedCenterPivot: {fileID: 0}
+  defaultOffsetPreset:
+    placeableCollider: {fileID: 0}
+    leftEdgePosition: {fileID: 0}
+    rightEdgePosition: {fileID: 0}
+    visualColliderCenter: {x: 1.25, y: 1.25, z: 1.25}
+  flippedOffsetPreset:
+    placeableCollider: {fileID: 0}
+    leftEdgePosition: {fileID: 0}
+    rightEdgePosition: {fileID: 0}
+    visualColliderCenter: {x: 1.25, y: 1.25, z: -1.25}
 --- !u!1 &5719044356686296887
 GameObject:
   m_ObjectHideFlags: 0

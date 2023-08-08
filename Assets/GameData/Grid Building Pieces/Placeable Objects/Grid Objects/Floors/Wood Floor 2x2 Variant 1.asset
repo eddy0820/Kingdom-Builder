@@ -15,6 +15,7 @@ MonoBehaviour:
   name: 'Wood Floor 2x2 Variant 1 '
   prefab: {fileID: 5785724299158041941, guid: 0030f8667dfe400478cdd0aca1cc716a, type: 3}
   visual: {fileID: 5629827672070378757, guid: a7fa4b19e9f935a4db1e9174c9109243, type: 3}
+  rotateable: 1
   objectType: 0
   buildingCategoryType: 1
   UIIcons:

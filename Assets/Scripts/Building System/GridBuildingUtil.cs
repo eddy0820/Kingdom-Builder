@@ -83,4 +83,9 @@ public static class GridBuildingUtil
             DisableMeshRendererRecursive(child.gameObject, tag);
         }
     }
+    
+    public static bool IsThisABuildingGhost(GameObject gameObj)
+    {
+        return gameObj.layer == LayerMask.NameToLayer("Building Ghost");
+    }
 }
