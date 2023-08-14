@@ -228,6 +228,7 @@ GameObject:
   - component: {fileID: 449666326}
   - component: {fileID: 449666325}
   - component: {fileID: 449666328}
+  - component: {fileID: 449666329}
   m_Layer: 3
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -369,6 +370,45 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &449666329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449666323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba2450d610446f40bef3e592f9aff9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stepSoundMaterialVariations:
+  - materialSoundType: 0
+    walkSounds: {fileID: 11400000, guid: b1c64c077eefca4469badecfecb31e11, type: 2}
+    runSounds: {fileID: 11400000, guid: f3dd24f473542944cbd27812b74b6f4c, type: 2}
+  - materialSoundType: 1
+    walkSounds: {fileID: 11400000, guid: bed30ea3bab9a3844b8842da7a67c9d1, type: 2}
+    runSounds: {fileID: 11400000, guid: d6b3c28e67c2eb041931ef767899c2da, type: 2}
+  - materialSoundType: 2
+    walkSounds: {fileID: 11400000, guid: 5f48a15d15b830446a094bf990350ab2, type: 2}
+    runSounds: {fileID: 11400000, guid: db1fe87ca4a062f469090cd1b1372518, type: 2}
+  footstepSoundConfig:
+    volume: 1
+    spatialBlend: 0
+    pitch: 1
+    pan: 0
+  feetInfo:
+    leftFootInfo:
+      foot: 0
+      overlapTranform: {fileID: 535669545}
+    rightFootInfo:
+      foot: 1
+      overlapTranform: {fileID: 1932981076}
+  footRaycastLength: 1.5
+  footstepRaycastLayerMask:
+    serializedVersion: 2
+    m_Bits: 17
+  defaultMaterialSoundType: 0
 --- !u!1 &463977293
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,6 +624,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SYNTY_PolyStartPack_Male
       objectReference: {fileID: 0}
+    - target: {fileID: 1045401375514670, guid: 911f5c11c25a944419e449bf4d732ad2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4111819248598986, guid: 911f5c11c25a944419e449bf4d732ad2, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -635,6 +679,47 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4111819248598986, guid: 911f5c11c25a944419e449bf4d732ad2, type: 3}
   m_PrefabInstance: {fileID: 514131037}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &514131041 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4878242429458732, guid: 911f5c11c25a944419e449bf4d732ad2, type: 3}
+  m_PrefabInstance: {fileID: 514131037}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &514131042 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4797445682120390, guid: 911f5c11c25a944419e449bf4d732ad2, type: 3}
+  m_PrefabInstance: {fileID: 514131037}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &535669544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 535669545}
+  m_Layer: 0
+  m_Name: Heel Transform L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &535669545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535669544}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: -0.045, z: 0.15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 514131041}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &582366768
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,6 +768,7 @@ MonoBehaviour:
   character: {fileID: 449666326}
   characterCamera: {fileID: 1814969513}
   uiCanvas: {fileID: 2124959000}
+  soundController: {fileID: 449666329}
 --- !u!114 &582366771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1626,6 +1712,37 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &1932981075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1932981076}
+  m_Layer: 0
+  m_Name: Heel Transform R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1932981076
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932981075}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.045, z: -0.15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 514131042}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2049338515
 PrefabInstance:
   m_ObjectHideFlags: 0

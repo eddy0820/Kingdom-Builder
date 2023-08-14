@@ -23,7 +23,7 @@ public class InputManager : MonoBehaviour
 
     PlayerController playerController;
 
-    public InputManagerEvent OnNumberKeyPressed;
+    [HideInInspector] public InputManagerEvent OnNumberKeyPressed;
 
     private void Awake()
     {

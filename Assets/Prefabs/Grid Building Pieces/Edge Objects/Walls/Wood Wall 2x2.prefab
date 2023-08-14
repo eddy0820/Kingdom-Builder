@@ -288,6 +288,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPivot: {fileID: 9081182099903846792}
+  colliderToApplyMaterialSoundTypeHolder: {fileID: 8530792735273501956}
+  objectType: 0
+  buildingType: 0
+  materialSoundType: 0
   parentHolders:
   - {fileID: 8221896199945288607}
   - {fileID: 7011918926002002747}
@@ -352,6 +356,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
+--- !u!64 &8530792735273501956 stripped
+MeshCollider:
+  m_CorrespondingSourceObject: {fileID: 2858660864773505169, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}
+  m_PrefabInstance: {fileID: 5895060326933005717}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8538997226256607512 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2832740655321918605, guid: 41b47cd88fca876448d38d94f597cfd6, type: 3}

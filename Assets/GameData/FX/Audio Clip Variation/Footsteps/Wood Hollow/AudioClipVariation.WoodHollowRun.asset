@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 712652ee03ad9d34fa67bdb1b5684da1, type: 3}
+  m_Name: AudioClipVariation.WoodHollowRun
+  m_EditorClassIdentifier: 
+  name: Wood Hollow Run
+  audioClips:
+  - {fileID: 8300000, guid: 114618dbd595149428be6aac2c045685, type: 3}
+  - {fileID: 8300000, guid: 7824ff1605c3bd24a94ce2d815d370f0, type: 3}
+  - {fileID: 8300000, guid: f03bf13217e46614186d2e01f3333463, type: 3}
+  - {fileID: 8300000, guid: 2aef95fe652f13e4cafcdc5afe2a89b7, type: 3}
+  - {fileID: 8300000, guid: f98bf4eaf466a464ebe80dc8502376d3, type: 3}
+  - {fileID: 8300000, guid: 35d9f5c23e552fa4d983de6a8dd4004e, type: 3}
+  - {fileID: 8300000, guid: 9af76394cdc6db142b4516bafe778b84, type: 3}
+  - {fileID: 8300000, guid: dc293b74f82d76244ac4c3ba110509c5, type: 3}

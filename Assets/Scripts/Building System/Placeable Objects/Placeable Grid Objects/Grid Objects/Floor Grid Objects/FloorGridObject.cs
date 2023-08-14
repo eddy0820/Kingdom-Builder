@@ -36,6 +36,7 @@ public class FloorGridObject : GridObject, IHasEdges
 
         EdgeObject edgeObject = edgeObjectTransform.GetComponentInChildren<EdgeObject>();
         edgeObject.SetBuildingType(edgeObjectSO.BuildingType);
+        edgeObject.SetMaterialSoundType(edgeObjectSO.MaterialSoundType);
 
         return edgeObjectTransform.gameObject;
     }
@@ -45,7 +46,7 @@ public class FloorGridObject : GridObject, IHasEdges
         edge = Edge.UpWest;
         debugString = "";
 
-        if(edgeObjectDictionary[edgePosition.Edge] == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, BuildingType))
+        if(edgeObjectDictionary[edgePosition.Edge] == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, buildingType))
         {   
             if(IsEdgeTaken(edgePosition)) //  Might not need this check, I think it's a dumbo mistake
             {

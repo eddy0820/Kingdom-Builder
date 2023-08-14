@@ -44,3 +44,6 @@ https://assetstore.unity.com/packages/tools/sprite-management/sprite-sheet-packe
 
 Universal Rename Tool by KonH
 https://assetstore.unity.com/packages/tools/utilities/universal-rename-tool-84549
+
+Universal Sound FX by Imphenzia
+https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256

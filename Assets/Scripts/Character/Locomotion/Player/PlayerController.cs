@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     public PlayerCamera CharacterCamera => characterCamera;
     [SerializeField] PlayerCanvas uiCanvas;
     public PlayerCanvas UICanvas => uiCanvas;
+    [SerializeField] PlayerSoundController soundController;
+    public PlayerSoundController SoundController => soundController;
 
     private float verticalInput;
     private float horizontalInput;

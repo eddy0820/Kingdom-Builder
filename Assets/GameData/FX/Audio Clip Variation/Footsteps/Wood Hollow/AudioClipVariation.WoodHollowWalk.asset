@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 712652ee03ad9d34fa67bdb1b5684da1, type: 3}
+  m_Name: AudioClipVariation.WoodHollowWalk
+  m_EditorClassIdentifier: 
+  name: Wood Hollow Walk
+  audioClips:
+  - {fileID: 8300000, guid: b894ef283348bad4c8988f6abf7797e3, type: 3}
+  - {fileID: 8300000, guid: 1c404eeb97cf3114ea6e3133a9f7c296, type: 3}
+  - {fileID: 8300000, guid: dff9e6f01f14ddc4b8b2c99c803ebe42, type: 3}
+  - {fileID: 8300000, guid: be0c516c6c4e8da4ea35b6606c3cd70e, type: 3}
+  - {fileID: 8300000, guid: 83a4afb7f5a65d343a49859c179f37a9, type: 3}
+  - {fileID: 8300000, guid: 1bfe8b361f9abda4f8c10cf4e5ee87c7, type: 3}
+  - {fileID: 8300000, guid: db9888e324062d145ad315cd626b504b, type: 3}
+  - {fileID: 8300000, guid: 8cdf7f1be097a7240a36cb4c9dc25b3f, type: 3}

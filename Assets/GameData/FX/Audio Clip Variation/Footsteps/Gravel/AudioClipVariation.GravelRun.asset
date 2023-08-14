@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 712652ee03ad9d34fa67bdb1b5684da1, type: 3}
+  m_Name: AudioClipVariation.GravelRun
+  m_EditorClassIdentifier: 
+  name: Gravel Run
+  audioClips:
+  - {fileID: 8300000, guid: d1be72cd236ac844d834f0f076bc98f5, type: 3}
+  - {fileID: 8300000, guid: a5f110cf457c2194887f32148f274689, type: 3}
+  - {fileID: 8300000, guid: a8b70c64d6ab1594f8c006b2f1b2df25, type: 3}
+  - {fileID: 8300000, guid: c50c51295294e6747aacf2b310fdb0b1, type: 3}
+  - {fileID: 8300000, guid: 131ed995619e4674387a15980044d110, type: 3}
+  - {fileID: 8300000, guid: bdd010367273f67459268259f93ce309, type: 3}
+  - {fileID: 8300000, guid: 129a4619e3ba7e8429dcbafaefd79dd5, type: 3}
+  - {fileID: 8300000, guid: 86ca5a057a8764a4d84b17dd9b419ef6, type: 3}

@@ -22,6 +22,7 @@ public class GridObject : PlaceableObject
         placedObject.origin = _origin;
         placedObject.direction = _direction;
         placedObject.SetBuildingType(_gridObjectSO.BuildingType);
+        placedObject.SetMaterialSoundType(_gridObjectSO.MaterialSoundType);
 
         return placedObject;
     }

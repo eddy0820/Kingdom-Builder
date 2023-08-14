@@ -23,9 +23,14 @@ public abstract class PlaceableObjectSO : ScriptableObject
     public BuildingCategoryTypes BuildingCategoryType => buildingCategoryType;
 
     [Space(15)]
+
     [SerializeField] Sprite[] UIIcons;
     public Sprite[] UIICons => UIIcons;
     public Sprite MainIcon => GetFirstIcon();
+
+    [Space(15)]
+    [SerializeField] EMaterialSoundType materialSoundType;
+    public EMaterialSoundType MaterialSoundType => materialSoundType;
 
     private void Awake()
     {

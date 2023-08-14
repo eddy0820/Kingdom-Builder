@@ -127,6 +127,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerPivot: {fileID: 5324822049776708876}
+  colliderToApplyMaterialSoundTypeHolder: {fileID: 5260422526363103237}
+  objectType: 0
+  buildingType: 0
+  materialSoundType: 0
   parentHolders:
   - {fileID: 1054322634847193264}
   - {fileID: 6553357119685046864}
@@ -233,7 +237,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b1b8433f7cdfd48bf3ebda54d97cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  edge: 0
 --- !u!1 &8294515728782790636
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,7 +295,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b1b8433f7cdfd48bf3ebda54d97cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  edge: 0
 --- !u!1001 &3496170057269835845
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -350,6 +352,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d08dbc08ecdb1704bae3db0362d11138, type: 3}
+--- !u!64 &5260422526363103237 stripped
+MeshCollider:
+  m_CorrespondingSourceObject: {fileID: 8756161295892940864, guid: d08dbc08ecdb1704bae3db0362d11138, type: 3}
+  m_PrefabInstance: {fileID: 3496170057269835845}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5324822050283919398 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8746400961657561187, guid: d08dbc08ecdb1704bae3db0362d11138, type: 3}

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 712652ee03ad9d34fa67bdb1b5684da1, type: 3}
+  m_Name: AudioClipVariation.GravelWalk
+  m_EditorClassIdentifier: 
+  name: Gravel Walk
+  audioClips:
+  - {fileID: 8300000, guid: 203a1e7646987ae43afcf236a032c4a6, type: 3}
+  - {fileID: 8300000, guid: 7bd946f281bd9114793e0e3c805a8873, type: 3}
+  - {fileID: 8300000, guid: 9cc28fc1700903b45834be8b4a61b122, type: 3}
+  - {fileID: 8300000, guid: 32e882d6a9c35db45a53d212fcaaa836, type: 3}
+  - {fileID: 8300000, guid: 4859933c3f1d94e4fb77cd7e2131b659, type: 3}
+  - {fileID: 8300000, guid: 47bfacac98cf6ff4bb1aeaa47c016872, type: 3}
+  - {fileID: 8300000, guid: 0b5266aa05ff522439ce4065b3aced52, type: 3}
+  - {fileID: 8300000, guid: bd5ab1696598b4842bb1efaba3582c16, type: 3}

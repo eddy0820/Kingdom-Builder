@@ -15,6 +15,7 @@ MonoBehaviour:
   name: Wood Stair Railing Variant 1
   prefab: {fileID: 1812151057414715034, guid: 3bae9e75fb097f14fb6678688d58da99, type: 3}
   visual: {fileID: 902933118266952625, guid: 95755e2efc11a694b93338dcac0bcdaf, type: 3}
+  rotateable: 0
   objectType: 1
   buildingCategoryType: 1
   UIIcons:
@@ -78,6 +79,7 @@ MonoBehaviour:
   - {fileID: -4714330763487284946, guid: 2169ba99dda521e49b4d0978f07f8d9b, type: 3}
   - {fileID: -3534087784206247114, guid: 2169ba99dda521e49b4d0978f07f8d9b, type: 3}
   - {fileID: 5837351196193789030, guid: 2169ba99dda521e49b4d0978f07f8d9b, type: 3}
+  materialSoundType: 2
   materialBuildingType: 0
   buildingType: 3
   subBuildingType: 4

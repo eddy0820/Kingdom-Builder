@@ -79,6 +79,7 @@ MonoBehaviour:
   - {fileID: -4714330763487284946, guid: ae5124631b97cdd4ba73fd3aeea0cf2a, type: 3}
   - {fileID: -3534087784206247114, guid: ae5124631b97cdd4ba73fd3aeea0cf2a, type: 3}
   - {fileID: 5837351196193789030, guid: ae5124631b97cdd4ba73fd3aeea0cf2a, type: 3}
+  materialSoundType: 2
   materialBuildingType: 0
   buildingType: 3
   subBuildingType: 0

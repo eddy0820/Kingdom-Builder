@@ -39,6 +39,7 @@ public class StairObject : EdgeObject, IHasEdges
         
         EdgeObject edgeObject = edgeObjectTransform.GetComponentInChildren<EdgeObject>();
         edgeObject.SetBuildingType(edgeObjectSO.BuildingType);
+        edgeObject.SetMaterialSoundType(edgeObjectSO.MaterialSoundType);
 
         return edgeObjectTransform.gameObject;
     }
@@ -73,7 +74,7 @@ public class StairObject : EdgeObject, IHasEdges
         edge = Edge.UpWest;
         debugString = "";
 
-        if(edgeObjectDictionary.ContainsKey(edgePosition.Edge) && edgeObjectDictionary[edgePosition.Edge] == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, BuildingType))
+        if(edgeObjectDictionary.ContainsKey(edgePosition.Edge) && edgeObjectDictionary[edgePosition.Edge] == null && EdgeObjectBuildingManager.IsCompatibleWithEdgeObject(edgeObjectSO, buildingType))
         {
             if(GridBuildingManager.Instance.BuildingGhost.EdgeObjectBuildingGhost.IsFakeGhostCollidingWithEdgeObjectVisual())
             {
