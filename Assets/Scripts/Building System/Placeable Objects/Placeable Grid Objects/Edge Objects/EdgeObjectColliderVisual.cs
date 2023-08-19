@@ -21,7 +21,7 @@ public class EdgeObjectColliderVisual : AbstractColliderVisual
 
     private void OnTriggerEnter(Collider other)
     {
-        if(IsThisABuildingGhost() && OtherIsEdgeObject(other))
+        if(IsThisABuildingGhost() && OtherIsEdgeObjectVisual(other))
         {
             isCollidingWithEdgeObjectVisual = true;
             currentOtherCollider = other;
@@ -30,7 +30,7 @@ public class EdgeObjectColliderVisual : AbstractColliderVisual
 
     private void OnTriggerStay(Collider other)
     {
-        if(IsThisABuildingGhost() && OtherIsEdgeObject(other))
+        if(IsThisABuildingGhost() && OtherIsEdgeObjectVisual(other))
         {
             isCollidingWithEdgeObjectVisual = true;
             currentOtherCollider = other;
@@ -39,7 +39,7 @@ public class EdgeObjectColliderVisual : AbstractColliderVisual
     
     private void OnTriggerExit(Collider other)
     {
-        if(IsThisABuildingGhost() && OtherIsEdgeObject(other))
+        if(IsThisABuildingGhost() && OtherIsEdgeObjectVisual(other))
         {
             isCollidingWithEdgeObjectVisual = false;
         }

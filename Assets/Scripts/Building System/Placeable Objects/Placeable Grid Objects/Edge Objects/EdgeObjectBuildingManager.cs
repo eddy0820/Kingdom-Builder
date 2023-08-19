@@ -10,17 +10,19 @@ public class EdgeObjectBuildingManager : AbstractPlaceableObjectBuildingManager
 
     protected override void OnAwake() {}
 
-    public override GameObject PlaceObject()
+    public override bool PlaceObject(out PlaceableObject placeableObject)
     {
         EdgeObjectSO edgeObjectSO = (EdgeObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
 
         if(CanPlaceObject(edgeObjectSO, out IHasEdges iHasEdgesObject, out Edge edge, out string debugString))
         {
-            return iHasEdgesObject.PlaceEdge(edge, edgeObjectSO); 
+            placeableObject = iHasEdgesObject.PlaceEdge(edge, edgeObjectSO).GetComponent<PlaceableObject>();
+            return true;
         }
 
         Debug.Log("Can't place Edge Object! " + debugString);
-        return null;
+        placeableObject = null;
+        return false;
     }
     
     public override void Demolish(PlaceableObject placeableObject)

@@ -1,5 +1,13 @@
 # Kingdom-Builder
 
+To-Do
+------
+-Add Dynamic Camera to Character Creation
+-Fix/Find Workaround for body parts that can be selected as Female and dont fit correctly
+-Rework Building System to not be so rigid
+-Add UI sounds to Character Creation
+-Add heel transforms to the character prefab from Character Creation
+
 Used Assets
 ------------
 
@@ -47,3 +55,6 @@ https://assetstore.unity.com/packages/tools/utilities/universal-rename-tool-8454
 
 Universal Sound FX by Imphenzia
 https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256
+
+DOTween by Demigiant
+https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676

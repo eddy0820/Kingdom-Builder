@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280f17ac9a430c5448867f54be1232b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  otherIsCheckType: 1
   isCollidingWithEdgeObjectVisual: 0
 --- !u!65 &1276127392039935022
 BoxCollider:

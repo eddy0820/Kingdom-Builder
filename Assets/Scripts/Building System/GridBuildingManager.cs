@@ -53,8 +53,14 @@ public class GridBuildingManager : MonoBehaviour
     Material visualAnchorDebugMaterial;
     string identifierTag;
 
+    [Space(15)]
+
     [SerializeField] GameObject debugHolder;
     public GameObject DebugHolder => debugHolder; 
+    [SerializeField] GridBuildingSoundController soundController;
+    public GridBuildingSoundController SoundController => soundController;
+
+    public PlaceableLooseObjectSO test;
 
     List<GridXZ<GridBuildingCell>> gridList;
 
@@ -76,8 +82,6 @@ public class GridBuildingManager : MonoBehaviour
     
     AbstractPlaceableObjectBuildingManager currentBuildingManager;
     public AbstractPlaceableObjectBuildingManager CurrentBuildingManager => currentBuildingManager;
-
-    public PlaceableLooseObjectSO test;
 
     private void Awake()
     {
@@ -184,8 +188,15 @@ public class GridBuildingManager : MonoBehaviour
         {
             if(Mouse3D.Instance.AmILookingAtCollider() && IsWithinMaxBuildDistance() && currentPlaceableObjectSO != null)
             {
-                GameObject placedObject = currentBuildingManager.PlaceObject();
-                HandleVisualAnchorDebug(placedObject);
+                if(currentBuildingManager.PlaceObject(out PlaceableObject placedObject))
+                {
+                    soundController.PlayBuildSound(true);
+                    HandleVisualAnchorDebug(placedObject.gameObject);
+                }
+                else
+                {
+                    soundController.PlayBuildSound(false);
+                }
             } 
         }
     }
@@ -203,6 +214,7 @@ public class GridBuildingManager : MonoBehaviour
                 if(hitObject != null)
                 { 
                     GetBuildingManagerFromPlaceableObjectSO(hitObject.ObjectType).Demolish(hitObject);
+                    soundController.PlayDemolishSound();
                 }
             }
         } 

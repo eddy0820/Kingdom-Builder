@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Floors
   buildingType: 0
-  possibleSubTypes: 
+  icon: {fileID: 21300000, guid: 2457c9b3e552d0e49affffea363cdcc0, type: 3}

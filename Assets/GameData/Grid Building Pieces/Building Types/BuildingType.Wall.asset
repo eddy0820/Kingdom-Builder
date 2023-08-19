@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Walls
   buildingType: 2
-  possibleSubTypes: 000000000100000002000000
+  icon: {fileID: 21300000, guid: 9b9faf193c2300040a91358e4d7f481b, type: 3}

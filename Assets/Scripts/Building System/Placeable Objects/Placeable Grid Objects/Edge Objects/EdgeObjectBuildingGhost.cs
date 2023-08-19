@@ -4,17 +4,42 @@ using UnityEngine;
 
 public class EdgeObjectBuildingGhost : AbstractPlaceableObjectBuildingGhost
 {
+    bool isSnapped;
+
+    EdgePosition lastEdgePosition;
+    float lastTimeBuildingGhostSnapSoundPlayed;
+
     protected override void OnAwake() {}
 
     public override void DoVisibleGhostMovement(Transform visual)
     {
         if(GridBuildingManager.Instance.EdgeObjectBuildingManager.ShouldBuildingGhostSnapToEdgePosition(out EdgePosition edgePosition))
         {
+            if(lastEdgePosition != null && lastEdgePosition != edgePosition)
+            {
+                isSnapped = false;
+            }
+
+            lastEdgePosition = edgePosition;
+            
+            if(!isSnapped)
+            {
+                isSnapped = true;
+
+                if(Time.time - lastTimeBuildingGhostSnapSoundPlayed < 0.1f) return;
+
+                GridBuildingManager.Instance.SoundController.PlayBuildingGhostSnapSound();
+
+                lastTimeBuildingGhostSnapSoundPlayed = Time.time;
+            }
+
             visual.transform.position = Vector3.Lerp(visual.transform.position, edgePosition.PivotTransform.position, Time.deltaTime * 15f);
             visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, edgePosition.PivotTransform.rotation, Time.deltaTime * 25f);
         }
         else
         {
+            isSnapped = false;
+
             visual.transform.position = Vector3.Lerp(visual.transform.position, Mouse3D.Instance.GetMouseWorldPosition(), Time.deltaTime * 15f);
             visual.transform.rotation = Quaternion.Lerp(visual.transform.rotation, Quaternion.identity, Time.deltaTime * 25f);
         }

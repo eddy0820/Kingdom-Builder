@@ -153,8 +153,8 @@ public class PlayerController : MonoBehaviour
     public void ToggleBuildMode()
     {
         buildModeEnabled = !buildModeEnabled;
-        uiCanvas.Crosshair.SetActive(buildModeEnabled);
-        uiCanvas.BuildHotbar.SetActive(buildModeEnabled);
+        uiCanvas.ToggleCrosshair(buildModeEnabled);
+        uiCanvas.ToggleBuildHotbar(buildModeEnabled);
         characterCamera.DoBuildModeCamera(buildModeEnabled);
         GridBuildingManager.Instance.BuildingGhost.RefreshVisual();
 
@@ -165,9 +165,10 @@ public class PlayerController : MonoBehaviour
         else
         {
             uiCanvas.ToggleBuildMenu(buildModeEnabled);
-            uiCanvas.Crosshair.SetActive(buildModeEnabled);
+            uiCanvas.ToggleCrosshair(buildModeEnabled);
             InputManager.Instance.GridBuilding.Disable();
         }
-        
+
+        GridBuildingManager.Instance.SoundController.PlayToggleBuildingSound(buildModeEnabled);
     }
 }

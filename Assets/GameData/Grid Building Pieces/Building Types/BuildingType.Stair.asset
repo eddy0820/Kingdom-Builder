@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Stairs
   buildingType: 4
-  possibleSubTypes: 
+  icon: {fileID: 21300000, guid: eb8e1d441a339444a8466d452557ac3e, type: 3}

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Doorways
   buildingType: 1
-  possibleSubTypes: 
+  icon: {fileID: 21300000, guid: 52c378f1f1dc90247941dd7862b2daa6, type: 3}

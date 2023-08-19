@@ -15,14 +15,16 @@ public class LooseObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         HandleLooseObjectRotation();
     }
 
-    public override GameObject PlaceObject()
+    public override bool PlaceObject(out PlaceableObject placeableObject)
     {
         if(CanPlaceObject(out Vector3 pos))
         {
-            return Instantiate(GridBuildingManager.CurrentPlaceableObjectSO.Prefab, pos, Quaternion.Euler(0, looseObjectEulerY, 0)).gameObject;
+            placeableObject = Instantiate(GridBuildingManager.CurrentPlaceableObjectSO.Prefab, pos, Quaternion.Euler(0, looseObjectEulerY, 0)).GetComponent<PlaceableObject>();
+            return true;
         }
 
-        return null;
+        placeableObject = null;
+        return false;
     }
 
     public override void Demolish(PlaceableObject placeableObject)

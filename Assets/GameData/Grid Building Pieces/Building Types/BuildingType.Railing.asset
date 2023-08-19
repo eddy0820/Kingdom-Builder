@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Railings / Fences
   buildingType: 3
-  possibleSubTypes: 03000000
+  icon: {fileID: 21300000, guid: 243fa5002ff092a4ca0b8b65af852656, type: 3}

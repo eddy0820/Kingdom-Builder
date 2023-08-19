@@ -14,6 +14,14 @@ public abstract class AbstractColliderVisual : MonoBehaviour
         return CheckForEdgeObjectUpRecursive(other.gameObject) || CheckForEdgeObjectDownRecursive(other.gameObject);
     }
 
+    protected bool OtherIsEdgeObjectVisual(Collider other)
+    {
+        if(other.gameObject.GetComponent<EdgeObjectColliderVisual>() != null && other.gameObject.layer != LayerMask.NameToLayer("Placeable Collider"))
+            return true;
+        else
+            return false;
+    }
+
     private bool CheckForEdgeObjectUpRecursive(GameObject targetGameObject)
     {
         if(targetGameObject.GetComponent<EdgeObject>() != null)

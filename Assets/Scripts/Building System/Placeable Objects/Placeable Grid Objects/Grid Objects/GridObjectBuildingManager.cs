@@ -13,7 +13,7 @@ public class GridObjectBuildingManager : AbstractPlaceableObjectBuildingManager
         currentDirection = Direction.Down;
     }
 
-    public override GameObject PlaceObject()
+    public override bool PlaceObject(out PlaceableObject placeableObject)
     {
         GridXZ<GridBuildingCell> selectedGrid = GridBuildingManager.SelectedGrid;
         GridObjectSO currentGridObjectSO = (GridObjectSO) GridBuildingManager.CurrentPlaceableObjectSO;
@@ -33,11 +33,13 @@ public class GridObjectBuildingManager : AbstractPlaceableObjectBuildingManager
                 selectedGrid.GetGridObject(gridObjectPosition.x, gridObjectPosition.y).SetGridObject(gridObject);
             }
 
-            return gridObject.gameObject;
+            placeableObject = gridObject;
+            return true;
         }
 
         Debug.Log("Can't Build Here");
-        return null;  
+        placeableObject = null;
+        return false;  
     }
 
     private bool CanBuildGridObjectInGridPositions(List<Vector2Int> gridObjectPositionList)

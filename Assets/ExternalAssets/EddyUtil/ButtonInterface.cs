@@ -24,12 +24,16 @@ public abstract class ButtonInterface<T> : AbstractGameInterface where T : Butto
 
     private void OnEnterButton(ButtonEntry buttonEntry)
     {
+        if(buttonEntry.IsSelected) return;
+
         buttonEntry.SetIsHovered(true);
         OnEnter(buttonEntry);
     }
 
     private void OnExitButton(ButtonEntry buttonEntry)
     {
+        if(buttonEntry.IsSelected) return;
+        
         buttonEntry.SetIsHovered(false);
         OnExit(buttonEntry);
     }
@@ -62,7 +66,7 @@ public abstract class ButtonInterface<T> : AbstractGameInterface where T : Butto
         [SerializeField, ReadOnly] bool isSelected;
         public bool IsSelected => isSelected;
 
-        public void SetIsHovered(bool b)
+        public virtual void SetIsHovered(bool b)
         {
             isHovered = b;
         }

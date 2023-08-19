@@ -100,7 +100,8 @@ public class FloorGridObject : GridObject, IHasEdges
 
     public bool IsEastEdgeTaken(EdgePosition edgePosition)
     {
-        return edgeObjectDictionary[GetComplimentaryEdge(edgePosition.Edge)] != null;
+        edgeObjectDictionary.TryGetValue(GetComplimentaryEdge(edgePosition.Edge), out EdgeObject edgeObject);
+        return edgeObject != null;
     }
 
     public bool IsEdgeTaken(EdgePosition edgePosition)

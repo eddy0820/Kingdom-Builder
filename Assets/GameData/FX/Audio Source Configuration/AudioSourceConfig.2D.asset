@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d982496166f7e6409b02936cb6799a9, type: 3}
+  m_Name: AudioSourceConfig.2D
+  m_EditorClassIdentifier: 
+  volume: 1
+  spatialBlend: 0
+  pitch: 1
+  pan: 0
