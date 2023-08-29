@@ -229,6 +229,7 @@ GameObject:
   - component: {fileID: 449666325}
   - component: {fileID: 449666328}
   - component: {fileID: 449666329}
+  - component: {fileID: 449666330}
   m_Layer: 3
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -412,6 +413,19 @@ MonoBehaviour:
   selectFromHotbarSound: {fileID: 8300000, guid: b84ac4ffca82d8645bfc21318cbf4289, type: 3}
   putIntoHotbarSound: {fileID: 8300000, guid: 514a730f3b046f7468b1a471e390ad88, type: 3}
   soundConfig2D: {fileID: 11400000, guid: 7e913b7917dd9f24faa005d8233cef9e, type: 2}
+--- !u!114 &449666330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449666323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d95a7318f94e1f4aa8c8fb7d719fe9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 449666328}
 --- !u!1 &463977293
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,6 +786,7 @@ MonoBehaviour:
   characterCamera: {fileID: 1814969513}
   uiCanvas: {fileID: 2124959000}
   soundController: {fileID: 449666329}
+  animationController: {fileID: 449666330}
 --- !u!114 &582366771
 MonoBehaviour:
   m_ObjectHideFlags: 0

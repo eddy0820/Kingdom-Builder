@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
 using NaughtyAttributes;
+using UnityEngine.UI;
 
 public class PlayerCharacterController : MonoBehaviour, ICharacterController
 {
@@ -10,7 +11,14 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     [Header("Stable Movement")]
     public float WalkingSpeed = 3;
+    [SerializeField] float walkingBlendNumer = 0.5f;
+
+    [Space(5)]
+
     public float JoggingSpeed = 6;
+    [SerializeField] float runningBlendNumer = 1f;
+
+    [Space(5)]
     public float SprintingSpeed = 10;
     public float Acceleration = 4;
     public float Decceleration = 2;
@@ -68,18 +76,13 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     private Vector3 lastInnerNormal = Vector3.zero;
     private Vector3 lastOuterNormal = Vector3.zero;
 
-    Animator animator;
-    int velocityHash;
-    int crouchedHash;
+    PlayerAnimationController animationController;
 
     private void Awake()
     {
         TransitionToState(CharacterState.Default);
 
-        animator = GetComponent<Animator>();
-        velocityHash = Animator.StringToHash("Velocity");
-        crouchedHash = Animator.StringToHash("Crouched");
-
+        animationController = PlayerController.Instance.AnimationController;
 
         Motor.CharacterController = this;
     }
@@ -172,7 +175,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
                 if(!_isCrouching)
                 {
                     _isCrouching = true;
-                    animator.SetBool(crouchedHash, true);
+                    animationController.ToggleCouch(true);
                     isWalking = false;
                     isSprinting = false;
                     Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
@@ -191,7 +194,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
             case CharacterState.Default:
             {
                 _shouldBeCrouching = false;
-                animator.SetBool(crouchedHash, false);
+                animationController.ToggleCouch(false);
                 break;
             }
         }
@@ -252,6 +255,15 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
                     // Smooth movement Velocity
                     currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+
+                    if(currentVelocity.magnitude > 0f)
+                    {
+                        animationController.ToggleMoving(true, currentVelocityMagnitude / JoggingSpeed);
+                    }
+                    else
+                    {
+                        animationController.ToggleMoving(false);
+                    }
                 }
                 // Air movement
                 else
@@ -298,6 +310,12 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
                     // Drag
                     currentVelocity *= (1f / (1f + (Drag * deltaTime)));
+
+                    if(currentVelocity.y < 0f)
+                    {
+                        Debug.Log(currentVelocity);
+                        //animationController.SetJumpStatus(EJumpStatus.Fall);
+                    }
                 }
 
                 // Handle jumping
@@ -306,7 +324,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
                 if (_jumpRequested)
                 {
                     // See if we actually are allowed to jump
-                    if(!_jumpConsumed && !_isCrouching && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle->Walk->Jog->Sprint") && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))
+                    if(!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))
                     {
                         // Calculate jump direction before ungrounding
                         Vector3 jumpDirection = Motor.CharacterUp;
@@ -325,6 +343,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
                         _jumpRequested = false;
                         _jumpConsumed = true;
                         _jumpedThisFrame = true;
+                        animationController.SetJumpStatus(EJumpStatus.Jump);
                     }
                 }
 
@@ -454,15 +473,14 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
             }
         }
 
-        if(_isCrouching)
+        if(targetVelocity == SprintingSpeed)
         {
-            animator.SetFloat(velocityHash, (targetVelocity / CrouchingSpeed));
+            animationController.ToggleSpint(true);
         }
         else
         {
-            animator.SetFloat(velocityHash, (targetVelocity / SprintingSpeed));
+            animationController.ToggleSpint(false);
         }
-        
 
         return targetVelocity;
     }
@@ -584,39 +602,33 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         }
     }
 
-    public void PostGroundingUpdate(float deltaTime)
+#region Ground Stuff
+
+    public void PostGroundingUpdate(float deltaTime) {}
+
+    public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) 
     {
-        // Handle landing and leaving ground
-        if (Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround)
+        if(Time.timeSinceLevelLoad > 1 && Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround)
         {
-            OnLanded();
-        }
-        else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround)
-        {
-            OnLeaveStableGround();
+            animationController.SetJumpStatus(EJumpStatus.Land);
         }
     }
 
-    protected void OnLanded() 
+#endregion
+
+    public void AddVelocity(Vector3 velocity)
     {
-        if(Time.timeSinceLevelLoad > 1)
+        switch (CurrentCharacterState)
         {
-            animator.SetTrigger("Land");
+            case CharacterState.Default:
+                {
+                    _internalVelocityAdd += velocity;
+                    break;
+                }
         }
-        
     }
 
-    protected void OnLeaveStableGround() 
-    {
-        if(_jumpedThisFrame)
-        {
-            animator.SetTrigger("Jump");
-        }
-        else
-        {
-            animator.SetTrigger("Fall");
-        }
-    }
+    public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
 
     public bool IsColliderValidForCollisions(Collider coll)
     {
@@ -631,22 +643,6 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         }
 
         return true;
-    }
-
-    public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
-
-    public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
-
-    public void AddVelocity(Vector3 velocity)
-    {
-        switch (CurrentCharacterState)
-        {
-            case CharacterState.Default:
-                {
-                    _internalVelocityAdd += velocity;
-                    break;
-                }
-        }
     }
 
     public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) { }
