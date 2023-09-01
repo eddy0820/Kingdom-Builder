@@ -11,22 +11,24 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     [Header("Stable Movement")]
     public float WalkingSpeed = 3;
-    [SerializeField] float walkingBlendNumer = 0.5f;
+    public float WalkAccel;
 
     [Space(5)]
 
-    public float JoggingSpeed = 6;
-    [SerializeField] float runningBlendNumer = 1f;
+    public float RunningSpeed = 6;
+    public float RunAccel;
 
     [Space(5)]
+
     public float SprintingSpeed = 10;
-    public float Acceleration = 4;
-    public float Decceleration = 2;
-    public float CrouchingSpeed = 3;
-    public float CrouchingAcceleration = 2;
-    public float CrouchingDecceleration = 2;
+    public float SprintAccel;
     
-    float targetVelocity = 0;
+    [Space(5)]
+
+    public float CrouchingSpeed = 3;
+    public float CrouchAccel;
+
+    float targetSpeed = 0;
 
     [Space(15)]
     public float StableMovementSharpness = 15f;
@@ -103,7 +105,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         switch(state)
         {
             case CharacterState.Default:
-            targetVelocity = 0;
+                targetSpeed = 0;
                 break;
         }
     }
@@ -227,16 +229,18 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
             {
                 isSprinting = true;
                 isWalking = false;
+                animationController.ToggleSpint(true);
             }
             else
             {
                 isSprinting = false;
+                animationController.ToggleSpint(false);
             }
         }  
     }
 
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
-    {
+    {   
         switch(CurrentCharacterState)
         {
             case CharacterState.Default:
@@ -254,14 +258,14 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
                     // Calculate target velocity
                     Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                     Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
-                    Vector3 targetMovementVelocity = reorientedInput * CalculateTargetVelocity(deltaTime);
+                    Vector3 targetMovementVelocity = reorientedInput * CalculateTargetSpeed(deltaTime);
 
                     // Smooth movement Velocity
                     currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
 
                     if(currentVelocity.magnitude > 0f)
                     {
-                        animationController.ToggleMoving(true, currentVelocityMagnitude / JoggingSpeed);
+                        animationController.ToggleMoving(true, currentVelocityMagnitude / RunningSpeed);
                     }
                     else
                     {
@@ -314,10 +318,9 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
                     // Drag
                     currentVelocity *= (1f / (1f + (Drag * deltaTime)));
 
-                    if(currentVelocity.y < 0f)
+                    if(currentVelocity.y <= 0f)
                     {
-                        Debug.Log(currentVelocity);
-                        //animationController.SetJumpStatus(EJumpStatus.Fall);
+                        animationController.SetJumpStatus(EJumpStatus.Fall);
                     }
                 }
 
@@ -362,130 +365,43 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         }
     }
 
-    private float CalculateTargetVelocity(float deltaTime)
+    private float CalculateTargetSpeed(float deltaTime)
     {
+        float moveSpeed = 0;
+        float moveAccel = RunAccel;
+
         if(_moveInputVector.magnitude > 0)
         {
-            // Crouched
-            if(_isCrouching)
+            moveSpeed = RunningSpeed;
+
+            if(isWalking)
             {
-                if(targetVelocity >= 0 && targetVelocity < CrouchingSpeed)
-                {
-                    targetVelocity += deltaTime * CrouchingAcceleration;
-
-                    if(targetVelocity > CrouchingSpeed)
-                    {
-                        targetVelocity = CrouchingSpeed;
-                    }
-                }
-                else if(targetVelocity > CrouchingSpeed)
-                {
-                    targetVelocity = CrouchingSpeed;
-                }
+                moveSpeed = WalkingSpeed;
+                moveAccel = WalkAccel;
             }
-            // Not Crouched
-            else
+            else if(isSprinting)
             {
-                // Between 0 and Walk Speed
-                if(targetVelocity >= 0 && targetVelocity < WalkingSpeed)
-                {
-                    targetVelocity += deltaTime * Acceleration;
-
-                    if(targetVelocity > WalkingSpeed)
-                    {
-                        targetVelocity = WalkingSpeed;
-                    }
-                }
-                // Between Walk Speed and Jog Speed
-                else if(targetVelocity >= WalkingSpeed && targetVelocity < JoggingSpeed)
-                {
-                    if(!isWalking)
-                    {
-                        targetVelocity += deltaTime * Acceleration;
-                    }
-                    else
-                    {
-                        targetVelocity -= deltaTime * Decceleration; 
-                    }
-
-                    if(targetVelocity > JoggingSpeed)
-                    {
-                        targetVelocity = JoggingSpeed;
-                    }
-
-                    if(targetVelocity < WalkingSpeed)
-                    {
-                        targetVelocity = WalkingSpeed;
-                    }
-                }
-                // Between Jog Speed and Sprint Speed
-                else if(targetVelocity >= JoggingSpeed && targetVelocity <= SprintingSpeed)
-                {
-                    if(isSprinting)
-                    {
-                        targetVelocity += deltaTime * Acceleration;
-                    }
-                    else
-                    {
-                        targetVelocity -= deltaTime * Decceleration;
-
-                        if(!isWalking)
-                        {
-                            if(targetVelocity < JoggingSpeed)
-                            {
-                                targetVelocity = JoggingSpeed;
-                            }
-                        }
-                    }
-
-                    if(targetVelocity > SprintingSpeed)
-                    {
-                        targetVelocity = SprintingSpeed;
-                    }
-                }
-                // Passed Sprint Speed
-                else if(targetVelocity > SprintingSpeed)
-                {
-                    targetVelocity = SprintingSpeed;
-                }
+                moveSpeed = SprintingSpeed;
+                moveAccel = SprintAccel;
             }
+            else if(_isCrouching)
+            {
+                moveSpeed = CrouchingSpeed;
+                moveAccel = CrouchAccel;
+            }
+
         }
-        else
+
+        float speed = Mathf.Lerp(targetSpeed, moveSpeed, 1f - Mathf.Exp(-moveAccel * deltaTime));
+
+        if(speed < 0.1f)
         {
-            if(_isCrouching)
-            {
-                if(targetVelocity > 0)
-                {
-                    targetVelocity -= deltaTime * CrouchingDecceleration;
-                }
-                else
-                {
-                    targetVelocity = 0;
-                }
-            }
-            else
-            {
-                if(targetVelocity > 0)
-                {
-                    targetVelocity -= deltaTime * Decceleration;
-                }
-                else
-                {
-                    targetVelocity = 0;
-                }
-            }
+            speed = 0;
         }
-
-        if(targetVelocity == SprintingSpeed)
-        {
-            animationController.ToggleSpint(true);
-        }
-        else
-        {
-            animationController.ToggleSpint(false);
-        }
-
-        return targetVelocity;
+        
+        targetSpeed = speed;
+        Debug.Log(speed);
+        return speed;
     }
 
     public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)

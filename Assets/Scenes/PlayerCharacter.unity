@@ -309,13 +309,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Motor: {fileID: 449666325}
   WalkingSpeed: 2.5
-  JoggingSpeed: 5
+  WalkAccel: 4
+  RunningSpeed: 6
+  RunAccel: 10
   SprintingSpeed: 7
-  Acceleration: 3
-  Decceleration: 8
+  SprintAccel: 9
   CrouchingSpeed: 1
-  CrouchingAcceleration: 2
-  CrouchingDecceleration: 6
+  CrouchAccel: 3
   StableMovementSharpness: 15
   OrientationSharpness: 20
   OrientationMethod: 1
