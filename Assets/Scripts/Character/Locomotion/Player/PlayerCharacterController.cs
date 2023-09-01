@@ -35,8 +35,11 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     [Header("Movement Checks")]
     [ReadOnly, SerializeField] bool isWalking;
+    public bool IsWalking => isWalking;
     [ReadOnly, SerializeField] bool isSprinting;
+    public bool IsSprinting => isSprinting;
     [ReadOnly, SerializeField] bool _isCrouching;
+    public bool IsCrouching => _isCrouching;
 
     [Header("Air Movement")]
     public float MaxAirMoveSpeed = 15f;

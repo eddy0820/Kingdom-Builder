@@ -32,17 +32,28 @@ public class PlayerSoundController : AbstractSoundController
 
     [Header("Audio Source Configurations")]
     [SerializeField] AudioSourceConfigurationSO soundConfig2D;
+    
+    PlayerCharacterController playerCharacterController;
+
+    float timeSinceLastFootstepSound;
+
+    private void Awake()
+    {
+        playerCharacterController = GetComponent<PlayerCharacterController>();
+    }
  
 #region Footstep Sound Methods
 
-    public void PlayRunSound(Foot foot)
+    public void PlayFootstepSound(Foot foot)
     {
-        PlayFootstepSound(GetMaterialVariationSounds(foot).RunSounds);
-    }
+        if(Time.time - timeSinceLastFootstepSound < 0.0001f) return;
 
-    public void PlayWalkSound(Foot foot)
-    {
-        PlayFootstepSound(GetMaterialVariationSounds(foot).WalkSounds);
+        timeSinceLastFootstepSound = Time.time;
+
+        if(playerCharacterController.IsCrouching || playerCharacterController.IsWalking)
+            PlayFootstepSound(GetMaterialVariationSounds(foot).WalkSounds);
+        else
+            PlayFootstepSound(GetMaterialVariationSounds(foot).RunSounds);
     }
 
     private StepSoundMaterialVariations GetMaterialVariationSounds(Foot foot)

@@ -7,14 +7,6 @@ public class PlayerAnimationController : MonoBehaviour
 {
     [SerializeField] Animator animator;
 
-    private void Start()
-    {
-        foreach(var param in animator.parameters)
-        {
-            Debug.Log(param.name);
-        }
-    }
-
     public void ToggleCouch(bool isCouch)
     {
         animator.SetBool(AnimationParameters.Crouch, isCouch);
