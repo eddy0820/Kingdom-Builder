@@ -209,7 +209,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     {
         if(!_isCrouching)
         {
-            if(_bool && _moveInputVector != Vector3.zero)
+            if(_bool)
             {
                 isWalking = true;
                 isSprinting = false;
@@ -225,16 +225,14 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     {
         if(!_isCrouching)
         {
-            if(_bool && _moveInputVector != Vector3.zero)
+            if(_bool)
             {
                 isSprinting = true;
                 isWalking = false;
-                animationController.ToggleSpint(true);
             }
             else
             {
                 isSprinting = false;
-                animationController.ToggleSpint(false);
             }
         }  
     }
@@ -265,11 +263,22 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
                     if(currentVelocity.magnitude > 0f)
                     {
-                        animationController.ToggleMoving(true, currentVelocityMagnitude / RunningSpeed);
+                        animationController.ToggleMoving(true);
+                        animationController.SetVelocity(currentVelocity.magnitude / RunningSpeed);
                     }
                     else
                     {
                         animationController.ToggleMoving(false);
+                        animationController.SetVelocity(0);
+                    }
+
+                    if(isSprinting && _moveInputVector.magnitude > 0f)
+                    {
+                        animationController.ToggleSpint(true);
+                    }
+                    else
+                    {
+                        animationController.ToggleSpint(false);
                     }
                 }
                 // Air movement
@@ -400,7 +409,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         }
         
         targetSpeed = speed;
-        Debug.Log(speed);
+
         return speed;
     }
 

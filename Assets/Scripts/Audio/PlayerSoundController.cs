@@ -46,14 +46,14 @@ public class PlayerSoundController : AbstractSoundController
 
     public void PlayFootstepSound(Foot foot)
     {
-        if(Time.time - timeSinceLastFootstepSound < 0.0001f) return;
-
+        if(Time.time - timeSinceLastFootstepSound < 0.1f) return;
+    
         timeSinceLastFootstepSound = Time.time;
 
         if(playerCharacterController.IsCrouching || playerCharacterController.IsWalking)
-            PlayFootstepSound(GetMaterialVariationSounds(foot).WalkSounds);
+            PlayFootstepSoundInternal(GetMaterialVariationSounds(foot).WalkSounds);
         else
-            PlayFootstepSound(GetMaterialVariationSounds(foot).RunSounds);
+            PlayFootstepSoundInternal(GetMaterialVariationSounds(foot).RunSounds);
     }
 
     private StepSoundMaterialVariations GetMaterialVariationSounds(Foot foot)
@@ -72,7 +72,7 @@ public class PlayerSoundController : AbstractSoundController
         return hitInfo.collider.gameObject.TryGetComponent(out IMateralSoundType i) ? i.GetMaterialSoundType() : defaultMaterialSoundType;
     }
 
-    private void PlayFootstepSound(AudioClipVariationSO audioClipVariation)
+    private void PlayFootstepSoundInternal(AudioClipVariationSO audioClipVariation)
     {
         AudioClip audioClip;
 

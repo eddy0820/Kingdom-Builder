@@ -12,10 +12,14 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool(AnimationParameters.Crouch, isCouch);
     }
 
-    public void ToggleMoving(bool isMoving, float velocityZ = 0)
+    public void ToggleMoving(bool isMoving)
+    {
+        animator.SetBool(AnimationParameters.Moving, isMoving);
+    }
+
+    public void SetVelocity(float velocityZ)
     {
         animator.SetFloat(AnimationParameters.VelocityZ, velocityZ);
-        animator.SetBool(AnimationParameters.Moving, isMoving);
     }
 
     public void ToggleSpint(bool isSprint)
