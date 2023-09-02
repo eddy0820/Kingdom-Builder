@@ -67,9 +67,10 @@ public class PlayerSoundController : AbstractSoundController
     {
         FootInfo footInfo = feetInfo.GetFootInfo(foot);
 
-        Physics.Raycast(footInfo.OverlapTransform.position, Vector3.down, out RaycastHit hitInfo, footRaycastLength, footstepRaycastLayerMask, QueryTriggerInteraction.Ignore);
-
-        return hitInfo.collider.gameObject.TryGetComponent(out IMateralSoundType i) ? i.GetMaterialSoundType() : defaultMaterialSoundType;
+        if(Physics.Raycast(footInfo.OverlapTransform.position, Vector3.down, out RaycastHit hitInfo, footRaycastLength, footstepRaycastLayerMask, QueryTriggerInteraction.Ignore))
+            return hitInfo.collider.gameObject.TryGetComponent(out IMateralSoundType i) ? i.GetMaterialSoundType() : defaultMaterialSoundType;
+        else
+            return defaultMaterialSoundType;
     }
 
     private void PlayFootstepSoundInternal(AudioClipVariationSO audioClipVariation)

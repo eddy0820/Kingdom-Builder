@@ -314,7 +314,7 @@ MonoBehaviour:
   RunAccel: 10
   SprintingSpeed: 8
   SprintAccel: 10
-  CrouchingSpeed: 1
+  CrouchingSpeed: 1.5
   CrouchAccel: 10
   StableMovementSharpness: 15
   OrientationSharpness: 20

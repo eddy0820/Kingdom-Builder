@@ -52,7 +52,7 @@ public class BuildHotbarInterface : ButtonInterface<BuildHotbarInterface.BuildHo
 
     private void OnNumberKeyPressedCallback(int key)
     {
-        if(!PlayerController.Instance.UICanvas.BuildMenuEnabled)
+        if(PlayerController.Instance.BuildModeEnabled && !PlayerController.Instance.UICanvas.BuildMenuEnabled)
         {
             foreach(BuildHotBarEntry buildHotBarEntry in buttons)
             {
