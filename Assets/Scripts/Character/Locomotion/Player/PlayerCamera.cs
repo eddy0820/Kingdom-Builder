@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using Cinemachine;
 
 public class PlayerCamera : MonoBehaviour
 {
     [Header("Framing")]
-    public Camera Camera;
+    public CinemachineVirtualCamera Camera;
     public Vector2 FollowPointFraming = new Vector2(0f, 0f);
     public Vector2 DefaultFollowPointFraming = new Vector2(0f, 0f);
     public Vector2 BuildModeFollowPointFraming = new Vector2(0f, 0f);
