@@ -7,8 +7,11 @@ using Cinemachine;
 
 public class PlayerCamera : MonoBehaviour
 {
-    [Header("Framing")]
-    public CinemachineVirtualCamera Camera;
+    public CinemachineVirtualCamera FollowCamera;
+    public CinemachineVirtualCamera LockOnCamera;
+    LockOn lockOnController;
+
+    [Header("Follow Camera Framing")]
     public Vector2 FollowPointFraming = new Vector2(0f, 0f);
     public Vector2 DefaultFollowPointFraming = new Vector2(0f, 0f);
     public Vector2 BuildModeFollowPointFraming = new Vector2(0f, 0f);
@@ -19,6 +22,8 @@ public class PlayerCamera : MonoBehaviour
     public float DefaultDistance = 6f;
     public float MinDistance = 0f;
     public float MaxDistance = 10f;
+
+    [Header("Follow Camera Distance")]
     public float DistanceMovementSpeed = 5f;
     public float DistanceMovementSharpness = 10f;
 
@@ -55,7 +60,8 @@ public class PlayerCamera : MonoBehaviour
 
     [ReadOnly] public bool inFirstPerson;
 
-    public Transform Transform { get; private set; }
+    public Transform FollowCameraTransform { get; private set; }
+    public Transform LockOnCameraTransform { get; private set; }
     public Transform FollowTransform { get; private set; }
 
     public Vector3 PlanarDirection { get; set; }
@@ -80,7 +86,10 @@ public class PlayerCamera : MonoBehaviour
 
     void Awake()
     {
-        Transform = this.transform;
+        lockOnController = GetComponent<LockOn>();
+        
+        FollowCameraTransform = FollowCamera.transform;
+        LockOnCameraTransform = LockOnCamera.transform;
 
         _currentDistance = DefaultDistance;
         TargetDistance = _currentDistance;
@@ -122,11 +131,12 @@ public class PlayerCamera : MonoBehaviour
 
             _targetVerticalAngle -= (rotationInput.y * RotationSpeed);
             _targetVerticalAngle = Mathf.Clamp(_targetVerticalAngle, MinVerticalAngle, MaxVerticalAngle);
+            Debug.Log(_targetVerticalAngle);
             Quaternion verticalRot = Quaternion.Euler(_targetVerticalAngle, 0, 0);
-            Quaternion targetRotation = Quaternion.Slerp(Transform.rotation, planarRot * verticalRot, 1f - Mathf.Exp(-RotationSharpness * deltaTime));
+            Quaternion targetRotation = Quaternion.Slerp(FollowCameraTransform.rotation, planarRot * verticalRot, 1f - Mathf.Exp(-RotationSharpness * deltaTime));
 
             // Apply rotation
-            Transform.rotation = targetRotation;
+            FollowCameraTransform.rotation = targetRotation;
 
             // Process distance input
             if(_distanceIsObstructed && Mathf.Abs(zoomInput) > 0f)
@@ -143,7 +153,7 @@ public class PlayerCamera : MonoBehaviour
             
             RaycastHit closestHit = new RaycastHit();
             closestHit.distance = Mathf.Infinity;
-            _obstructionCount = Physics.SphereCastNonAlloc(_currentFollowPosition, ObstructionCheckRadius, -Transform.forward, _obstructions, TargetDistance, ObstructionLayers, QueryTriggerInteraction.Ignore);
+            _obstructionCount = Physics.SphereCastNonAlloc(_currentFollowPosition, ObstructionCheckRadius, -FollowCameraTransform.forward, _obstructions, TargetDistance, ObstructionLayers, QueryTriggerInteraction.Ignore);
             
             for(int i = 0; i < _obstructionCount; i++)
             {
@@ -191,11 +201,23 @@ public class PlayerCamera : MonoBehaviour
             Vector3 targetPosition = _currentFollowPosition - ((targetRotation * Vector3.forward) * _currentDistance);
 
             // Handle framing
-            targetPosition += Transform.right * FollowPointFraming.x;
-            targetPosition += Transform.up * FollowPointFraming.y;
+            targetPosition += FollowCameraTransform.right * FollowPointFraming.x;
+            targetPosition += FollowCameraTransform.up * FollowPointFraming.y;
 
             // Apply position
-            Transform.position = targetPosition;
+            FollowCameraTransform.position = targetPosition;
+
+            CinemachineFramingTransposer framingTransposer = LockOnCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+            //framingTransposer.m_CameraDistance = TargetDistance;
+            //float minScreenY = -0.5F;
+            //float maxScreenY = 1.5F;
+
+            //float verticalAngleLockOn = (_targetVerticalAngle - MinVerticalAngle) / (MaxVerticalAngle - MinVerticalAngle) * (maxScreenY - minScreenY) + minScreenY;
+            //framingTransposer.m_ScreenY = verticalAngleLockOn;
+            
+            
+            
+
         }
     }
 

@@ -28,6 +28,9 @@ public class PlayerController : MonoBehaviour
     bool buildModeEnabled;
     public bool BuildModeEnabled => buildModeEnabled;
 
+    bool lockedOn;
+    public bool LockedOn => lockedOn;
+
     public Action OnEnterFirstPerson;
     public Action OnExitFirstPerson;
 
@@ -103,7 +106,11 @@ public class PlayerController : MonoBehaviour
         // Build the CharacterInputs struct
         characterInputs.MoveAxisForward = verticalInput;
         characterInputs.MoveAxisRight = horizontalInput;
-        characterInputs.CameraRotation = characterCamera.Transform.rotation;
+
+        if(!lockedOn)
+            characterInputs.CameraRotation = characterCamera.FollowCameraTransform.rotation;
+        else
+            characterInputs.CameraRotation = characterCamera.LockOnCameraTransform.rotation;
 
         // Apply inputs to character
         character.SetInputs(ref characterInputs);
@@ -172,5 +179,12 @@ public class PlayerController : MonoBehaviour
         }
 
         GridBuildingManager.Instance.SoundController.PlayToggleBuildingSound(buildModeEnabled);
+    }
+
+    public void SetLockedOn(bool _lockedOn)
+    {
+        lockedOn = _lockedOn;
+
+        
     }
 }
