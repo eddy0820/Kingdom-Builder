@@ -76,6 +76,8 @@ public class PlayerCamera : MonoBehaviour
     private float _obstructionTime;
     private Vector3 _currentFollowPosition;
 
+    CinemachineFramingTransposer lockOnFramingTransposer;
+
     private const int MaxObstructions = 32;
 
     void OnValidate()
@@ -87,11 +89,13 @@ public class PlayerCamera : MonoBehaviour
     void Awake()
     {
         lockOnController = GetComponent<LockOn>();
+        lockOnFramingTransposer = LockOnCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         
         FollowCameraTransform = FollowCamera.transform;
         LockOnCameraTransform = LockOnCamera.transform;
 
         _currentDistance = DefaultDistance;
+        lockOnFramingTransposer.m_CameraDistance = DefaultDistance;
         TargetDistance = _currentDistance;
 
         _targetVerticalAngle = 0f;
@@ -131,7 +135,6 @@ public class PlayerCamera : MonoBehaviour
 
             _targetVerticalAngle -= (rotationInput.y * RotationSpeed);
             _targetVerticalAngle = Mathf.Clamp(_targetVerticalAngle, MinVerticalAngle, MaxVerticalAngle);
-            Debug.Log(_targetVerticalAngle);
             Quaternion verticalRot = Quaternion.Euler(_targetVerticalAngle, 0, 0);
             Quaternion targetRotation = Quaternion.Slerp(FollowCameraTransform.rotation, planarRot * verticalRot, 1f - Mathf.Exp(-RotationSharpness * deltaTime));
 
@@ -139,11 +142,13 @@ public class PlayerCamera : MonoBehaviour
             FollowCameraTransform.rotation = targetRotation;
 
             // Process distance input
-            if(_distanceIsObstructed && Mathf.Abs(zoomInput) > 0f)
+            if(_distanceIsObstructed && Mathf.Abs(zoomInput) > 0f && !PlayerController.Instance.LockedOn)
             {
                 TargetDistance = _currentDistance;
             }
+            
             TargetDistance += zoomInput * DistanceMovementSpeed;
+            TargetDistance = Mathf.RoundToInt(TargetDistance);
             TargetDistance = Mathf.Clamp(TargetDistance, MinDistance, MaxDistance);
 
             // Find the smoothed follow position
@@ -207,13 +212,9 @@ public class PlayerCamera : MonoBehaviour
             // Apply position
             FollowCameraTransform.position = targetPosition;
 
-            CinemachineFramingTransposer framingTransposer = LockOnCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-            //framingTransposer.m_CameraDistance = TargetDistance;
-            //float minScreenY = -0.5F;
-            //float maxScreenY = 1.5F;
-
-            //float verticalAngleLockOn = (_targetVerticalAngle - MinVerticalAngle) / (MaxVerticalAngle - MinVerticalAngle) * (maxScreenY - minScreenY) + minScreenY;
-            //framingTransposer.m_ScreenY = verticalAngleLockOn;
+           
+            //Debug.Log(TargetDistance);
+            lockOnFramingTransposer.m_CameraDistance = TargetDistance;
             
             
             

@@ -95,6 +95,8 @@ public class PlayerController : MonoBehaviour
             scrollInput = 0f;
         #endif
 
+        if(scrollInput != 0f)
+            Debug.Log(scrollInput);
         // Apply inputs to the camera
         characterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
     }
