@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 using Cinemachine;
+using DG.Tweening;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -116,7 +117,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void UpdateWithInput(float deltaTime, float zoomInput, Vector3 rotationInput)
     {
-        if(FollowTransform)
+        if(FollowTransform )
         {
             if(InvertX)
             {
@@ -146,7 +147,7 @@ public class PlayerCamera : MonoBehaviour
             {
                 TargetDistance = _currentDistance;
             }
-            
+
             TargetDistance += zoomInput * DistanceMovementSpeed;
             TargetDistance = Mathf.RoundToInt(TargetDistance);
             TargetDistance = Mathf.Clamp(TargetDistance, MinDistance, MaxDistance);
@@ -212,13 +213,7 @@ public class PlayerCamera : MonoBehaviour
             // Apply position
             FollowCameraTransform.position = targetPosition;
 
-           
-            //Debug.Log(TargetDistance);
             lockOnFramingTransposer.m_CameraDistance = TargetDistance;
-            
-            
-            
-
         }
     }
 
@@ -239,18 +234,20 @@ public class PlayerCamera : MonoBehaviour
 
     private void OnEnterFirstPerson()
     {
-        if(!PlayerController.Instance.BuildModeEnabled) return;
+        if(PlayerController.Instance.LockedOn)
+            DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 0f, 0f), 0.5f);
 
-        //StopAllCoroutines();
+        if(!PlayerController.Instance.BuildModeEnabled) return;
         
         StartCoroutine(DoCameraLerp(BuildModeFollowPointFraming, DefaultFollowPointFraming));
     }
 
     private void OnExitFirstPerson()
     {
-        if(!PlayerController.Instance.BuildModeEnabled) return;
+        if(PlayerController.Instance.LockedOn)
+            DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 1f, 0f), 0.5f);
 
-        //StopAllCoroutines();
+        if(!PlayerController.Instance.BuildModeEnabled) return;
 
         StartCoroutine(DoCameraLerp(DefaultFollowPointFraming, BuildModeFollowPointFraming));
     }
