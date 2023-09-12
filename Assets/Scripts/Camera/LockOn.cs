@@ -63,14 +63,18 @@ public class LockOn : MonoBehaviour
 
     private void FoundTarget()
     {
+        PlayerController.Instance.OnEnterLockOn?.Invoke();
         cameraAnimator.Play(lockOnAnimatorState);
+        
         PlayerController.Instance.SetLockedOn(true);
     }
 
     void ResetTarget()
     {
+        PlayerController.Instance.OnExitLockOn?.Invoke();
         currentTarget = null;
         cameraAnimator.Play(followAnimatorState);
+        
         PlayerController.Instance.SetLockedOn(false);
     }
 
@@ -84,10 +88,6 @@ public class LockOn : MonoBehaviour
 
         pos = currentTarget.position + new Vector3(0, currentYOffset, 0);
         lockOnLocator.position = pos;
-        //Vector3 dir = currentTarget.position - transform.position;
-        //dir.y = 0;
-        //Quaternion rot = Quaternion.LookRotation(dir);
-        //transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * lookAtSmoothing);
     }
 
     private Transform ScanNearBy()

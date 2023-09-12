@@ -105,6 +105,9 @@ public class PlayerCamera : MonoBehaviour
 
         PlayerController.Instance.OnEnterFirstPerson += OnEnterFirstPerson;
         PlayerController.Instance.OnExitFirstPerson += OnExitFirstPerson;
+
+        PlayerController.Instance.OnEnterLockOn += OnEnterLockOn;
+        PlayerController.Instance.OnExitLockOn += OnExitLockOn;
     }
 
     // Set the transform that the camera will orbit around
@@ -117,7 +120,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void UpdateWithInput(float deltaTime, float zoomInput, Vector3 rotationInput)
     {
-        if(FollowTransform )
+        if(FollowTransform)
         {
             if(InvertX)
             {
@@ -130,7 +133,11 @@ public class PlayerCamera : MonoBehaviour
 
             // Process rotation input
             Quaternion rotationFromInput = Quaternion.Euler(FollowTransform.up * (rotationInput.x * RotationSpeed));
-            PlanarDirection = rotationFromInput * PlanarDirection;
+
+            if(rotationInput != Vector3.zero)
+                PlanarDirection = rotationFromInput * PlanarDirection;
+            
+            
             PlanarDirection = Vector3.Cross(FollowTransform.up, Vector3.Cross(PlanarDirection, FollowTransform.up));
             Quaternion planarRot = Quaternion.LookRotation(PlanarDirection, FollowTransform.up);
 
@@ -140,6 +147,7 @@ public class PlayerCamera : MonoBehaviour
             Quaternion targetRotation = Quaternion.Slerp(FollowCameraTransform.rotation, planarRot * verticalRot, 1f - Mathf.Exp(-RotationSharpness * deltaTime));
 
             // Apply rotation
+
             FollowCameraTransform.rotation = targetRotation;
 
             // Process distance input
@@ -211,9 +219,16 @@ public class PlayerCamera : MonoBehaviour
             targetPosition += FollowCameraTransform.up * FollowPointFraming.y;
 
             // Apply position
+
             FollowCameraTransform.position = targetPosition;
 
             lockOnFramingTransposer.m_CameraDistance = TargetDistance;
+
+            if(PlayerController.Instance.LockedOn && !GetComponentInChildren<CinemachineStateDrivenCamera>().IsBlending)
+            {
+                FollowCameraTransform.position = Camera.main.transform.position;
+                FollowCameraTransform.rotation = Camera.main.transform.rotation;
+            }
         }
     }
 
@@ -266,5 +281,15 @@ public class PlayerCamera : MonoBehaviour
         FollowPointFraming = targetPosition;
 
         yield break;
+    }
+
+    private void OnEnterLockOn()
+    {
+       
+    }
+
+    private void OnExitLockOn()
+    {
+        PlanarDirection = LockOnCameraTransform.forward;
     }
 }

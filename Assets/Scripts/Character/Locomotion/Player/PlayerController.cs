@@ -34,6 +34,9 @@ public class PlayerController : MonoBehaviour
     public Action OnEnterFirstPerson;
     public Action OnExitFirstPerson;
 
+    public Action OnEnterLockOn;
+    public Action OnExitLockOn;
+
     private void Awake()
     {
         if(Instance == null)
@@ -83,7 +86,7 @@ public class PlayerController : MonoBehaviour
         Vector3 lookInputVector = new Vector3(mouseLookAxisRight, mouseLookAxisUp, 0f);
 
         // Prevent moving the camera while the cursor isn't locked
-        if(Cursor.lockState != CursorLockMode.Locked)
+        if(Cursor.lockState != CursorLockMode.Locked || lockedOn)
         {
             lookInputVector = Vector3.zero;
         }
@@ -95,19 +98,18 @@ public class PlayerController : MonoBehaviour
             scrollInput = 0f;
         #endif
 
-        if(scrollInput != 0f)
-            Debug.Log(scrollInput);
         // Apply inputs to the camera
         characterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
     }
 
     private void HandleCharacterInput()
     {
-        PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
-
-        // Build the CharacterInputs struct
-        characterInputs.MoveAxisForward = verticalInput;
-        characterInputs.MoveAxisRight = horizontalInput;
+        PlayerCharacterInputs characterInputs = new PlayerCharacterInputs
+        {
+            // Build the CharacterInputs struct
+            MoveAxisForward = verticalInput,
+            MoveAxisRight = horizontalInput
+        };
 
         if(!lockedOn)
             characterInputs.CameraRotation = characterCamera.FollowCameraTransform.rotation;
