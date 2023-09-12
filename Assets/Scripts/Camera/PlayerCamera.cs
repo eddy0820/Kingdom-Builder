@@ -249,7 +249,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void OnEnterFirstPerson()
     {
-        if(PlayerController.Instance.LockedOn)
+        if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 1f)
             DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 0f, 0f), 0.5f);
 
         if(!PlayerController.Instance.BuildModeEnabled) return;
@@ -259,7 +259,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void OnExitFirstPerson()
     {
-        if(PlayerController.Instance.LockedOn)
+        if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 0f)
             DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 1f, 0f), 0.5f);
 
         if(!PlayerController.Instance.BuildModeEnabled) return;
@@ -290,6 +290,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void OnExitLockOn()
     {
-        PlanarDirection = LockOnCameraTransform.forward;
+        if(PlayerController.Instance.LockedOn) // are we still locked on (I set it after this fires)
+            PlanarDirection = LockOnCameraTransform.forward;
     }
 }

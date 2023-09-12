@@ -6,7 +6,7 @@ using NaughtyAttributes;
 public class LockOn : MonoBehaviour
 {
     [SerializeField] Transform lockOnLocator;
-    public Transform LockOnLocator => lockOnLocator;
+    [SerializeField] Canvas lockOnReticleCanvas;
 
     [Header("Animator")]
     [SerializeField] Animator cameraAnimator;
@@ -16,6 +16,7 @@ public class LockOn : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] LayerMask targetLayers;
+    [SerializeField] float reticleScale = 0.1f;
     [SerializeField] bool zeroVertLook;
     [SerializeField] float noticeZone = 10f;
     [SerializeField] float maxNoticeAngle = 60;
@@ -25,14 +26,13 @@ public class LockOn : MonoBehaviour
     [Space(15)]
     [ReadOnly, SerializeField] Transform currentTarget;
 
-    Transform cam;
 
     float currentYOffset;
     Vector3 pos;
 
     private void Awake()
     {
-        cam = Camera.main.transform;
+        lockOnReticleCanvas.gameObject.SetActive(false);
     }
 
     void Update()
@@ -65,6 +65,7 @@ public class LockOn : MonoBehaviour
     {
         PlayerController.Instance.OnEnterLockOn?.Invoke();
         cameraAnimator.Play(lockOnAnimatorState);
+        lockOnReticleCanvas.gameObject.SetActive(true);
         
         PlayerController.Instance.SetLockedOn(true);
     }
@@ -74,6 +75,7 @@ public class LockOn : MonoBehaviour
         PlayerController.Instance.OnExitLockOn?.Invoke();
         currentTarget = null;
         cameraAnimator.Play(followAnimatorState);
+        lockOnReticleCanvas.gameObject.SetActive(false);
         
         PlayerController.Instance.SetLockedOn(false);
     }
@@ -88,6 +90,8 @@ public class LockOn : MonoBehaviour
 
         pos = currentTarget.position + new Vector3(0, currentYOffset, 0);
         lockOnLocator.position = pos;
+        lockOnReticleCanvas.transform.position = pos;
+        lockOnReticleCanvas.transform.localScale = (Camera.main.transform.position - pos).magnitude * reticleScale * Vector3.one;
     }
 
     private Transform ScanNearBy()
@@ -99,9 +103,9 @@ public class LockOn : MonoBehaviour
 
         for (int i = 0; i < nearbyTargets.Length; i++)
         {
-            Vector3 dir = nearbyTargets[i].transform.position - cam.position;
+            Vector3 dir = nearbyTargets[i].transform.position - Camera.main.transform.position;
             dir.y = 0;
-            float _angle = Vector3.Angle(cam.forward, dir);
+            float _angle = Vector3.Angle(Camera.main.transform.forward, dir);
             
             if (_angle < closestAngle)
             {
