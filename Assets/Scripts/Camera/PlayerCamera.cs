@@ -11,6 +11,7 @@ public class PlayerCamera : MonoBehaviour
     public CinemachineVirtualCamera FollowCamera;
     public CinemachineVirtualCamera LockOnCamera;
     LockOn lockOnController;
+    public LockOn LockOnController => lockOnController;
 
     [Header("Follow Camera Framing")]
     public Vector2 FollowPointFraming = new Vector2(0f, 0f);

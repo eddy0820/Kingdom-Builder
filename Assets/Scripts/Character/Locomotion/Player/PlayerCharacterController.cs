@@ -85,38 +85,14 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     private void Awake()
     {
+        PlayerController.Instance.OnEnterLockOn += () => TransitionToState(CharacterState.LockedOn);
+        PlayerController.Instance.OnExitLockOn += () => TransitionToState(CharacterState.Default);
+
         TransitionToState(CharacterState.Default);
 
         animationController = PlayerController.Instance.AnimationController;
 
         Motor.CharacterController = this;
-    }
-
-    public void TransitionToState(CharacterState newState)
-    {
-        CharacterState tmpInitialState = CurrentCharacterState;
-        OnStateExit(tmpInitialState, newState);
-        CurrentCharacterState = newState;
-        OnStateEnter(newState, tmpInitialState);
-    }
-
-    public void OnStateEnter(CharacterState state, CharacterState fromState)
-    {
-        switch(state)
-        {
-            case CharacterState.Default:
-                targetSpeed = 0;
-                break;
-        }
-    }
-
-    public void OnStateExit(CharacterState state, CharacterState toState)
-    {
-        switch(state)
-        {
-            case CharacterState.Default:
-                break;
-        }
     }
 
     public void SetInputs(ref PlayerCharacterInputs inputs)
@@ -153,14 +129,71 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
                 break;
             }
+            case CharacterState.LockedOn:
+            {
+                // Move and look inputs
+                _moveInputVector = cameraPlanarRotation * moveInputVector;
+
+                switch (OrientationMethod)
+                {
+                    case OrientationMethod.TowardsCamera:
+                        _lookInputVector = cameraPlanarDirection;
+                        break;
+                    case OrientationMethod.TowardsMovement:
+
+                        if(isSprinting)
+                            _lookInputVector = _moveInputVector.normalized;
+                        else
+                            _lookInputVector = PlayerController.Instance.CharacterCamera.LockOnController.LookAtDirectionVector.normalized;
+                        break;
+                }
+
+                break;
+            }
         }
     }
+
+#region State Transition Stuff
+
+    public void TransitionToState(CharacterState newState)
+    {
+        CharacterState tmpInitialState = CurrentCharacterState;
+        OnStateExit(tmpInitialState, newState);
+        CurrentCharacterState = newState;
+        OnStateEnter(newState, tmpInitialState);
+    }
+
+    public void OnStateEnter(CharacterState state, CharacterState fromState)
+    {
+        switch(state)
+        {
+            case CharacterState.Default:
+            case CharacterState.LockedOn:
+                targetSpeed = 0;
+                break;
+        }
+    }
+
+    public void OnStateExit(CharacterState state, CharacterState toState)
+    {
+        switch(state)
+        {
+            case CharacterState.Default:
+            case CharacterState.LockedOn:
+                break;
+        }
+    }
+
+#endregion    
+
+#region Setters
 
     public void DoJump()
     {
         switch(CurrentCharacterState)
         {
             case CharacterState.Default:
+            case CharacterState.LockedOn:
             {
                 _timeSinceJumpRequested = 0f;
                 _jumpRequested = true;
@@ -174,6 +207,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         switch(CurrentCharacterState)
         {
             case CharacterState.Default:
+            case CharacterState.LockedOn:
             {
                 _shouldBeCrouching = true;
 
@@ -197,6 +231,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         switch (CurrentCharacterState)
         {
             case CharacterState.Default:
+            case CharacterState.LockedOn:
             {
                 _shouldBeCrouching = false;
                 animationController.ToggleCouch(false);
@@ -237,11 +272,16 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         }  
     }
 
+#endregion
+
+#region Character Updates
+
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {   
         switch(CurrentCharacterState)
         {
             case CharacterState.Default:
+            case CharacterState.LockedOn:
             {
                 // Ground movement
                 if(Motor.GroundingStatus.IsStableOnGround)
@@ -325,7 +365,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
                     currentVelocity += Gravity * deltaTime;
 
                     // Drag
-                    currentVelocity *= (1f / (1f + (Drag * deltaTime)));
+                    currentVelocity *= 1f / (1f + (Drag * deltaTime));
 
                     if(currentVelocity.y <= 0f)
                     {
@@ -418,6 +458,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         switch (CurrentCharacterState)
         {
             case CharacterState.Default:
+            case CharacterState.LockedOn:
                 {
                     if (_lookInputVector.sqrMagnitude > 0f && OrientationSharpness > 0f)
                     {
@@ -475,6 +516,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         switch (CurrentCharacterState)
         {
             case CharacterState.Default:
+            case CharacterState.LockedOn:
                 {
                     // Handle jump-related values
 
@@ -530,6 +572,8 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         }
     }
 
+#endregion
+
 #region Ground Stuff
 
     public void PostGroundingUpdate(float deltaTime) {}
@@ -544,11 +588,14 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
 #endregion
 
+#region Collision Stuff
+
     public void AddVelocity(Vector3 velocity)
     {
         switch (CurrentCharacterState)
         {
             case CharacterState.Default:
+            case CharacterState.LockedOn:
                 {
                     _internalVelocityAdd += velocity;
                     break;
@@ -577,12 +624,14 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void OnDiscreteCollisionDetected(Collider hitCollider) { }
 
+#endregion
 
 }
 
 public enum CharacterState
 {
     Default,
+    LockedOn,
 }
 
 public enum OrientationMethod

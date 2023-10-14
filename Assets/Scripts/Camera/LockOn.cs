@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using System.Security.Cryptography;
 
 public class LockOn : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class LockOn : MonoBehaviour
 
     float currentYOffset;
     Vector3 pos;
+    Vector3 lookAtDirectionVector;
+    public Vector3 LookAtDirectionVector => lookAtDirectionVector;
 
     private void Awake()
     {
@@ -55,7 +58,11 @@ public class LockOn : MonoBehaviour
         if(PlayerController.Instance.LockedOn) 
         {
             if(!TargetOnRange()) 
+            {
                 ResetTarget();
+                return;
+            }
+                  
             LookAtTarget();
         }
 
@@ -63,7 +70,6 @@ public class LockOn : MonoBehaviour
 
     private void FoundTarget()
     {
-        PlayerController.Instance.OnEnterLockOn?.Invoke();
         cameraAnimator.Play(lockOnAnimatorState);
         lockOnReticleCanvas.gameObject.SetActive(true);
         
@@ -72,7 +78,8 @@ public class LockOn : MonoBehaviour
 
     void ResetTarget()
     {
-        PlayerController.Instance.OnExitLockOn?.Invoke();
+        if(!PlayerController.Instance.LockedOn) return;
+        
         currentTarget = null;
         cameraAnimator.Play(followAnimatorState);
         lockOnReticleCanvas.gameObject.SetActive(false);
@@ -92,6 +99,10 @@ public class LockOn : MonoBehaviour
         lockOnLocator.position = pos;
         lockOnReticleCanvas.transform.position = pos;
         lockOnReticleCanvas.transform.localScale = (Camera.main.transform.position - pos).magnitude * reticleScale * Vector3.one;
+        
+        Vector3 playerPosition = PlayerController.Instance.Character.Motor.Transform.position;
+        lookAtDirectionVector = pos - playerPosition;
+        lookAtDirectionVector.y = 0;
     }
 
     private Transform ScanNearBy()

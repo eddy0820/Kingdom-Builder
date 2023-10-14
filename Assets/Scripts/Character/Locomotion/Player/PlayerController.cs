@@ -187,8 +187,11 @@ public class PlayerController : MonoBehaviour
 
     public void SetLockedOn(bool _lockedOn)
     {
-        lockedOn = _lockedOn;
+        if(_lockedOn)
+            OnEnterLockOn?.Invoke();
+        else
+            OnExitLockOn?.Invoke();
 
-        
+        lockedOn = _lockedOn;
     }
 }
