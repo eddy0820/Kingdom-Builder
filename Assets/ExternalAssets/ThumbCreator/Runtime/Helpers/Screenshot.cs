@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace ThumbCreator.Helpers
 {
+    #if UNITY_EDITOR
     public static class Screenshot
     {
         [MenuItem("Tools/ThumbCreator/Take Screenshot with transparency")]
@@ -59,4 +60,6 @@ namespace ThumbCreator.Helpers
             }
         }
     }
+
+    #endif
 }

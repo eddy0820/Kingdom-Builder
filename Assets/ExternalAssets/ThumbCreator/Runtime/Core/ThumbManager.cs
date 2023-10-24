@@ -84,7 +84,10 @@ namespace ThumbCreator.Core
                 {
                     //transform.localRotation = Quaternion.Euler(RotationX, i, RotationZ);
                     Target.transform.localRotation = Quaternion.Euler(Target.transform.rotation.x, i, Target.transform.rotation.z);
-                    Screenshot.GeneratePng(Filename, m_width, m_height, false, count);
+                    
+                    #if UNITY_EDITOR
+                        Screenshot.GeneratePng(Filename, m_width, m_height, false, count);
+                    #endif
                     count++;
                 }
 
@@ -97,7 +100,9 @@ namespace ThumbCreator.Core
             switch (ExportFile)
             {
                 case FileType.Png:
+                    #if UNITY_EDITOR
                     Screenshot.GeneratePng(Filename, m_width, m_height);
+                    #endif
                     break;
                 case FileType.Sprite:
                     GenerateSprite();

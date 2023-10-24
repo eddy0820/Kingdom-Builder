@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using NaughtyAttributes;
+using UnityEngine;
+
+public class MovementAttributesSO : ScriptableObject
+{
+    
+    [Header("Stable Movement")]
+    [BoxGroup(" "), SerializeField] MovementSpeedSettings walkingSpeedSettings;
+    public MovementSpeedSettings WalkingSpeedSettings => walkingSpeedSettings;
+    [BoxGroup(" "), SerializeField] MovementSpeedSettings runningSpeedSettings;
+    public MovementSpeedSettings RunningSpeedSettings => runningSpeedSettings;
+    [BoxGroup(" "), SerializeField] MovementSpeedSettings sprintingSpeedSettings;
+    public MovementSpeedSettings SprintingSpeedSettings => sprintingSpeedSettings;
+    [BoxGroup(" "), SerializeField] MovementSpeedSettings crouchingSpeedSettings;
+    public MovementSpeedSettings CrouchingSpeedSettings => crouchingSpeedSettings;
+    [Space(10)]
+    [BoxGroup(" "), SerializeField] float stableMovementSharpness;
+    public float StableMovementSharpness => stableMovementSharpness;
+    [BoxGroup(" "), SerializeField] float orientationSharpness;
+    public float OrientationSharpness => orientationSharpness;
+    [BoxGroup(" "), SerializeField] float bonusOrientationSharpness = 20f;
+    public float BonusOrientationSharpness => bonusOrientationSharpness;
+}

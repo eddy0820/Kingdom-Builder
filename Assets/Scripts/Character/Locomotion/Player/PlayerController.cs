@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
+using NaughtyAttributes;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public PlayerSoundController SoundController => soundController;
     [SerializeField] PlayerAnimationController animationController;
     public PlayerAnimationController AnimationController => animationController;
+    [Expandable, SerializeField] PlayerAttributesSO attributesSO;
+    public PlayerAttributesSO AttributesSO => attributesSO;
 
     private float verticalInput;
     private float horizontalInput;
@@ -148,7 +151,7 @@ public class PlayerController : MonoBehaviour
         if(characterCamera.TargetDistance == 0f)
         {
             characterCamera.inFirstPerson = true;
-            character.OrientationMethod = OrientationMethod.TowardsCamera;
+            character.ChangeOrientationMethod(OrientationMethod.TowardsCamera);
             character.MeshRoot.gameObject.SetActive(false);
 
             if(lastFrameFirstPersonState != characterCamera.inFirstPerson) OnEnterFirstPerson?.Invoke();
@@ -156,7 +159,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             characterCamera.inFirstPerson = false;
-            character.OrientationMethod = OrientationMethod.TowardsMovement;
+            character.ChangeOrientationMethod(OrientationMethod.TowardsMovement);
             character.MeshRoot.gameObject.SetActive(true);
             
             if(lastFrameFirstPersonState != characterCamera.inFirstPerson) OnExitFirstPerson?.Invoke();

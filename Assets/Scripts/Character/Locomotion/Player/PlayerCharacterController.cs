@@ -5,37 +5,102 @@ using KinematicCharacterController;
 using NaughtyAttributes;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(PlayerCharacterStateMachine))]
 public class PlayerCharacterController : MonoBehaviour, ICharacterController
 {
-    public KinematicCharacterMotor Motor;
+    [SerializeField] KinematicCharacterMotor motor;
+    public KinematicCharacterMotor Motor => motor;
+    [SerializeField] Transform meshRoot;
+    public Transform MeshRoot => meshRoot;
+    [SerializeField] Transform cameraFollowPoint;
+    public Transform CameraFollowPoint => cameraFollowPoint;
 
-    [Header("Stable Movement")]
-    public float WalkingSpeed = 3;
-    public float WalkAccel;
+    [HorizontalLine(1)]
 
-    [Space(5)]
+    [ReadOnly, SerializeField] MovementAttributes attributes;
+    public MovementAttributes Attributes => attributes;
 
-    public float RunningSpeed = 6;
-    public float RunAccel;
+    [System.Serializable]
+    public class MovementAttributes
+    {
+        [Header("Stable Movement")]
+        [ReadOnly, SerializeField] MovementSpeedSettings walkingSpeedSettings;
+        public MovementSpeedSettings WalkingSpeedSettings => walkingSpeedSettings;
+        [ReadOnly, SerializeField] MovementSpeedSettings runningSpeedSettings;
+        public MovementSpeedSettings RunningSpeedSettings => runningSpeedSettings;
+        [ReadOnly, SerializeField] MovementSpeedSettings sprintingSpeedSettings;
+         public MovementSpeedSettings SprintingSpeedSettings => sprintingSpeedSettings;
+        [ReadOnly, SerializeField] MovementSpeedSettings crouchingSpeedSettings;
+        public MovementSpeedSettings CrouchingSpeedSettings => crouchingSpeedSettings;
+        [Space(10)]
+        [ReadOnly, SerializeField] float stableMovementSharpness;
+        public float StableMovementSharpness => stableMovementSharpness;
+        [ReadOnly, SerializeField] float orientationSharpness;
+        public float OrientationSharpness => orientationSharpness;
+        [ReadOnly, SerializeField] float bonusOrientationSharpness;
+        public float BonusOrientationSharpness => bonusOrientationSharpness;
 
-    [Space(5)]
+        [Header("Air Movement")]
+        [ReadOnly, SerializeField] MovementSpeedSettings airSpeedSettings;
+        public MovementSpeedSettings AirSpeedSettings => airSpeedSettings;
+        [Space(10)]
+        [ReadOnly, SerializeField] float drag;
+        public float Drag => drag;
 
-    public float SprintingSpeed = 10;
-    public float SprintAccel;
+        [Header("Jumping")]
+        [ReadOnly, SerializeField] bool allowJumpingWhenSliding;
+        public bool AllowJumpingWhenSliding => allowJumpingWhenSliding;
+        [ReadOnly, SerializeField] float jumpUpSpeed;
+        public float JumpUpSpeed => jumpUpSpeed;
+        [ReadOnly, SerializeField] float jumpScalableForwardSpeed;
+        public float JumpScalableForwardSpeed => jumpScalableForwardSpeed;
+        [ReadOnly, SerializeField] float jumpPreGroundingGraceTime;
+        public float JumpPreGroundingGraceTime => jumpPreGroundingGraceTime;
+        [ReadOnly, SerializeField] float jumpPostGroundingGraceTime;
+        public float JumpPostGroundingGraceTime => jumpPostGroundingGraceTime;
+
+        [Header("Other")]
+        [ReadOnly, SerializeField] float crouchedCapsuleHeight;
+        public float CrouchedCapsuleHeight => crouchedCapsuleHeight;
+
+        public MovementAttributes(PlayerMovementAttributesSO attributesSO)
+        {
+            walkingSpeedSettings = attributesSO.WalkingSpeedSettings;
+            runningSpeedSettings = attributesSO.RunningSpeedSettings;
+            sprintingSpeedSettings = attributesSO.SprintingSpeedSettings;
+            crouchingSpeedSettings = attributesSO.CrouchingSpeedSettings;
+            stableMovementSharpness = attributesSO.StableMovementSharpness;
+            orientationSharpness = attributesSO.OrientationSharpness;
+            bonusOrientationSharpness = attributesSO.BonusOrientationSharpness;
+
+            airSpeedSettings = attributesSO.AirSpeedSettings;
+            drag = attributesSO.Drag;
+
+            allowJumpingWhenSliding = attributesSO.AllowJumpingWhenSliding;
+            jumpUpSpeed = attributesSO.JumpUpSpeed;
+            jumpScalableForwardSpeed = attributesSO.JumpScalableForwardSpeed;
+            jumpPreGroundingGraceTime = attributesSO.JumpPreGroundingGraceTime;
+            jumpPostGroundingGraceTime = attributesSO.JumpPostGroundingGraceTime;
+
+            crouchedCapsuleHeight = attributesSO.CrouchedCapsuleHeight;
+
+        }
+    }
     
-    [Space(5)]
+    [HorizontalLine(1)]
 
-    public float CrouchingSpeed = 3;
-    public float CrouchAccel;
+    [Space(10)]
 
-    float targetSpeed = 0;
+    [SerializeField] OrientationMethod startingOrientationMethod = OrientationMethod.TowardsCamera;
+    [SerializeField] BonusOrientationMethod startingBonusOrientationMethod = BonusOrientationMethod.None;
 
-    [Space(15)]
-    public float StableMovementSharpness = 15f;
-    public float OrientationSharpness = 10f;
-    public OrientationMethod OrientationMethod = OrientationMethod.TowardsCamera;
+    [ReadOnly, SerializeField] OrientationMethod currentOrientationMethod = OrientationMethod.TowardsCamera;
+    public OrientationMethod CurrentOrientationMethod => currentOrientationMethod;
+    [ReadOnly, SerializeField] BonusOrientationMethod currentBonusOrientationMethod = BonusOrientationMethod.None;
+    public BonusOrientationMethod CurrentBonusOrientationMethod => currentBonusOrientationMethod;
 
-    [Header("Movement Checks")]
+    [ReadOnly, SerializeField] float targetSpeed = 0;
+    [Space(10)]
     [ReadOnly, SerializeField] bool isWalking;
     public bool IsWalking => isWalking;
     [ReadOnly, SerializeField] bool isSprinting;
@@ -43,56 +108,43 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     [ReadOnly, SerializeField] bool _isCrouching;
     public bool IsCrouching => _isCrouching;
 
-    [Header("Air Movement")]
-    public float MaxAirMoveSpeed = 15f;
-    public float AirAccelerationSpeed = 15f;
-    public float Drag = 0.1f;
+    [Space(10)]
+    [SerializeField] List<Collider> ignoredColliders = new();
+    
 
-    [Header("Jumping")]
-    public bool AllowJumpingWhenSliding = false;
-    public float JumpUpSpeed = 10f;
-    public float JumpScalableForwardSpeed = 10f;
-    public float JumpPreGroundingGraceTime = 0f;
-    public float JumpPostGroundingGraceTime = 0f;
+    Collider[] _probedColliders = new Collider[8];
+    RaycastHit[] _probedHits = new RaycastHit[8];
 
-    [Header("Misc")]
-    public List<Collider> IgnoredColliders = new List<Collider>();
-    public BonusOrientationMethod BonusOrientationMethod = BonusOrientationMethod.None;
-    public float BonusOrientationSharpness = 10f;
-    public Vector3 Gravity = new Vector3(0, -30f, 0);
-    public Transform MeshRoot;
-    public Transform CameraFollowPoint;
-    public float CrouchedCapsuleHeight = 1f;
+    Vector3 _moveInputVector;
+    Vector3 _lookInputVector;
 
-    public CharacterState CurrentCharacterState { get; private set; }
+    bool _jumpRequested = false;
+    bool _jumpConsumed = false;
+    bool _jumpedThisFrame = false;
+    float _timeSinceJumpRequested = Mathf.Infinity;
+    float _timeSinceLastAbleToJump = 0f;
 
-    private Collider[] _probedColliders = new Collider[8];
-    private RaycastHit[] _probedHits = new RaycastHit[8];
-    private Vector3 _moveInputVector;
-    private Vector3 _lookInputVector;
-    private bool _jumpRequested = false;
-    private bool _jumpConsumed = false;
-    private bool _jumpedThisFrame = false;
-    private float _timeSinceJumpRequested = Mathf.Infinity;
-    private float _timeSinceLastAbleToJump = 0f;
-    private Vector3 _internalVelocityAdd = Vector3.zero;
-    private bool _shouldBeCrouching = false;
+    Vector3 _internalVelocityAdd = Vector3.zero;
 
-    private Vector3 lastInnerNormal = Vector3.zero;
-    private Vector3 lastOuterNormal = Vector3.zero;
+    bool _shouldBeCrouching = false;
+
+    Vector3 lastInnerNormal = Vector3.zero;
+    Vector3 lastOuterNormal = Vector3.zero;
 
     PlayerAnimationController animationController;
+    PlayerCharacterStateMachine stateMachine;
 
     private void Awake()
     {
-        PlayerController.Instance.OnEnterLockOn += () => TransitionToState(CharacterState.LockedOn);
-        PlayerController.Instance.OnExitLockOn += () => TransitionToState(CharacterState.Default);
+        attributes = new MovementAttributes(PlayerController.Instance.AttributesSO.MovementAttributes as PlayerMovementAttributesSO);
 
-        TransitionToState(CharacterState.Default);
-
+        stateMachine = GetComponent<PlayerCharacterStateMachine>();
         animationController = PlayerController.Instance.AnimationController;
 
-        Motor.CharacterController = this;
+        currentOrientationMethod = startingOrientationMethod;
+        currentBonusOrientationMethod = startingBonusOrientationMethod;
+
+        motor.CharacterController = this;
     }
 
     public void SetInputs(ref PlayerCharacterInputs inputs)
@@ -101,87 +153,29 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
 
         // Calculate camera direction and rotation on the character plane
-        Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
+        Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, motor.CharacterUp).normalized;
 
         if(cameraPlanarDirection.sqrMagnitude == 0f)
         {
-            cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, Motor.CharacterUp).normalized;
+            cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, motor.CharacterUp).normalized;
         }
 
-        Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
+        Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, motor.CharacterUp);
 
-        switch(CurrentCharacterState)
-        {
-            case CharacterState.Default:
-            {
-                // Move and look inputs
-                _moveInputVector = cameraPlanarRotation * moveInputVector;
-
-                switch (OrientationMethod)
-                {
-                    case OrientationMethod.TowardsCamera:
-                        _lookInputVector = cameraPlanarDirection;
-                        break;
-                    case OrientationMethod.TowardsMovement:
-                        _lookInputVector = _moveInputVector.normalized;
-                        break;
-                }
-
-                break;
-            }
-            case CharacterState.LockedOn:
-            {
-                // Move and look inputs
-                _moveInputVector = cameraPlanarRotation * moveInputVector;
-
-                switch (OrientationMethod)
-                {
-                    case OrientationMethod.TowardsCamera:
-                        _lookInputVector = cameraPlanarDirection;
-                        break;
-                    case OrientationMethod.TowardsMovement:
-
-                        if(isSprinting)
-                            _lookInputVector = _moveInputVector.normalized;
-                        else
-                            _lookInputVector = PlayerController.Instance.CharacterCamera.LockOnController.LookAtDirectionVector.normalized;
-                        break;
-                }
-
-                break;
-            }
-        }
+        _moveInputVector = stateMachine.CurrentState.SetMoveInputVectorFromInputs(cameraPlanarRotation, moveInputVector);
+        _lookInputVector = stateMachine.CurrentState.SetLookInputVectorFromInputs(currentOrientationMethod, cameraPlanarDirection, _moveInputVector.normalized);
     }
 
 #region State Transition Stuff
 
-    public void TransitionToState(CharacterState newState)
+    public void ChangeOrientationMethod(OrientationMethod newOrientationMethod)
     {
-        CharacterState tmpInitialState = CurrentCharacterState;
-        OnStateExit(tmpInitialState, newState);
-        CurrentCharacterState = newState;
-        OnStateEnter(newState, tmpInitialState);
+        currentOrientationMethod = newOrientationMethod;
     }
 
-    public void OnStateEnter(CharacterState state, CharacterState fromState)
+    public void ChangeBonusOrientationMethod(BonusOrientationMethod newBonusOrientationMethod)
     {
-        switch(state)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-                targetSpeed = 0;
-                break;
-        }
-    }
-
-    public void OnStateExit(CharacterState state, CharacterState toState)
-    {
-        switch(state)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-                break;
-        }
+        currentBonusOrientationMethod = newBonusOrientationMethod;
     }
 
 #endregion    
@@ -190,54 +184,17 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void DoJump()
     {
-        switch(CurrentCharacterState)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-            {
-                _timeSinceJumpRequested = 0f;
-                _jumpRequested = true;
-                break;
-            }
-        }
+        stateMachine.CurrentState.DoJump(ref _timeSinceJumpRequested, ref _jumpRequested);
     }
 
     public void DoCrouchDown()
     {
-        switch(CurrentCharacterState)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-            {
-                _shouldBeCrouching = true;
-
-                if(!_isCrouching)
-                {
-                    _isCrouching = true;
-                    animationController.ToggleCouch(true);
-                    isWalking = false;
-                    isSprinting = false;
-                    Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                    //MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
-                }
-
-                break;
-            }
-        }
+        stateMachine.CurrentState.DoCrouchDown(ref _shouldBeCrouching, ref _isCrouching, ref isWalking, ref isSprinting);
     }
 
     public void DoCrouchUp()
     {
-        switch (CurrentCharacterState)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-            {
-                _shouldBeCrouching = false;
-                animationController.ToggleCouch(false);
-                break;
-            }
-        }
+        stateMachine.CurrentState.DoCrouchUp(ref _shouldBeCrouching);
     }
 
     public void SetIsWalking(bool _bool)
@@ -278,298 +235,22 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {   
-        switch(CurrentCharacterState)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-            {
-                // Ground movement
-                if(Motor.GroundingStatus.IsStableOnGround)
-                {
-                    float currentVelocityMagnitude = currentVelocity.magnitude;
-
-                    Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
-
-                    // Reorient velocity on slope
-                    currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
-            
-                    // Calculate target velocity
-                    Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
-                    Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
-                    Vector3 targetMovementVelocity = reorientedInput * CalculateTargetSpeed(deltaTime);
-
-                    // Smooth movement Velocity
-                    currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-
-                    if(currentVelocity.magnitude > 0f)
-                    {
-                        animationController.ToggleMoving(true);
-                        animationController.SetVelocity(currentVelocity.magnitude / RunningSpeed);
-                    }
-                    else
-                    {
-                        animationController.ToggleMoving(false);
-                        animationController.SetVelocity(0);
-                    }
-
-                    if(isSprinting && _moveInputVector.magnitude > 0f)
-                    {
-                        animationController.ToggleSpint(true);
-                    }
-                    else
-                    {
-                        animationController.ToggleSpint(false);
-                    }
-                }
-                // Air movement
-                else
-                {
-                    // Add move input
-                    if(_moveInputVector.sqrMagnitude > 0f)
-                    {
-                        Vector3 addedVelocity = _moveInputVector * AirAccelerationSpeed * deltaTime;
-
-                        Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
-
-                        // Limit air velocity from inputs
-                        if(currentVelocityOnInputsPlane.magnitude < MaxAirMoveSpeed)
-                        {
-                            // clamp addedVel to make total vel not exceed max vel on inputs plane
-                            Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, MaxAirMoveSpeed);
-                            addedVelocity = newTotal - currentVelocityOnInputsPlane;
-                        }
-                        else
-                        {
-                            // Make sure added vel doesn't go in the direction of the already-exceeding velocity
-                            if(Vector3.Dot(currentVelocityOnInputsPlane, addedVelocity) > 0f)
-                            {
-                                addedVelocity = Vector3.ProjectOnPlane(addedVelocity, currentVelocityOnInputsPlane.normalized);
-                            }
-                        }
-
-                        // Prevent air-climbing sloped walls
-                        if(Motor.GroundingStatus.FoundAnyGround)
-                        {
-                            if(Vector3.Dot(currentVelocity + addedVelocity, addedVelocity) > 0f)
-                            {
-                                Vector3 perpenticularObstructionNormal = Vector3.Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal), Motor.CharacterUp).normalized;
-                                addedVelocity = Vector3.ProjectOnPlane(addedVelocity, perpenticularObstructionNormal);
-                            }
-                        }
-
-                        // Apply added velocity
-                        currentVelocity += addedVelocity;
-                    }
-
-                    // Gravity
-                    currentVelocity += Gravity * deltaTime;
-
-                    // Drag
-                    currentVelocity *= 1f / (1f + (Drag * deltaTime));
-
-                    if(currentVelocity.y <= 0f)
-                    {
-                        animationController.SetJumpStatus(EJumpStatus.Fall);
-                    }
-                }
-
-                // Handle jumping
-                _jumpedThisFrame = false;
-                _timeSinceJumpRequested += deltaTime;
-                if (_jumpRequested)
-                {
-                    // See if we actually are allowed to jump
-                    if(!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))
-                    {
-                        // Calculate jump direction before ungrounding
-                        Vector3 jumpDirection = Motor.CharacterUp;
-                        if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround)
-                        {
-                            jumpDirection = Motor.GroundingStatus.GroundNormal;
-                        }
-
-                        // Makes the character skip ground probing/snapping on its next update. 
-                        // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
-                        Motor.ForceUnground();
-
-                        // Add to the return velocity and reset jump state
-                        currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
-                        currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
-                        _jumpRequested = false;
-                        _jumpConsumed = true;
-                        _jumpedThisFrame = true;
-                        animationController.SetJumpStatus(EJumpStatus.Jump);
-                    }
-                }
-
-                // Take into account additive velocity
-                if (_internalVelocityAdd.sqrMagnitude > 0f)
-                {
-                    currentVelocity += _internalVelocityAdd;
-                    _internalVelocityAdd = Vector3.zero;
-                }
-
-                break;
-            }
-        }
-    }
-
-    private float CalculateTargetSpeed(float deltaTime)
-    {
-        float moveSpeed = 0;
-        float moveAccel = RunAccel;
-
-        if(_moveInputVector.magnitude > 0)
-        {
-            moveSpeed = RunningSpeed;
-
-            if(isWalking)
-            {
-                moveSpeed = WalkingSpeed;
-                moveAccel = WalkAccel;
-            }
-            else if(isSprinting)
-            {
-                moveSpeed = SprintingSpeed;
-                moveAccel = SprintAccel;
-            }
-            else if(_isCrouching)
-            {
-                moveSpeed = CrouchingSpeed;
-                moveAccel = CrouchAccel;
-            }
-
-        }
-
-        float speed = Mathf.Lerp(targetSpeed, moveSpeed, 1f - Mathf.Exp(-moveAccel * deltaTime));
-
-        if(speed < 0.1f)
-        {
-            speed = 0;
-        }
-        
-        targetSpeed = speed;
-
-        return speed;
+        stateMachine.CurrentState.UpdateVelocity(ref currentVelocity, ref _moveInputVector, ref _jumpedThisFrame, ref _timeSinceJumpRequested, ref _jumpRequested, ref _jumpConsumed, ref _timeSinceLastAbleToJump, ref _internalVelocityAdd, ref targetSpeed, deltaTime);
     }
 
     public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
     {
-        switch (CurrentCharacterState)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-                {
-                    if (_lookInputVector.sqrMagnitude > 0f && OrientationSharpness > 0f)
-                    {
-                        // Smoothly interpolate from current to target look direction
-                        Vector3 smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
-
-                        // Set the current rotation (which will be used by the KinematicCharacterMotor)
-                        currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, Motor.CharacterUp);
-                    }
-
-                    Vector3 currentUp = (currentRotation * Vector3.up);
-
-                    if (BonusOrientationMethod == BonusOrientationMethod.TowardsGravity)
-                    {
-                        // Rotate from current up to invert gravity
-                        Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
-                        currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
-                    }
-                    else if (BonusOrientationMethod == BonusOrientationMethod.TowardsGroundSlopeAndGravity)
-                    {
-                        if (Motor.GroundingStatus.IsStableOnGround)
-                        {
-                            Vector3 initialCharacterBottomHemiCenter = Motor.TransientPosition + (currentUp * Motor.Capsule.radius);
-
-                            Vector3 smoothedGroundNormal = Vector3.Slerp(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
-                            currentRotation = Quaternion.FromToRotation(currentUp, smoothedGroundNormal) * currentRotation;
-
-                            // Move the position to create a rotation around the bottom hemi center instead of around the pivot
-                            Motor.SetTransientPosition(initialCharacterBottomHemiCenter + (currentRotation * Vector3.down * Motor.Capsule.radius));
-                        }
-                        else
-                        {
-                            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
-                            currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
-                        }
-                    }
-                    else
-                    {
-                        Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
-                        currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
-                    }
-
-                    break;
-                }
-        }
+        stateMachine.CurrentState.UpdateRotation(ref currentRotation, _lookInputVector, deltaTime);
     }
 
     public void BeforeCharacterUpdate(float deltaTime)
     {
-        
+        stateMachine.CurrentState.BeforeCharacterUpdate(deltaTime);
     }
 
     public void AfterCharacterUpdate(float deltaTime)
     {
-        switch (CurrentCharacterState)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-                {
-                    // Handle jump-related values
-
-                    // Handle jumping pre-ground grace period
-                    if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime)
-                    {
-                        _jumpRequested = false;
-                    }
-
-                    if (AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround)
-                    {
-                        // If we're on a ground surface, reset jumping values
-                        if (!_jumpedThisFrame)
-                        {
-                            _jumpConsumed = false;
-                        }
-                        _timeSinceLastAbleToJump = 0f;
-                    }
-                    else
-                    {
-                        // Keep track of time since we were last able to jump (for grace period)
-                        _timeSinceLastAbleToJump += deltaTime;
-                    }
-
-
-                    // Handle uncrouching
-                    if (_isCrouching && !_shouldBeCrouching)
-                    {
-                        // Do an overlap test with the character's standing height to see if there are any obstructions
-                        Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
-                        if (Motor.CharacterOverlap
-                            (
-                                Motor.TransientPosition,
-                                Motor.TransientRotation,
-                                _probedColliders,
-                                Motor.CollidableLayers,
-                                QueryTriggerInteraction.Ignore
-                            ) > 0)
-                        {
-                            // If obstructions, just stick to crouching dimensions
-                            Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                        }
-                        else
-                        {
-                            // If no obstructions, uncrouch
-                            MeshRoot.localScale = new Vector3(1f, 1f, 1f);
-                            _isCrouching = false;
-                        }
-                    }
-
-                    break;
-                }
-        }
+        stateMachine.CurrentState.AfterCharacterUpdate(ref _jumpRequested, ref _jumpConsumed, ref _timeSinceLastAbleToJump, ref _isCrouching, _timeSinceJumpRequested, _jumpedThisFrame, _shouldBeCrouching, _probedColliders, deltaTime);
     }
 
 #endregion
@@ -580,7 +261,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) 
     {
-        if(Time.timeSinceLevelLoad > 1 && Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround)
+        if(Time.timeSinceLevelLoad > 1 && motor.GroundingStatus.IsStableOnGround && !motor.LastGroundingStatus.IsStableOnGround)
         {
             animationController.SetJumpStatus(EJumpStatus.Land);
         }
@@ -592,27 +273,19 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void AddVelocity(Vector3 velocity)
     {
-        switch (CurrentCharacterState)
-        {
-            case CharacterState.Default:
-            case CharacterState.LockedOn:
-                {
-                    _internalVelocityAdd += velocity;
-                    break;
-                }
-        }
+        stateMachine.CurrentState.AddVelocity(ref _internalVelocityAdd, velocity);
     }
 
     public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
 
     public bool IsColliderValidForCollisions(Collider coll)
     {
-        if (IgnoredColliders.Count == 0)
+        if (ignoredColliders.Count == 0)
         {
             return true;
         }
 
-        if (IgnoredColliders.Contains(coll))
+        if (ignoredColliders.Contains(coll))
         {
             return false;
         }
@@ -628,12 +301,6 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
 }
 
-public enum CharacterState
-{
-    Default,
-    LockedOn,
-}
-
 public enum OrientationMethod
 {
     TowardsCamera,
@@ -645,12 +312,6 @@ public struct PlayerCharacterInputs
     public float MoveAxisForward;
     public float MoveAxisRight;
     public Quaternion CameraRotation;
-}
-
-public struct AICharacterInputs
-{
-    public Vector3 MoveVector;
-    public Vector3 LookVector;
 }
 
 public enum BonusOrientationMethod
