@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 public class LockOn : MonoBehaviour
 {
     [SerializeField] Transform lockOnLocator;
+    public Transform LockOnLocator => lockOnLocator;
     [SerializeField] Canvas lockOnReticleCanvas;
 
     [Header("Animator")]

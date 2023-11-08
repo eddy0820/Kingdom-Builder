@@ -20,6 +20,25 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
         }
     }
 
+    protected override void SetMovementAnim(Vector3 currentVelocity, Vector3 moveInputVector)
+    {
+
+        Vector3 relativeVelocity = Motor.Transform.InverseTransformDirection(currentVelocity);
+
+        if(currentVelocity.magnitude > 0f)
+        {
+            AnimationController.ToggleMoving(true);
+            AnimationController.SetVelocityZ(relativeVelocity.z / RunningSpeedSettings.Speed);
+            AnimationController.SetVelocityX(relativeVelocity.x / RunningSpeedSettings.Speed);
+        }
+        else
+        {
+            AnimationController.ToggleMoving(false);
+            AnimationController.SetVelocityZ(0);
+            AnimationController.SetVelocityX(0);
+        }
+    }
+
     public override void OnEnterState(PlayerCharacterControllerState fromState)
     {
         
@@ -27,6 +46,6 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     public override void OnExitState(PlayerCharacterControllerState toState)
     {
-        
+        AnimationController.SetVelocityX(0);
     }
 }

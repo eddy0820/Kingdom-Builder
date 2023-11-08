@@ -116,6 +116,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     RaycastHit[] _probedHits = new RaycastHit[8];
 
     Vector3 _moveInputVector;
+    Vector3 _nonRelativeMoveInputVector;
     Vector3 _lookInputVector;
 
     bool _jumpRequested = false;
@@ -151,6 +152,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     {
         // Clamp input
         Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
+        _nonRelativeMoveInputVector = moveInputVector;
 
         // Calculate camera direction and rotation on the character plane
         Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, motor.CharacterUp).normalized;
@@ -235,7 +237,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {   
-        stateMachine.CurrentState.UpdateVelocity(ref currentVelocity, ref _moveInputVector, ref _jumpedThisFrame, ref _timeSinceJumpRequested, ref _jumpRequested, ref _jumpConsumed, ref _timeSinceLastAbleToJump, ref _internalVelocityAdd, ref targetSpeed, deltaTime);
+        stateMachine.CurrentState.UpdateVelocity(ref currentVelocity, ref _moveInputVector, ref _jumpedThisFrame, ref _timeSinceJumpRequested, ref _jumpRequested, ref _jumpConsumed, ref _timeSinceLastAbleToJump, ref _internalVelocityAdd, ref targetSpeed, _nonRelativeMoveInputVector, deltaTime);
     }
 
     public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)

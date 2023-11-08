@@ -17,9 +17,14 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetBool(AnimationParameters.Moving, isMoving);
     }
 
-    public void SetVelocity(float velocityZ)
+    public void SetVelocityZ(float velocityZ)
     {
         animator.SetFloat(AnimationParameters.VelocityZ, velocityZ);
+    }
+
+    public void SetVelocityX(float velocityX)
+    {
+        animator.SetFloat(AnimationParameters.VelocityX, velocityX);
     }
 
     public void ToggleSpint(bool isSprint)

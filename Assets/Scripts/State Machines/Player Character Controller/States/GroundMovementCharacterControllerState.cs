@@ -5,36 +5,36 @@ using KinematicCharacterController;
 
 public abstract class GroundMovementCharacterControllerState : PlayerCharacterControllerState
 {   
-    MovementSpeedSettings WalkingSpeedSettings => playerCharacterController.Attributes.WalkingSpeedSettings;
-    MovementSpeedSettings RunningSpeedSettings => playerCharacterController.Attributes.RunningSpeedSettings;
-    MovementSpeedSettings SprintingSpeedSettings => playerCharacterController.Attributes.SprintingSpeedSettings;
-    MovementSpeedSettings CrouchingSpeedSettings => playerCharacterController.Attributes.CrouchingSpeedSettings;
+    protected MovementSpeedSettings WalkingSpeedSettings => playerCharacterController.Attributes.WalkingSpeedSettings;
+    protected MovementSpeedSettings RunningSpeedSettings => playerCharacterController.Attributes.RunningSpeedSettings;
+    protected MovementSpeedSettings SprintingSpeedSettings => playerCharacterController.Attributes.SprintingSpeedSettings;
+    protected MovementSpeedSettings CrouchingSpeedSettings => playerCharacterController.Attributes.CrouchingSpeedSettings;
 
-    float StableMovementSharpness => playerCharacterController.Attributes.StableMovementSharpness;
-    float OrientationSharpness => playerCharacterController.Attributes.OrientationSharpness;
-    float BonusOrientationSharpness => playerCharacterController.Attributes.BonusOrientationSharpness;
+    protected float StableMovementSharpness => playerCharacterController.Attributes.StableMovementSharpness;
+    protected float OrientationSharpness => playerCharacterController.Attributes.OrientationSharpness;
+    protected float BonusOrientationSharpness => playerCharacterController.Attributes.BonusOrientationSharpness;
     
-    MovementSpeedSettings AirSpeedSettings => playerCharacterController.Attributes.AirSpeedSettings;
-    float Drag => playerCharacterController.Attributes.Drag;
+    protected MovementSpeedSettings AirSpeedSettings => playerCharacterController.Attributes.AirSpeedSettings;
+    protected float Drag => playerCharacterController.Attributes.Drag;
     
-    bool AllowJumpingWhenSliding => playerCharacterController.Attributes.AllowJumpingWhenSliding;
-    float JumpUpSpeed => playerCharacterController.Attributes.JumpUpSpeed;
-    float JumpScalableForwardSpeed => playerCharacterController.Attributes.JumpScalableForwardSpeed;
-    float JumpPreGroundingGraceTime => playerCharacterController.Attributes.JumpPreGroundingGraceTime;
-    float JumpPostGroundingGraceTime => playerCharacterController.Attributes.JumpPostGroundingGraceTime;
+    protected bool AllowJumpingWhenSliding => playerCharacterController.Attributes.AllowJumpingWhenSliding;
+    protected float JumpUpSpeed => playerCharacterController.Attributes.JumpUpSpeed;
+    protected float JumpScalableForwardSpeed => playerCharacterController.Attributes.JumpScalableForwardSpeed;
+    protected float JumpPreGroundingGraceTime => playerCharacterController.Attributes.JumpPreGroundingGraceTime;
+    protected float JumpPostGroundingGraceTime => playerCharacterController.Attributes.JumpPostGroundingGraceTime;
 
-    float CrouchedCapsuleHeight => playerCharacterController.Attributes.CrouchedCapsuleHeight;
+    protected float CrouchedCapsuleHeight => playerCharacterController.Attributes.CrouchedCapsuleHeight;
 
-    BonusOrientationMethod CurrentBonusOrientationMethod => playerCharacterController.CurrentBonusOrientationMethod;
+    protected BonusOrientationMethod CurrentBonusOrientationMethod => playerCharacterController.CurrentBonusOrientationMethod;
     protected bool IsWalking => playerCharacterController.IsWalking;
     protected bool IsSprinting => playerCharacterController.IsSprinting;
     protected bool IsCrouching => playerCharacterController.IsCrouching;
 
-    PlayerAnimationController AnimationController => PlayerController.Instance.AnimationController;
+    protected PlayerAnimationController AnimationController => PlayerController.Instance.AnimationController;
     protected PlayerCamera Camera => PlayerController.Instance.CharacterCamera;
-    KinematicCharacterMotor Motor => playerCharacterController.Motor;
-    Transform MeshRoot => playerCharacterController.MeshRoot;
-    Vector3 Gravity => GameSettings.Instance.Gravity;  
+    protected KinematicCharacterMotor Motor => playerCharacterController.Motor;
+    protected Transform MeshRoot => playerCharacterController.MeshRoot;
+    protected Vector3 Gravity => GameSettings.Instance.Gravity;  
 
     public override Vector3 SetMoveInputVectorFromInputs(Quaternion cameraPlanarRotation, Vector3 clampedMoveInputVector)
     {
@@ -82,7 +82,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
         AnimationController.ToggleCouch(false);
     }
 
-    public override void UpdateVelocity(ref Vector3 currentVelocity, ref Vector3 moveInputVector, ref bool jumpedThisFrame, ref float timeSinceJumpRequested, ref bool jumpRequested, ref bool jumpConsumed, ref float timeSinceLastAbleToJump, ref Vector3 internalVelocityAdd, ref float targetSpeed, float deltaTime)
+    public override void UpdateVelocity(ref Vector3 currentVelocity, ref Vector3 moveInputVector, ref bool jumpedThisFrame, ref float timeSinceJumpRequested, ref bool jumpRequested, ref bool jumpConsumed, ref float timeSinceLastAbleToJump, ref Vector3 internalVelocityAdd, ref float targetSpeed, Vector3 nonRelativeMoveInputVector, float deltaTime)
     {
         // Ground movement
         if(Motor.GroundingStatus.IsStableOnGround)
@@ -101,17 +101,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
 
             // Smooth movement Velocity
             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
-
-            if(currentVelocity.magnitude > 0f)
-            {
-                AnimationController.ToggleMoving(true);
-                AnimationController.SetVelocity(currentVelocity.magnitude / RunningSpeedSettings.Speed);
-            }
-            else
-            {
-                AnimationController.ToggleMoving(false);
-                AnimationController.SetVelocity(0);
-            }
+            SetMovementAnim(currentVelocity, nonRelativeMoveInputVector);
 
             if(IsSprinting && moveInputVector.magnitude > 0f)
             {
@@ -240,13 +230,28 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
         float speed = Mathf.Lerp(targetSpeed, moveSpeed, 1f - Mathf.Exp(-moveAccel * deltaTime));
 
         if(speed < 0.1f)
-        {
             speed = 0;
-        }
+
+        if(moveSpeed - speed <= 0.0001f)
+            speed = moveSpeed;
         
         targetSpeed = speed;
 
         return speed;
+    }
+
+    protected virtual void SetMovementAnim(Vector3 currentVelocity, Vector3 nonRelativeMoveInputVector)
+    {
+        if(currentVelocity.magnitude > 0f)
+        {
+            AnimationController.ToggleMoving(true);
+            AnimationController.SetVelocityZ(currentVelocity.magnitude / RunningSpeedSettings.Speed);
+        }
+        else
+        {
+            AnimationController.ToggleMoving(false);
+            AnimationController.SetVelocityZ(0);
+        }
     }
 
     public override void UpdateRotation(ref Quaternion currentRotation, Vector3 _lookInputVector, float deltaTime)

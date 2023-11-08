@@ -35,7 +35,7 @@ public abstract class PlayerCharacterControllerState : DecentralizedStateMachine
     public abstract void DoJump(ref float timeSinceJumpRequested, ref bool jumpRequested);
     public abstract void DoCrouchDown(ref bool shouldBeCrouching, ref bool isCrouching, ref bool isWalking, ref bool isSprinting);
     public abstract void DoCrouchUp(ref bool shouldBeCrouching);
-    public abstract void UpdateVelocity(ref Vector3 currentVelocity, ref Vector3 moveInputVector, ref bool jumpedThisFrame, ref float timeSinceJumpRequested, ref bool jumpRequested, ref bool jumpConsumed, ref float timeSinceLastAbleToJump, ref Vector3 internalVelocityAdd, ref float targetSpeed, float deltaTime);
+    public abstract void UpdateVelocity(ref Vector3 currentVelocity, ref Vector3 moveInputVector, ref bool jumpedThisFrame, ref float timeSinceJumpRequested, ref bool jumpRequested, ref bool jumpConsumed, ref float timeSinceLastAbleToJump, ref Vector3 internalVelocityAdd, ref float targetSpeed, Vector3 nonRelativeMoveInputVector, float deltaTime);
     public abstract void UpdateRotation(ref Quaternion currentRotation, Vector3 _lookInputVector, float deltaTime);
     public abstract void BeforeCharacterUpdate(float deltaTime);
     public abstract void AfterCharacterUpdate(ref bool _jumpRequested, ref bool _jumpConsumed, ref float _timeSinceLastAbleToJump, ref bool _isCrouching, float _timeSinceJumpRequested, bool _jumpedThisFrame, bool _shouldBeCrouching, Collider[] _probedColliders, float deltaTime);
