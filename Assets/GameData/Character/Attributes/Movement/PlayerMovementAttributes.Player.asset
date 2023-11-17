@@ -24,8 +24,15 @@ MonoBehaviour:
   crouchingSpeedSettings:
     speed: 1.5
     acceleration: 10
+  lockOnWalkingSpeedSettings:
+    speed: 2
+    acceleration: 10
+  lockOnRunningSpeedSettings:
+    speed: 4
+    acceleration: 10
   stableMovementSharpness: 15
   orientationSharpness: 20
+  bonusOrientationSharpness: 20
   airSpeedSettings:
     speed: 10
     acceleration: 30

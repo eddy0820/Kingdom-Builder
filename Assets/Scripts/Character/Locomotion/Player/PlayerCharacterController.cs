@@ -32,6 +32,10 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
          public MovementSpeedSettings SprintingSpeedSettings => sprintingSpeedSettings;
         [ReadOnly, SerializeField] MovementSpeedSettings crouchingSpeedSettings;
         public MovementSpeedSettings CrouchingSpeedSettings => crouchingSpeedSettings;
+        [ReadOnly, SerializeField] MovementSpeedSettings lockOnWalkingSpeedSettings;
+        public MovementSpeedSettings LockOnWalkingSpeedSettings => lockOnWalkingSpeedSettings;
+        [ReadOnly, SerializeField] MovementSpeedSettings lockOnRunningSpeedSettings;
+        public MovementSpeedSettings LockOnRunningSpeedSettings => lockOnRunningSpeedSettings;
         [Space(10)]
         [ReadOnly, SerializeField] float stableMovementSharpness;
         public float StableMovementSharpness => stableMovementSharpness;
@@ -69,6 +73,9 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
             runningSpeedSettings = attributesSO.RunningSpeedSettings;
             sprintingSpeedSettings = attributesSO.SprintingSpeedSettings;
             crouchingSpeedSettings = attributesSO.CrouchingSpeedSettings;
+            lockOnWalkingSpeedSettings = attributesSO.LockOnWalkingSpeedSettings;
+            lockOnRunningSpeedSettings = attributesSO.LockOnRunningSpeedSettings;
+            
             stableMovementSharpness = attributesSO.StableMovementSharpness;
             orientationSharpness = attributesSO.OrientationSharpness;
             bonusOrientationSharpness = attributesSO.BonusOrientationSharpness;

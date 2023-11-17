@@ -201,10 +201,10 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
         }
     }
 
-    private float CalculateTargetSpeed(float deltaTime, Vector3 moveInputVector, ref float targetSpeed)
+    protected virtual void ChooseTargetSpeed(Vector3 moveInputVector, out float moveSpeed, out float moveAccel)
     {
-        float moveSpeed = 0;
-        float moveAccel = RunningSpeedSettings.Acceleration;
+        moveSpeed = 0;
+        moveAccel = RunningSpeedSettings.Acceleration;
 
         if(moveInputVector.magnitude > 0)
         {
@@ -226,6 +226,11 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
                 moveAccel = CrouchingSpeedSettings.Acceleration;
             }
         }
+    }
+
+    private float CalculateTargetSpeed(float deltaTime, Vector3 moveInputVector, ref float targetSpeed)
+    {
+        ChooseTargetSpeed(moveInputVector, out float moveSpeed, out float moveAccel);
 
         float speed = Mathf.Lerp(targetSpeed, moveSpeed, 1f - Mathf.Exp(-moveAccel * deltaTime));
 

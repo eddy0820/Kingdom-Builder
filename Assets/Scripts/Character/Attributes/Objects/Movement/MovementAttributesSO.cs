@@ -15,6 +15,10 @@ public class MovementAttributesSO : ScriptableObject
     public MovementSpeedSettings SprintingSpeedSettings => sprintingSpeedSettings;
     [BoxGroup(" "), SerializeField] MovementSpeedSettings crouchingSpeedSettings;
     public MovementSpeedSettings CrouchingSpeedSettings => crouchingSpeedSettings;
+    [BoxGroup(" "), SerializeField] MovementSpeedSettings lockOnWalkingSpeedSettings;
+    public MovementSpeedSettings LockOnWalkingSpeedSettings => lockOnWalkingSpeedSettings;
+    [BoxGroup(" "), SerializeField] MovementSpeedSettings lockOnRunningSpeedSettings;
+    public MovementSpeedSettings LockOnRunningSpeedSettings => lockOnRunningSpeedSettings;
     [Space(10)]
     [BoxGroup(" "), SerializeField] float stableMovementSharpness;
     public float StableMovementSharpness => stableMovementSharpness;

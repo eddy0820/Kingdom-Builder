@@ -5,8 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerCharacterController))]
 public class PlayerCharacterStateMachine : DecentralizedStateMachine<PlayerCharacterControllerState>
 {
-    PlayerCharacterController playerCharacterController;
-
     protected override void OnAwake()
     {
         if(!SubscribeToLockOnEvents()) return;
