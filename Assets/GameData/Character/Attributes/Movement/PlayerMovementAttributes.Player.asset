@@ -25,10 +25,10 @@ MonoBehaviour:
     speed: 1.5
     acceleration: 10
   lockOnWalkingSpeedSettings:
-    speed: 2
+    speed: 1.75
     acceleration: 10
   lockOnRunningSpeedSettings:
-    speed: 4
+    speed: 3.5
     acceleration: 10
   stableMovementSharpness: 15
   orientationSharpness: 20
