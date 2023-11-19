@@ -165,7 +165,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
             case OrientationMethod.TowardsCamera:
                 return cameraPlanarDirection;
             case OrientationMethod.TowardsMovement:
-                if(playerCharacterController.IsSprinting)
+                if(playerCharacterController.IsSprinting || playerCharacterController.IsCrouching)
                     return normalizedMoveInputVector;
                 else
                     return lookAtDirectionVector.normalized;
