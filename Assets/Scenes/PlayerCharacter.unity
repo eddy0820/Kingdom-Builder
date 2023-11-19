@@ -278,6 +278,58 @@ MonoBehaviour:
   m_MaximumFOV: 60
   m_MinimumOrthoSize: 1
   m_MaximumOrthoSize: 5000
+--- !u!1 &128557176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 128557177}
+  - component: {fileID: 128557178}
+  m_Layer: 5
+  m_Name: Health Bar Ghost Mask
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &128557177
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128557176}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 842190543}
+  m_Father: {fileID: 1974119934}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &128557178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128557176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding: {x: 15, y: 15, z: 290, w: 5}
+  m_Softness: {x: 0, y: 0}
 --- !u!1 &137088323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,7 +1288,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.086998306, y: -0.068733804, z: 0.032792617, w: -0.99329334}
+  m_LocalRotation: {x: -0.086998306, y: -0.068733804, z: 0.03280132, w: -0.99329305}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1607,6 +1659,82 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+--- !u!1 &842190542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 842190543}
+  - component: {fileID: 842190545}
+  - component: {fileID: 842190544}
+  m_Layer: 5
+  m_Name: Health Bar Fill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &842190543
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842190542}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 128557177}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &842190544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842190542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.50980395}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: d72998f67c2ec1e4c88b209ef31bae5c, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &842190545
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842190542}
+  m_CullTransparentMesh: 1
 --- !u!1 &930732815
 GameObject:
   m_ObjectHideFlags: 0
@@ -1863,7 +1991,7 @@ RectTransform:
   m_Children:
   - {fileID: 1804294012}
   m_Father: {fileID: 1974119934}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2753,6 +2881,7 @@ GameObject:
   - component: {fileID: 1816204515}
   - component: {fileID: 1816204517}
   - component: {fileID: 1816204516}
+  - component: {fileID: 1816204518}
   m_Layer: 5
   m_Name: Health HUD
   m_TagString: Untagged
@@ -2822,6 +2951,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &1816204518
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816204514}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1826645485
 GameObject:
   m_ObjectHideFlags: 0
@@ -3011,8 +3152,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.13733922, y: -0.63281494, z: 0.75152254, w: 0.12608355}
-  m_LocalPosition: {x: -2.7181318, y: 27.431864, z: -26.690857}
+  m_LocalRotation: {x: 0.13999246, y: -0.6322109, z: 0.75098854, w: 0.12933563}
+  m_LocalPosition: {x: -2.7182298, y: 27.431774, z: -26.691053}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3150,6 +3291,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 128557177}
   - {fileID: 1020202764}
   m_Father: {fileID: 1816204515}
   m_RootOrder: 1
@@ -3563,46 +3705,97 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4d6b1fb0566476489d20aab87cdf770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthHUD:
+    gameObj: {fileID: 1816204514}
+    tweens:
+    - tweenValues:
+        tweenType: 1
+        moveYValues:
+          startPosY: 0
+          endPosY: 240
+        scaleValues:
+          startScale: 0
+          endScale: 0
+        canvasGroup: {fileID: 0}
+        fadeValues:
+          startAlpha: 0
+          endAlpha: 0
+      tweenDuration: 1
+      ease: 15
+  healthHUDFade:
+    gameObj: {fileID: 1816204514}
+    tweens:
+    - tweenValues:
+        tweenType: 2
+        moveYValues:
+          startPosY: 0
+          endPosY: 0
+        scaleValues:
+          startScale: 0
+          endScale: 0
+        canvasGroup: {fileID: 1816204518}
+        fadeValues:
+          startAlpha: 1
+          endAlpha: 0
+      tweenDuration: 1
+      ease: 1
   healthBarMask: {fileID: 1020202765}
   healthText: {fileID: 426039014}
   healthBarRightPaddingMin: 15
   healthBarRightPaddingMax: 390
+  numSecondsAfterShowToDoCallback: 0.1
+  numSecondsToWaitBeforeHidingHealthBar: 2
   crosshair:
     gameObj: {fileID: 406377631}
-    tweenValues:
-      tweenType: 0
-      moveYValues:
-        startPosY: 0
-        endPosY: 0
-      scaleValues:
-        startScale: 0
-        endScale: 1
-    tweenDuration: 0.25
-    ease: 15
+    tweens:
+    - tweenValues:
+        tweenType: 0
+        moveYValues:
+          startPosY: 0
+          endPosY: 0
+        scaleValues:
+          startScale: 0
+          endScale: 1
+        canvasGroup: {fileID: 0}
+        fadeValues:
+          startAlpha: 0
+          endAlpha: 0
+      tweenDuration: 0.25
+      ease: 15
   buildMenu:
     gameObj: {fileID: 656387006}
-    tweenValues:
-      tweenType: 1
-      moveYValues:
-        startPosY: 435
-        endPosY: -435
-      scaleValues:
-        startScale: 0
-        endScale: 0
-    tweenDuration: 1
-    ease: 15
+    tweens:
+    - tweenValues:
+        tweenType: 1
+        moveYValues:
+          startPosY: 435
+          endPosY: -435
+        scaleValues:
+          startScale: 0
+          endScale: 0
+        canvasGroup: {fileID: 0}
+        fadeValues:
+          startAlpha: 0
+          endAlpha: 0
+      tweenDuration: 1
+      ease: 15
   buildHotbar:
     gameObj: {fileID: 463977293}
-    tweenValues:
-      tweenType: 1
-      moveYValues:
-        startPosY: -210
-        endPosY: 30
-      scaleValues:
-        startScale: 0
-        endScale: 0
-    tweenDuration: 1
-    ease: 15
+    tweens:
+    - tweenValues:
+        tweenType: 1
+        moveYValues:
+          startPosY: -210
+          endPosY: 30
+        scaleValues:
+          startScale: 0
+          endScale: 0
+        canvasGroup: {fileID: 0}
+        fadeValues:
+          startAlpha: 0
+          endAlpha: 0
+      tweenDuration: 1
+      ease: 15
   buildMenuEnabled: 0
 --- !u!1001 &2134725590
 PrefabInstance:

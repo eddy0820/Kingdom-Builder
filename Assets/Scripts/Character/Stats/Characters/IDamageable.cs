@@ -11,5 +11,5 @@ public interface IDamageable
     public void Heal(float amount);
     public void Die();
 
-    public Action<float, float> OnHealthChanged { get; set; }
+    public Action<float, float, float, EHealthChangedOperation> OnHealthChanged { get; set; }
 }

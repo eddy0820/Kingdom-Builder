@@ -8,15 +8,27 @@ public class PlayerStats : CharacterStats, IDamageable
 {
     float currentHealth;
 
-    public Action<float, float> OnHealthChanged { get => OnHealthChangedInternal; set => OnHealthChangedInternal = value; }
-    private Action<float, float> OnHealthChangedInternal;
+    public Action<float, float, float, EHealthChangedOperation> OnHealthChanged { get => OnHealthChangedInternal; set => OnHealthChangedInternal = value; }
+    private Action<float, float, float, EHealthChangedOperation> OnHealthChangedInternal;
 
     public PlayerStats(BaseStatsSO _baseStatsSO) : base(_baseStatsSO) {}
 
     public void SetHealth(float amount)
     {
+        EHealthChangedOperation operation;
+
+        if(amount > currentHealth)
+            operation = EHealthChangedOperation.Heal;
+        else if(amount < currentHealth)
+            operation = EHealthChangedOperation.Damage;
+        else
+            operation = EHealthChangedOperation.NoChange;
+
+
+        float oldHealth = currentHealth;
         currentHealth = amount;
-        OnHealthChanged?.Invoke(currentHealth, getStatFromName[CommonStatTypeNames.MaxHealth].Value);
+
+        OnHealthChanged?.Invoke(oldHealth, currentHealth, getStatFromName[CommonStatTypeNames.MaxHealth].Value, operation);
     }
 
     public float GetHealth()
@@ -31,9 +43,16 @@ public class PlayerStats : CharacterStats, IDamageable
             Debug.LogWarning("This would heal, just use 'Heal()'");
             return;
         }
+        
+        float newHealth = currentHealth - damage;
+        float oldHealth = currentHealth;
 
-        currentHealth -= damage;
-        OnHealthChanged?.Invoke(currentHealth, getStatFromName[CommonStatTypeNames.MaxHealth].Value);
+        EHealthChangedOperation operation = EHealthChangedOperation.Damage;
+        if(oldHealth == newHealth) operation = EHealthChangedOperation.NoChange;
+
+        currentHealth = newHealth;
+
+        OnHealthChanged?.Invoke(oldHealth, currentHealth, getStatFromName[CommonStatTypeNames.MaxHealth].Value, operation);
 
         if(currentHealth <= 0)
             Die();
@@ -52,10 +71,16 @@ public class PlayerStats : CharacterStats, IDamageable
         if(amount > maxHealthStat.Value - currentHealth)
             amount = maxHealthStat.Value - currentHealth;
 
-        currentHealth += amount;
+        float newHealth = currentHealth + amount;
+        newHealth = Mathf.Clamp(newHealth, 0, maxHealthStat.Value);
+        float oldHealth = currentHealth;
 
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealthStat.Value);
-        OnHealthChanged?.Invoke(currentHealth, maxHealthStat.Value);
+        EHealthChangedOperation operation = EHealthChangedOperation.Heal;
+        if(oldHealth == newHealth) operation = EHealthChangedOperation.NoChange;
+
+        currentHealth = newHealth;
+        
+        OnHealthChanged?.Invoke(oldHealth, currentHealth, maxHealthStat.Value, operation);
     }
 
     public void Die()

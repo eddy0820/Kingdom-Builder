@@ -80,6 +80,11 @@ public class PlayerController : MonoBehaviour
         HandleCharacterInput();
 
         CheckIfFirstPerson();
+
+        if(Input.GetKeyUp(KeyCode.L))
+        {
+            PlayerStatsDamageable.TakeDamage(10);
+        }
     }
 
     private void LateUpdate()
