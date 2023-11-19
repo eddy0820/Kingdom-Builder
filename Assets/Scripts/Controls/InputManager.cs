@@ -22,6 +22,8 @@ public class InputManager : MonoBehaviour
     public PlayerControls.GridBuildingActions GridBuilding => gridBuilding;
 
     PlayerController playerController;
+    BuildModeCharacterControllerState buildModeState;
+    LockedOnCharacterControllerState lockedOnState;
 
     [HideInInspector] public InputManagerEvent OnNumberKeyPressed;
 
@@ -40,6 +42,11 @@ public class InputManager : MonoBehaviour
         OnNumberKeyPressed = new InputManagerEvent();
 
         playerController = GetComponent<PlayerController>();
+        playerController.StateMachine.OnStateMachineInitialized += () =>
+        {
+            playerController.StateMachine.GetState(out buildModeState);
+            playerController.StateMachine.GetState(out lockedOnState);
+        };
 
         //////////////// Horizonal Movement ////////////////
         groundMovement.HorizontalMovement.performed += ctx => 
@@ -75,11 +82,19 @@ public class InputManager : MonoBehaviour
         if(PlayerSpawner.Instance.GridBuildingInfo.EnableBuilding)
         {
             playerMechanics.ToggleBuildMode.performed += _ =>
-                playerController.ToggleBuildMode(); // do function
+            {
+                if(buildModeState != null)
+                    buildModeState.DecideBuildMode();
+                else
+                    Debug.LogError("Build Mode State is null!");
+            };
         }
 
         playerMechanics.MouseScroll.performed += ctx =>
             DoMouseScrollControl(ctx.ReadValue<float>());
+
+        playerMechanics.LockOn.performed += _ =>
+            lockedOnState.DecideLockOn();
 
         SetupNumberKeys();
     }

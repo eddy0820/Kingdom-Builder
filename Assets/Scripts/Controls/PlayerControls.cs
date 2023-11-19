@@ -412,6 +412,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LockOn"",
+                    ""type"": ""Button"",
+                    ""id"": ""f7a7c611-4620-44a9-bbda-f3d9af1c83ad"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -568,6 +577,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""NumberKey9"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a343eda-5ac7-420a-af43-a0c93fd8139d"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -709,6 +729,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_PlayerMechanics_NumberKey7 = m_PlayerMechanics.FindAction("NumberKey7", throwIfNotFound: true);
         m_PlayerMechanics_NumberKey8 = m_PlayerMechanics.FindAction("NumberKey8", throwIfNotFound: true);
         m_PlayerMechanics_NumberKey9 = m_PlayerMechanics.FindAction("NumberKey9", throwIfNotFound: true);
+        m_PlayerMechanics_LockOn = m_PlayerMechanics.FindAction("LockOn", throwIfNotFound: true);
         // GridBuilding
         m_GridBuilding = asset.FindActionMap("GridBuilding", throwIfNotFound: true);
         m_GridBuilding_Demolish = m_GridBuilding.FindAction("Demolish", throwIfNotFound: true);
@@ -918,6 +939,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMechanics_NumberKey7;
     private readonly InputAction m_PlayerMechanics_NumberKey8;
     private readonly InputAction m_PlayerMechanics_NumberKey9;
+    private readonly InputAction m_PlayerMechanics_LockOn;
     public struct PlayerMechanicsActions
     {
         private @PlayerControls m_Wrapper;
@@ -936,6 +958,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @NumberKey7 => m_Wrapper.m_PlayerMechanics_NumberKey7;
         public InputAction @NumberKey8 => m_Wrapper.m_PlayerMechanics_NumberKey8;
         public InputAction @NumberKey9 => m_Wrapper.m_PlayerMechanics_NumberKey9;
+        public InputAction @LockOn => m_Wrapper.m_PlayerMechanics_LockOn;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMechanics; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -987,6 +1010,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @NumberKey9.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnNumberKey9;
                 @NumberKey9.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnNumberKey9;
                 @NumberKey9.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnNumberKey9;
+                @LockOn.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnLockOn;
+                @LockOn.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnLockOn;
+                @LockOn.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnLockOn;
             }
             m_Wrapper.m_PlayerMechanicsActionsCallbackInterface = instance;
             if (instance != null)
@@ -1033,6 +1059,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @NumberKey9.started += instance.OnNumberKey9;
                 @NumberKey9.performed += instance.OnNumberKey9;
                 @NumberKey9.canceled += instance.OnNumberKey9;
+                @LockOn.started += instance.OnLockOn;
+                @LockOn.performed += instance.OnLockOn;
+                @LockOn.canceled += instance.OnLockOn;
             }
         }
     }
@@ -1135,6 +1164,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnNumberKey7(InputAction.CallbackContext context);
         void OnNumberKey8(InputAction.CallbackContext context);
         void OnNumberKey9(InputAction.CallbackContext context);
+        void OnLockOn(InputAction.CallbackContext context);
     }
     public interface IGridBuildingActions
     {

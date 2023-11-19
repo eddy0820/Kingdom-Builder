@@ -60,7 +60,7 @@ public class PlayerCanvas : MonoBehaviour
         TweenUIComponent(b, crosshair);
     }
 
-    public void TweenUIComponent(bool b, TweenedUIComponent tweenedUIComponent)
+    private void TweenUIComponent(bool b, TweenedUIComponent tweenedUIComponent)
     {
         DOTween.Kill(tweenedUIComponent.RectTransform);
 

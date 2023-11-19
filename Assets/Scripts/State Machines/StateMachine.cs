@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.State
 {
@@ -18,6 +19,8 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
 
     bool initialized = false;
     protected bool Initialized => initialized;
+
+    public Action OnStateMachineInitialized;
 
     private void Awake()
     {
@@ -39,6 +42,8 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
         states.ForEach(x => x.Initialize(this));
 
         initialized = true;
+
+        OnStateMachineInitialized?.Invoke();
     }
 
     private void Start()
@@ -55,6 +60,7 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
 
         OnUpdate();
         states.ForEach(x => x.OnUpdate());
+        currentState?.OnUpdateState();
     }
 
     protected abstract void OnAwake();
@@ -88,5 +94,9 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
         public abstract void OnEnterState(T fromState);
         public abstract void OnExitState(T toState);
         public abstract void OnUpdate();
+        public abstract void OnUpdateState();
+
+        public Action<T> OnEnterStateEvent;
+        public Action<T> OnExitStateEvent;
     }
 }

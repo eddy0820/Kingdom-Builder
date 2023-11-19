@@ -31,7 +31,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
     protected bool IsCrouching => playerCharacterController.IsCrouching;
 
     protected PlayerAnimationController AnimationController => PlayerController.Instance.AnimationController;
-    protected PlayerCamera Camera => PlayerController.Instance.CharacterCamera;
+    protected PlayerCamera PlayerCamera => PlayerController.Instance.CharacterCamera;
     protected KinematicCharacterMotor Motor => playerCharacterController.Motor;
     protected Transform MeshRoot => playerCharacterController.MeshRoot;
     protected Vector3 Gravity => GameSettings.Instance.Gravity;  

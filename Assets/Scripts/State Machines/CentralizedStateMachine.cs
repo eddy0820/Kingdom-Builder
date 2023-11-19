@@ -7,8 +7,6 @@ public abstract class CentralizedStateMachine<T> : StateMachine<T> where T : Cen
     protected override void OnUpdate()
     {
         RunStateMachine();
-
-        currentState?.OnUpdateState();
     }
 
     protected virtual void RunStateMachine()
@@ -22,8 +20,12 @@ public abstract class CentralizedStateMachine<T> : StateMachine<T> where T : Cen
     protected virtual void SwitchState(T nextState)
     {
         T previousState = currentState;
-        currentState?.OnExitState(currentState);
+
         currentState = nextState;
+
+        previousState?.OnExitStateEvent?.Invoke(currentState);
+        previousState?.OnExitState(currentState);
+        currentState?.OnEnterStateEvent?.Invoke(previousState);
         currentState?.OnEnterState(previousState);
     }
 
@@ -38,7 +40,6 @@ public abstract class CentralizedStateMachine<T> : StateMachine<T> where T : Cen
         }
 
         public abstract T ReturnNextState();
-        public abstract void OnUpdateState();
     }
 }
 

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingGhost : MonoBehaviour {
-
+public class BuildingGhost : MonoBehaviour 
+{
     [SerializeField] Material validGhostMaterial;
     [SerializeField] Material inValidGhostMaterial;
     [SerializeField] Material farAwayGhostMaterial;

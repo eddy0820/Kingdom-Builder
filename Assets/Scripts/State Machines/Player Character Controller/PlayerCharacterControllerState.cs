@@ -29,7 +29,12 @@ public abstract class PlayerCharacterControllerState : DecentralizedStateMachine
     {
         
     }
-    // rmemeba move characteer attributes to PlayerController instead of character controller
+
+    public override void OnUpdateState()
+    {
+        
+    }
+
     public abstract Vector3 SetMoveInputVectorFromInputs(Quaternion cameraPlanarRotation, Vector3 clampedMoveInputVector);
     public abstract Vector3 SetLookInputVectorFromInputs(OrientationMethod orientationMethod, Vector3 cameraPlanarDirection, Vector3 normalizedMoveInputVector);
     public abstract void DoJump(ref float timeSinceJumpRequested, ref bool jumpRequested);

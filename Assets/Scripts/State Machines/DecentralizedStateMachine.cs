@@ -7,8 +7,12 @@ public abstract class DecentralizedStateMachine<T> : StateMachine<T> where T : D
     public virtual void SwitchState(T nextState)
     {
         T previousState = currentState;
-        currentState?.OnExitState(currentState);
+
         currentState = nextState;
+        
+        previousState?.OnExitStateEvent?.Invoke(currentState);
+        previousState?.OnExitState(currentState);
+        currentState?.OnEnterStateEvent?.Invoke(previousState);
         currentState?.OnEnterState(previousState);
     }
 

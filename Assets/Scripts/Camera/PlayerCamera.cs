@@ -10,8 +10,6 @@ public class PlayerCamera : MonoBehaviour
 {
     public CinemachineVirtualCamera FollowCamera;
     public CinemachineVirtualCamera LockOnCamera;
-    LockOn lockOnController;
-    public LockOn LockOnController => lockOnController;
 
     [Header("Follow Camera Framing")]
     public Vector2 FollowPointFraming = new Vector2(0f, 0f);
@@ -90,7 +88,6 @@ public class PlayerCamera : MonoBehaviour
 
     void Awake()
     {
-        lockOnController = GetComponent<LockOn>();
         lockOnFramingTransposer = LockOnCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         
         FollowCameraTransform = FollowCamera.transform;
@@ -106,9 +103,6 @@ public class PlayerCamera : MonoBehaviour
 
         PlayerController.Instance.OnEnterFirstPerson += OnEnterFirstPerson;
         PlayerController.Instance.OnExitFirstPerson += OnExitFirstPerson;
-
-        PlayerController.Instance.OnEnterLockOn += OnEnterLockOn;
-        PlayerController.Instance.OnExitLockOn += OnExitLockOn;
     }
 
     // Set the transform that the camera will orbit around
@@ -282,16 +276,5 @@ public class PlayerCamera : MonoBehaviour
         FollowPointFraming = targetPosition;
 
         yield break;
-    }
-
-    private void OnEnterLockOn()
-    {
-       
-    }
-
-    private void OnExitLockOn()
-    {
-        if(PlayerController.Instance.LockedOn) // are we still locked on (I set it after this fires)
-            PlanarDirection = LockOnCameraTransform.forward;
     }
 }

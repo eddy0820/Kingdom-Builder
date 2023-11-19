@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] PlayerCharacterController character;
     public PlayerCharacterController Character => character;
+    [SerializeField] PlayerCharacterStateMachine stateMachine;
+    public PlayerCharacterStateMachine StateMachine => stateMachine;
     [SerializeField] PlayerCamera characterCamera;
     public PlayerCamera CharacterCamera => characterCamera;
     [SerializeField] PlayerCanvas uiCanvas;
@@ -28,17 +30,14 @@ public class PlayerController : MonoBehaviour
     private float mouseYInput;
     private float mouseScrollInput;
 
-    bool buildModeEnabled;
+    bool buildModeEnabled => stateMachine.CurrentState is BuildModeCharacterControllerState;
     public bool BuildModeEnabled => buildModeEnabled;
 
-    bool lockedOn;
+    bool lockedOn => stateMachine.CurrentState is LockedOnCharacterControllerState;
     public bool LockedOn => lockedOn;
 
     public Action OnEnterFirstPerson;
     public Action OnExitFirstPerson;
-
-    public Action OnEnterLockOn;
-    public Action OnExitLockOn;
 
     private void Awake()
     {
@@ -164,37 +163,5 @@ public class PlayerController : MonoBehaviour
             
             if(lastFrameFirstPersonState != characterCamera.inFirstPerson) OnExitFirstPerson?.Invoke();
         }
-    }
-
-    public void ToggleBuildMode()
-    {
-        buildModeEnabled = !buildModeEnabled;
-        uiCanvas.ToggleCrosshair(buildModeEnabled);
-        uiCanvas.ToggleBuildHotbar(buildModeEnabled);
-        characterCamera.DoBuildModeCamera(buildModeEnabled);
-        GridBuildingManager.Instance.BuildingGhost.RefreshVisual();
-
-        if(buildModeEnabled)
-        {
-            InputManager.Instance.GridBuilding.Enable();
-        }
-        else
-        {
-            uiCanvas.ToggleBuildMenu(buildModeEnabled);
-            uiCanvas.ToggleCrosshair(buildModeEnabled);
-            InputManager.Instance.GridBuilding.Disable();
-        }
-
-        GridBuildingManager.Instance.SoundController.PlayToggleBuildingSound(buildModeEnabled);
-    }
-
-    public void SetLockedOn(bool _lockedOn)
-    {
-        if(_lockedOn)
-            OnEnterLockOn?.Invoke();
-        else
-            OnExitLockOn?.Invoke();
-
-        lockedOn = _lockedOn;
     }
 }

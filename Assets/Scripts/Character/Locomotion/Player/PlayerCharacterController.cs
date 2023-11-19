@@ -146,7 +146,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     {
         attributes = new MovementAttributes(PlayerController.Instance.AttributesSO.MovementAttributes as PlayerMovementAttributesSO);
 
-        stateMachine = GetComponent<PlayerCharacterStateMachine>();
+        stateMachine = PlayerController.Instance.StateMachine;
         animationController = PlayerController.Instance.AnimationController;
 
         currentOrientationMethod = startingOrientationMethod;
