@@ -42,4 +42,4 @@ MonoBehaviour:
   jumpScalableForwardSpeed: 0
   jumpPreGroundingGraceTime: 0.1
   jumpPostGroundingGraceTime: 0.1
-  crouchedCapsuleHeight: 1.5
+  crouchedCapsuleHeight: 1

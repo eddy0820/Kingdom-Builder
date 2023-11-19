@@ -21,6 +21,8 @@ public class PlayerCanvas : MonoBehaviour
     [Space(10)]
     [SerializeField] float numSecondsAfterShowToDoCallback = 0.25f;
     [SerializeField] float numSecondsToWaitBeforeHidingHealthBar = 2f;
+    Sequence currentHealthBarFadeSequence;
+
 
     [HorizontalLine]
 
@@ -88,14 +90,18 @@ public class PlayerCanvas : MonoBehaviour
         Tween fadeTween = tweenedUIComponent.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade);
         if(fadeTween == null) return;
 
+        currentHealthBarFadeSequence?.Kill();
+        tweenedUIComponent.CurrentSequence?.Kill();
+        fadeTween.TweenValues.CanvasGroup.DOKill();
+
         fadeTween.TweenValues.CanvasGroup.alpha = fadeTween.TweenValues.FadeValues.StartAlpha;
 
-        Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(numSecondsAfterShowToDoCallback);
-        sequence.AppendCallback(() => actionToDoOnShow?.Invoke());
-        sequence.AppendInterval(numSecondsToWaitBeforeHidingHealthBar);
-        sequence.AppendCallback(() => TweenUIComponent(true, tweenedUIComponent, new(){ETweenType.Fade}, false));
-        sequence.Play();
+        currentHealthBarFadeSequence = DOTween.Sequence();
+        currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallback);
+        currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
+        currentHealthBarFadeSequence.AppendInterval(numSecondsToWaitBeforeHidingHealthBar);
+        currentHealthBarFadeSequence.AppendCallback(() => TweenUIComponent(true, tweenedUIComponent, new(){ETweenType.Fade}, false));
+        currentHealthBarFadeSequence.Play();
     }
 
 #endregion

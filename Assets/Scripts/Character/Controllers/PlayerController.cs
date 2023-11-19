@@ -81,9 +81,14 @@ public class PlayerController : MonoBehaviour
 
         CheckIfFirstPerson();
 
-        if(Input.GetKeyUp(KeyCode.L))
+        if(Input.GetKeyUp(KeyCode.N))
         {
             PlayerStatsDamageable.TakeDamage(10);
+        }
+
+        if(Input.GetKeyUp(KeyCode.M))
+        {
+            PlayerStatsDamageable.Heal(10);
         }
     }
 
