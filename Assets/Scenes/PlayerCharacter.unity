@@ -295,8 +295,6 @@ MonoBehaviour:
   zeroVertLook: 0
   noticeZone: 15
   maxNoticeAngle: 60
-  lookAtSmoothing: 2
-  currentTarget: {fileID: 0}
 --- !u!1 &261975532
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,7 +1062,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.08699826, y: -0.06873381, z: 0.032660503, w: -0.9932977}
+  m_LocalRotation: {x: -0.08699826, y: -0.06873381, z: 0.0326608, w: -0.9932977}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2630,8 +2628,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.096766934, y: -0.6405529, z: 0.75794667, w: 0.07645222}
-  m_LocalPosition: {x: -2.7167935, y: 27.433111, z: -26.68832}
+  m_LocalRotation: {x: 0.096853144, y: -0.64053935, z: 0.7579365, w: 0.07655745}
+  m_LocalPosition: {x: -2.7167969, y: 27.43311, z: -26.688324}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2691,7 +2689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CollideAgainst:
     serializedVersion: 2
-    m_Bits: 1281
+    m_Bits: 1280
   m_IgnoreTag: 
   m_TransparentLayers:
     serializedVersion: 2

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using NaughtyAttributes;
+using System.Linq;
 
 public class LockedOnCharacterControllerState : GroundMovementCharacterControllerState
 {
@@ -13,18 +13,16 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
     [Space(10)]
     [SerializeField] string followAnimatorState;
     [SerializeField] string lockOnAnimatorState;
+
     [Header("Settings")]
     [SerializeField] LayerMask targetLayers;
     [SerializeField] float reticleScale = 0.1f;
     [SerializeField] bool zeroVertLook;
     [SerializeField] float noticeZone = 10f;
     [SerializeField] float maxNoticeAngle = 60;
-    [SerializeField] float lookAtSmoothing = 2;
-    [Space(15)]
-    [ReadOnly, SerializeField] Transform currentTarget;
 
+    Targetable currentTargetable;
 
-    float currentYOffset;
     Vector3 currentLockOnPosition;
     Vector3 lookAtDirectionVector;
 
@@ -49,7 +47,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
     {
         AnimationController.SetVelocityX(0);
 
-        currentTarget = null;
+        currentTargetable = null;
         cameraAnimator.Play(followAnimatorState);
         lockOnReticleCanvas.gameObject.SetActive(false);
 
@@ -58,19 +56,19 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     public override void OnUpdateState()
     {
-        if(!TargetOnRange()) 
+        if(!TargetOnRange() || Blocked(currentTargetable.LockOnLocation.position)) 
         {
             ResetTarget();
             return;
         }
                 
-        if(currentTarget == null) 
+        if(currentTargetable == null) 
         {
             ResetTarget();
             return;
         }
 
-        currentLockOnPosition = currentTarget.position + new Vector3(0, currentYOffset, 0);
+        currentLockOnPosition = currentTargetable.LockOnLocation.position;
         lockOnLocator.position = currentLockOnPosition;
         lockOnReticleCanvas.transform.position = currentLockOnPosition;
         lockOnReticleCanvas.transform.localScale = (Camera.main.transform.position - currentLockOnPosition).magnitude * reticleScale * Vector3.one;
@@ -82,14 +80,14 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     public void DecideLockOn()
     {
-        if(currentTarget)
+        if(currentTargetable)
         {
             //If there is already a target, Reset.
             ResetTarget();
             return;
         }
         
-        if(currentTarget = ScanNearBy()) 
+        if(currentTargetable = ScanNearBy()) 
             FoundTarget();
         else 
             ResetTarget();
@@ -107,41 +105,38 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
         stateMachine.SwitchState(defaultState);
     }
 
-    private Transform ScanNearBy()
+    private Targetable ScanNearBy()
     {
-        Collider[] nearbyTargets = Physics.OverlapSphere(transform.position, noticeZone, targetLayers);
+        Collider[] nearbyTargets = Physics.OverlapSphere(Motor.Transform.position, noticeZone, targetLayers);
+        Targetable[] nearbyTargetables = nearbyTargets.Select(x => x.GetComponent<Targetable>()).Where(x => x != null).ToArray();
         float closestAngle = maxNoticeAngle;
-        Transform closestTarget = null;
-        if (nearbyTargets.Length <= 0) return null;
+        Targetable closestTarget = null;
 
-        for (int i = 0; i < nearbyTargets.Length; i++)
+        if(nearbyTargetables.Length <= 0) return null;
+
+        for(int i = 0; i < nearbyTargetables.Length; i++)
         {
-            Vector3 dir = nearbyTargets[i].transform.position - Camera.main.transform.position;
+            Vector3 dir = nearbyTargetables[i].transform.position - Camera.main.transform.position;
             dir.y = 0;
             float _angle = Vector3.Angle(Camera.main.transform.forward, dir);
             
             if (_angle < closestAngle)
             {
-                closestTarget = nearbyTargets[i].transform;
+                closestTarget = nearbyTargetables[i];
                 closestAngle = _angle;      
             }
         }
 
-        if (!closestTarget ) return null;
-        /*float h1 = closestTarget.GetComponent<CapsuleCollider>().height;
-        float h2 = closestTarget.localScale.y;
-        float h = h1 * h2;
-        float half_h = (h / 2) / 2;
-        currentYOffset = h - half_h;
-        if(zeroVertLook && currentYOffset > 1.6f && currentYOffset < 1.6f * 3) currentYOffset = 1.6f;
-        Vector3 tarPos = closestTarget.position + new Vector3(0, currentYOffset, 0);
-        if(Blocked(tarPos)) return null;*/
+        if(!closestTarget ) return null;
+
+        if(Blocked(closestTarget.LockOnLocation.position)) return null;
+
         return closestTarget;
     }
 
     private bool TargetOnRange()
     {
-        float dis = (transform.position - currentLockOnPosition).magnitude;
+        float dis = (Motor.Transform.position - currentLockOnPosition).magnitude;
 
         if(dis/2 > noticeZone) 
             return false; 
@@ -151,10 +146,10 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     private bool Blocked(Vector3 t)
     {
-        RaycastHit hit;
-        if(Physics.Linecast(transform.position + Vector3.up * 0.5f, t, out hit)){
-            if(!hit.transform.CompareTag("Enemy")) return true;
-        }
+        if(Physics.Linecast(Motor.Transform.position + Vector3.up * 0.5f, t, out RaycastHit hit))
+            if(hit.transform.GetComponent<Targetable>() == null) 
+                return true; 
+        
         return false;
     }
 
@@ -221,6 +216,6 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, noticeZone);   
+        Gizmos.DrawWireSphere(Motor.Transform.position, noticeZone);   
     }
 }
