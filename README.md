@@ -7,6 +7,7 @@ To-Do
 -Rework Building System to not be so rigid
 -Add UI sounds to Character Creation
 -Add heel transforms to the character prefab from Character Creation
+-Target switching for lock on
 
 Used Assets
 ------------

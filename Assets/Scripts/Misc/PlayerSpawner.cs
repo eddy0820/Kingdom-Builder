@@ -34,6 +34,11 @@ public class PlayerSpawner : MonoBehaviour
     PlayerInfoHolder playerInfo = null;
     PlayerCharacterController playerCharacter;
 
+    [HorizontalLine]
+
+    [SerializeField] bool enableLockOn = true;
+    public bool EnableLockOn => enableLockOn;
+
     private void Awake()
     {
         if(Instance == null)

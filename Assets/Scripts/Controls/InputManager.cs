@@ -94,7 +94,10 @@ public class InputManager : MonoBehaviour
             DoMouseScrollControl(ctx.ReadValue<float>());
 
         playerMechanics.LockOn.performed += _ =>
-            lockedOnState.DecideLockOn();
+        {
+            if(PlayerSpawner.Instance.EnableLockOn)
+                lockedOnState.DecideLockOn();
+        };
 
         SetupNumberKeys();
     }
