@@ -79,7 +79,6 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
     public override void DoCrouchUp(ref bool shouldBeCrouching)
     {
         shouldBeCrouching = false;
-        AnimationController.ToggleCouch(false);
     }
 
     public override void UpdateVelocity(ref Vector3 currentVelocity, ref Vector3 moveInputVector, ref bool jumpedThisFrame, ref float timeSinceJumpRequested, ref bool jumpRequested, ref bool jumpConsumed, ref float timeSinceLastAbleToJump, ref Vector3 internalVelocityAdd, ref float targetSpeed, Vector3 nonRelativeMoveInputVector, float deltaTime)
@@ -356,6 +355,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
             {
                 // If no obstructions, uncrouch
                 MeshRoot.localScale = new Vector3(1f, 1f, 1f);
+                AnimationController.ToggleCouch(false);
                 _isCrouching = false;
             }
         };
