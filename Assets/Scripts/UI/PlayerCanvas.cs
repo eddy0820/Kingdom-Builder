@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 using DG.Tweening;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerCanvas : MonoBehaviour
 {
+    [Header("Health Bar")]
+    [SerializeField] RectMask2D healthBarMask;
+    [SerializeField] TextMeshProUGUI healthText;
+    [SerializeField] float healthBarRightPaddingMin = 15;
+    [SerializeField] float healthBarRightPaddingMax = 390;
+
+    [HorizontalLine]
+
     [Header("Crosshair")]
     [SerializeField] TweenedUIComponent crosshair;
 
@@ -23,6 +33,9 @@ public class PlayerCanvas : MonoBehaviour
     BuildHotbarInterface buildHotbarInterface;
     public BuildHotbarInterface BuildHotbarInterface => buildHotbarInterface;
 
+    IDamageable playerStatsDamageable;
+    PlayerStats playerStats;
+
     private void Awake()
     {
         buildHotbarInterface = buildHotbar.GameObj.GetComponent<BuildHotbarInterface>();
@@ -32,7 +45,33 @@ public class PlayerCanvas : MonoBehaviour
 
         crosshair.GameObj.SetActive(false);
         crosshair.RectTransform.localScale = Vector3.zero;
+
+        playerStats = PlayerController.Instance.PlayerStats;
+        playerStatsDamageable = PlayerController.Instance.PlayerStatsDamageable;
+
+        playerStatsDamageable.OnHealthChanged += UpdateHealthBar;
+        playerStats.OnStatModifierChanged += OnStatModifierChanged;
     }
+
+#region HUD
+
+    public void UpdateHealthBar(float currentHealth, float maxHealth)
+    {
+        float healthPercentage = currentHealth / maxHealth;
+        healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, healthPercentage), healthBarMask.padding.w);
+        healthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+    }
+
+    public void OnStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    {
+        if(stat.type != playerStats.GetStatTypeFromName[CommonStatTypeNames.MaxHealth]) return;
+        
+        UpdateHealthBar(playerStatsDamageable.GetHealth(), stat.Value);
+    }
+
+#endregion
+
+#region Build Mode
 
     public void ToggleBuildMenu()
     {
@@ -59,6 +98,10 @@ public class PlayerCanvas : MonoBehaviour
     {
         TweenUIComponent(b, crosshair);
     }
+
+#endregion
+
+#region Tween UI Component
 
     private void TweenUIComponent(bool b, TweenedUIComponent tweenedUIComponent)
     {
@@ -154,4 +197,5 @@ public class PlayerCanvas : MonoBehaviour
         MoveY
     }
 
+#endregion
 }

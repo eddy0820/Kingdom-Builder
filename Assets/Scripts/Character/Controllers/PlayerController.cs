@@ -21,6 +21,16 @@ public class PlayerController : MonoBehaviour
     public PlayerSoundController SoundController => soundController;
     [SerializeField] PlayerAnimationController animationController;
     public PlayerAnimationController AnimationController => animationController;
+
+    [Space(10)]
+
+    [Expandable, SerializeField] BaseStatsSO baseStatsSO;
+    public BaseStatsSO BaseStatsSO => baseStatsSO;
+
+    PlayerStats playerStats;
+    public PlayerStats PlayerStats => playerStats;
+    public IDamageable PlayerStatsDamageable => playerStats;
+
     [Expandable, SerializeField] PlayerAttributesSO attributesSO;
     public PlayerAttributesSO AttributesSO => attributesSO;
 
@@ -45,6 +55,8 @@ public class PlayerController : MonoBehaviour
         {
             Instance = this;
         }
+
+        playerStats = new PlayerStats(baseStatsSO);
     }
 
     private void Start()
@@ -57,8 +69,10 @@ public class PlayerController : MonoBehaviour
         // Ignore the character's collider(s) for camera obstruction checks
         characterCamera.IgnoredColliders.Clear();
         characterCamera.IgnoredColliders.AddRange(character.GetComponentsInChildren<Collider>());
-    }
 
+        playerStats.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
+    }
+    
     private void Update()
     {
         //if(Input.GetMouseButtonDown(0)) Cursor.lockState = CursorLockMode.Locked;

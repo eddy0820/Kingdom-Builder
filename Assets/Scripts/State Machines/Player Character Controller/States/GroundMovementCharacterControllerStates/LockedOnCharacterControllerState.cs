@@ -216,6 +216,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     private void OnDrawGizmos()
     {
+        if(!Application.isPlaying) return;
         Gizmos.DrawWireSphere(Motor.Transform.position, noticeZone);   
     }
 }
