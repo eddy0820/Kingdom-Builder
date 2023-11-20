@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetKeyUp(KeyCode.M))
         {
-            PlayerStatsDamageable.Heal(10);
+            PlayerStatsDamageable.HealOverTimeToPercent(90, 5);
         }
     }
 

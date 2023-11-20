@@ -14,6 +14,7 @@ public class PlayerCanvas : MonoBehaviour
     [SerializeField] TweenedUIComponent healthHUDFade;
     [Space(10)]
     [SerializeField] RectMask2D healthBarMask;
+    [SerializeField] RectMask2D healthBarGhostMask;
     [SerializeField] TextMeshProUGUI healthText;
     [Space(10)]
     [SerializeField] float healthBarRightPaddingMin = 15;
@@ -69,9 +70,24 @@ public class PlayerCanvas : MonoBehaviour
     {
         ShowThenHideFadeTweenUIComponent(healthHUDFade, () =>
         {
-            float healthPercentage = currentHealth / maxHealth;
-            healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, healthPercentage), healthBarMask.padding.w);
-            healthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+            if(operation is not EHealthChangedOperation.HealOverTime)
+            {
+                float healthPercentage = currentHealth / maxHealth;
+                healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, healthPercentage), healthBarMask.padding.w);
+                healthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+            }
+            else
+            {
+                float healthPercentage = oldHealth / maxHealth;
+                healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, healthPercentage), healthBarMask.padding.w);
+                healthText.text = oldHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+
+                float ghostHealthPercentage = currentHealth / maxHealth;
+                healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, ghostHealthPercentage), healthBarGhostMask.padding.w);
+            
+                if(healthPercentage == ghostHealthPercentage)
+                    healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, healthBarRightPaddingMax, healthBarGhostMask.padding.w);
+            }
         });
 
         if(buildMenuEnabled)
@@ -94,11 +110,21 @@ public class PlayerCanvas : MonoBehaviour
         tweenedUIComponent.CurrentSequence?.Kill();
         fadeTween.TweenValues.CanvasGroup.DOKill();
 
+        bool doActionBeforeFade = fadeTween.TweenValues.CanvasGroup.alpha == fadeTween.TweenValues.FadeValues.StartAlpha;
+
+        if(doActionBeforeFade)
+        {
+            actionToDoOnShow?.Invoke();
+        }
+
         fadeTween.TweenValues.CanvasGroup.alpha = fadeTween.TweenValues.FadeValues.StartAlpha;
 
         currentHealthBarFadeSequence = DOTween.Sequence();
-        currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallback);
-        currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
+        if(!doActionBeforeFade) 
+        {   
+            currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallback);
+            currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
+        }
         currentHealthBarFadeSequence.AppendInterval(numSecondsToWaitBeforeHidingHealthBar);
         currentHealthBarFadeSequence.AppendCallback(() => TweenUIComponent(true, tweenedUIComponent, new(){ETweenType.Fade}, false));
         currentHealthBarFadeSequence.Play();

@@ -5,6 +5,7 @@ using UnityEngine;
 public enum EHealthChangedOperation
 {
     Damage,
-    Heal,
+    HealInstant,
+    HealOverTime,
     NoChange
 }
