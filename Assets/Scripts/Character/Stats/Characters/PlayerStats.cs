@@ -9,10 +9,24 @@ using DG.Tweening.Core;
 [Serializable]
 public class PlayerStats : CharacterStats, IDamageable
 {
-    float currentHealth;
+    float m_currentHealth;
+    float currentHealth
+    {
+        get => m_currentHealth;
+        set
+        {
+            m_currentHealth = value;
+            if(m_currentHealth <= 0)
+                Die();
+        }
+    }
+    
+    float projectedHealth;
 
-    public Action<float, float, float, EHealthChangedOperation> OnHealthChanged { get => OnHealthChangedInternal; set => OnHealthChangedInternal = value; }
-    private Action<float, float, float, EHealthChangedOperation> OnHealthChangedInternal;
+    Stat maxHealthStat => getStatFromName[CommonStatTypeNames.MaxHealth];
+
+    public Action<float, float, float> OnHealthChanged { get => OnHealthChangedInternal; set => OnHealthChangedInternal = value; }
+    private Action<float, float, float> OnHealthChangedInternal;
 
     Tweener healthOverTimeTweener;
 
@@ -20,28 +34,21 @@ public class PlayerStats : CharacterStats, IDamageable
 
     public void SetHealth(float amount)
     {
-        EHealthChangedOperation operation;
-
-        if(amount > currentHealth)
-            operation = EHealthChangedOperation.HealInstant;
-        else if(amount < currentHealth)
-            operation = EHealthChangedOperation.Damage;
-        else
-            operation = EHealthChangedOperation.NoChange;
-
-
-        float oldHealth = currentHealth;
-        currentHealth = amount;
-
-        OnHealthChanged?.Invoke(oldHealth, currentHealth, getStatFromName[CommonStatTypeNames.MaxHealth].Value, operation);
+        projectedHealth = amount;
+        SetCurrentHealthToProjected();
     }
 
-    public float GetHealth()
+    public float GetCurrentHealth()
     {
         return currentHealth;
     }
 
-    public void TakeDamage(float damage)
+    public float GetProjectedHealth()
+    {
+        return projectedHealth;
+    }
+
+    public void TakeDamageInstant(float damage)
     {
         if(damage < 0)
         {
@@ -49,18 +56,9 @@ public class PlayerStats : CharacterStats, IDamageable
             return;
         }
         
-        float newHealth = currentHealth - damage;
-        float oldHealth = currentHealth;
-
-        EHealthChangedOperation operation = EHealthChangedOperation.Damage;
-        if(oldHealth == newHealth) operation = EHealthChangedOperation.NoChange;
-
-        currentHealth = newHealth;
-
-        OnHealthChanged?.Invoke(oldHealth, currentHealth, getStatFromName[CommonStatTypeNames.MaxHealth].Value, operation);
-
-        if(currentHealth <= 0)
-            Die();
+        projectedHealth -= damage;
+        
+        SetCurrentHealthToProjected();
     }
 
     public void HealInstant(float amount)
@@ -71,24 +69,16 @@ public class PlayerStats : CharacterStats, IDamageable
             return;
         }
 
-        Stat maxHealthStat = getStatFromName[CommonStatTypeNames.MaxHealth];
+        if(amount > maxHealthStat.Value - projectedHealth)
+            amount = maxHealthStat.Value - projectedHealth;
 
-        if(amount > maxHealthStat.Value - currentHealth)
-            amount = maxHealthStat.Value - currentHealth;
+        projectedHealth += amount;
+        projectedHealth = Mathf.Clamp(projectedHealth, 0, maxHealthStat.Value);
 
-        float newHealth = currentHealth + amount;
-        newHealth = Mathf.Clamp(newHealth, 0, maxHealthStat.Value);
-        float oldHealth = currentHealth;
-
-        EHealthChangedOperation operation = EHealthChangedOperation.HealInstant;
-        if(oldHealth == newHealth) operation = EHealthChangedOperation.NoChange;
-
-        currentHealth = newHealth;
-        
-        OnHealthChanged?.Invoke(oldHealth, currentHealth, maxHealthStat.Value, operation);
+        SetCurrentHealthToProjected();
     }
 
-    public void HealOverTime(float percentAmount, float duration)
+    public void HealOverTime(float percentAmount, float percentPerSecond)
     {
         if(percentAmount < 0)
         {
@@ -96,32 +86,19 @@ public class PlayerStats : CharacterStats, IDamageable
             return;
         }
 
-        Stat maxHealthStat = getStatFromName[CommonStatTypeNames.MaxHealth];
-
         float amount = maxHealthStat.Value * (percentAmount / 100);
+        if(amount > maxHealthStat.Value - projectedHealth)
+            amount = maxHealthStat.Value - projectedHealth;
 
-        if(amount > maxHealthStat.Value - currentHealth)
-            amount = maxHealthStat.Value - currentHealth;
+        projectedHealth += amount;
+        projectedHealth = Mathf.Clamp(projectedHealth, 0, maxHealthStat.Value);
 
-        float newHealth = currentHealth + amount;
-        newHealth = Mathf.Clamp(newHealth, 0, maxHealthStat.Value);
-        float oldHealth = currentHealth;
+        float duration = percentAmount / percentPerSecond;
 
-        EHealthChangedOperation operation = EHealthChangedOperation.HealOverTime;
-        if(oldHealth == newHealth) operation = EHealthChangedOperation.NoChange;
-        
-        healthOverTimeTweener?.Kill();
-
-        healthOverTimeTweener = DOTween.To(() => currentHealth, x => 
-        {
-            OnHealthChanged?.Invoke(x, newHealth, maxHealthStat.Value, operation);
-            currentHealth = x;
-        }, newHealth, duration).SetEase(Ease.Linear).OnComplete(() => currentHealth = newHealth);
-
-        healthOverTimeTweener.Play();
+        SetCurrentHealthToProjected(duration);
     }
 
-    public void HealOverTimeToPercent(float percent, float duration)
+    public void HealOverTimeToPercent(float percent, float percentPerSecond)
     {
         if(percent < 0)
         {
@@ -129,39 +106,55 @@ public class PlayerStats : CharacterStats, IDamageable
             return;
         }
 
-        Stat maxHealthStat = getStatFromName[CommonStatTypeNames.MaxHealth];
+        float oldProjectedHealth = projectedHealth;
 
-        float amount = maxHealthStat.Value * (percent / 100);
+        projectedHealth = maxHealthStat.Value * (percent / 100);
+        projectedHealth = Mathf.Clamp(projectedHealth, 0, maxHealthStat.Value);
 
-        if(amount > maxHealthStat.Value - currentHealth)
-            amount = maxHealthStat.Value - currentHealth;
-
-        float newHealth = amount;
-        newHealth = Mathf.Clamp(newHealth, 0, maxHealthStat.Value);
-        float oldHealth = currentHealth;
-
-        if(newHealth < oldHealth)
+        if(projectedHealth < oldProjectedHealth)
         {
-            Debug.LogWarning("This would deal damage, just use 'TakeDamage()'");
+            Debug.LogWarning("Health is already higher than the percent you're trying to heal to.");
             return;
         }
 
-        EHealthChangedOperation operation = EHealthChangedOperation.HealOverTime;
-        if(oldHealth == newHealth) operation = EHealthChangedOperation.NoChange;
-        
-        healthOverTimeTweener?.Kill();
+        float duration = percent / percentPerSecond;
+
+        SetCurrentHealthToProjected(duration);
+    }
+
+    private void SetCurrentHealthToProjected(float duration = 0)
+    {
+        if(healthOverTimeTweener.IsActive() && healthOverTimeTweener.IsPlaying())
+        {
+            
+
+            healthOverTimeTweener.ChangeEndValue(projectedHealth, true);
+            return;
+        }
+
+        oldProjectedHealth = projectedHealth;
 
         healthOverTimeTweener = DOTween.To(() => currentHealth, x => 
         {
-            OnHealthChanged?.Invoke(x, newHealth, maxHealthStat.Value, operation);
             currentHealth = x;
-        }, newHealth, duration).SetEase(Ease.Linear).OnComplete(() => currentHealth = newHealth);
+            DebugHealth();
+            OnHealthChangedInternal?.Invoke(currentHealth, projectedHealth, maxHealthStat.Value);
+        }, projectedHealth, duration).SetEase(Ease.Linear).OnComplete(() => currentHealth = projectedHealth);
 
         healthOverTimeTweener.Play();
     }
 
+    float oldProjectedHealth;
+
+
+    private void DebugHealth()
+    {
+        Debug.Log($"Current health: {currentHealth}, Projected health: {projectedHealth}, Max health: {maxHealthStat.Value}");
+    }
+
     public void Die()
     {
+        healthOverTimeTweener?.Kill();
         Debug.Log("Player died");
     } 
 }

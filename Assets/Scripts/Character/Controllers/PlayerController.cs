@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetKeyUp(KeyCode.N))
         {
-            PlayerStatsDamageable.TakeDamage(10);
+            PlayerStatsDamageable.TakeDamageInstant(10);
         }
 
         if(Input.GetKeyUp(KeyCode.M))

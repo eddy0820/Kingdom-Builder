@@ -66,28 +66,16 @@ public class PlayerCanvas : MonoBehaviour
 
 #region HUD
 
-    public void UpdateHealthBar(float oldHealth, float currentHealth, float maxHealth, EHealthChangedOperation operation)
+    public void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth)
     {
         ShowThenHideFadeTweenUIComponent(healthHUDFade, () =>
         {
-            if(operation is not EHealthChangedOperation.HealOverTime)
-            {
-                float healthPercentage = currentHealth / maxHealth;
-                healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, healthPercentage), healthBarMask.padding.w);
-                healthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
-            }
-            else
-            {
-                float healthPercentage = oldHealth / maxHealth;
-                healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, healthPercentage), healthBarMask.padding.w);
-                healthText.text = oldHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+            float projectedHealthPercentage = projectedHealth / maxHealth;
+            float currentHealthPercentage = currentHealth / maxHealth;
 
-                float ghostHealthPercentage = currentHealth / maxHealth;
-                healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, ghostHealthPercentage), healthBarGhostMask.padding.w);
-            
-                if(healthPercentage == ghostHealthPercentage)
-                    healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, healthBarRightPaddingMax, healthBarGhostMask.padding.w);
-            }
+            healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
+            healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
+            healthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
         });
 
         if(buildMenuEnabled)
@@ -98,7 +86,7 @@ public class PlayerCanvas : MonoBehaviour
     {
         if(stat.type != playerStats.GetStatTypeFromName[CommonStatTypeNames.MaxHealth]) return;
         
-        UpdateHealthBar(playerStatsDamageable.GetHealth(), playerStatsDamageable.GetHealth(), stat.Value, EHealthChangedOperation.NoChange);
+        UpdateHealthBar(playerStatsDamageable.GetCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
     }
 
     public void ShowThenHideFadeTweenUIComponent(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
