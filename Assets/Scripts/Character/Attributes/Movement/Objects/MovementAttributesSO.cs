@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 
-public class MovementAttributesSO : ScriptableObject
+public abstract class MovementAttributesSO : ScriptableObject
 {
     
     [Header("Stable Movement")]

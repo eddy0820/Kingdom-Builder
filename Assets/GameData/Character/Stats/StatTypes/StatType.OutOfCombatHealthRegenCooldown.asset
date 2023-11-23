@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22c02b7331d9a4c45853adcd7a63ce41, type: 3}
-  m_Name: StatType.MaxHealth
+  m_Name: StatType.OutOfCombatHealthRegenCooldown
   m_EditorClassIdentifier: 
-  name: MaxHealth
-  defaultValue: 100
-  defaultMinValue: 1
+  name: OutOfCombatHealthRegenCooldown
+  defaultValue: 3
+  defaultMinValue: 0
   defaultMaxValue: Infinity

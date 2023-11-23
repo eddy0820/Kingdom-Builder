@@ -7,5 +7,4 @@ public abstract class CharacterAttributesSO : ScriptableObject
 {
     [Expandable, SerializeField] MovementAttributesSO movementAttributes;
     public MovementAttributesSO MovementAttributes => movementAttributes;
-    
 }

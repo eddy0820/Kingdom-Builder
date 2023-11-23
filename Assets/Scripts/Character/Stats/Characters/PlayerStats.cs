@@ -21,8 +21,11 @@ public class PlayerStats : CharacterStats, IDamageable
     
     float projectedHealth;
     float currentPercentPerSecond;
+    float lastTimeCurrentHealthActivelyChanged;
 
     Stat MaxHealthStat => getStatFromName[CommonStatTypeNames.MaxHealth];
+    Stat HealthRegenStat => getStatFromName[CommonStatTypeNames.HealthRegen];
+    Stat OutOfCombatHealthRegenCooldownStat => getStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown];
 
     public Action<float, float, float> OnHealthChanged { get => OnHealthChangedInternal; set => OnHealthChangedInternal = value; }
     private Action<float, float, float> OnHealthChangedInternal;
@@ -70,7 +73,10 @@ public class PlayerStats : CharacterStats, IDamageable
         projectedHealth -= damage;
 
         if(projectedHealth <= currentHealth)
+        {   
             currentHealth = projectedHealth;
+            lastTimeCurrentHealthActivelyChanged = Time.time;
+        }    
 
         InvokeOnHealthChanged();
     }
@@ -90,6 +96,7 @@ public class PlayerStats : CharacterStats, IDamageable
 
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealthStat.Value);
+        lastTimeCurrentHealthActivelyChanged = Time.time;
 
         if(projectedHealth <= currentHealth)
             projectedHealth = currentHealth;
@@ -153,9 +160,35 @@ public class PlayerStats : CharacterStats, IDamageable
             }
 
             currentHealth = Mathf.MoveTowards(currentHealth, projectedHealth, MaxHealthStat.Value * (currentPercentPerSecond / 100) * Time.deltaTime);
+            lastTimeCurrentHealthActivelyChanged = Time.time;
             InvokeOnHealthChanged();
 
             yield return null;
+        }
+    }
+
+    public IEnumerator HealthRegenCoroutine()
+    {
+        while(!isDead)
+        {
+            if(currentHealth == MaxHealthStat.Value || Time.time - lastTimeCurrentHealthActivelyChanged < OutOfCombatHealthRegenCooldownStat.Value)
+            {
+                yield return null;
+                continue;
+            }
+
+            float amount = MaxHealthStat.Value * (HealthRegenStat.Value / 100);
+
+            if(amount > MaxHealthStat.Value - projectedHealth)
+                amount = MaxHealthStat.Value - projectedHealth;
+
+            currentHealth += amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealthStat.Value);
+            projectedHealth = currentHealth;
+
+            InvokeOnHealthChanged();
+
+            yield return new WaitForSeconds(1);
         }
     }
 

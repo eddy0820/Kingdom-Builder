@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
         characterCamera.IgnoredColliders.AddRange(character.GetComponentsInChildren<Collider>());
 
         StartCoroutine(PlayerStatsDamageable.HealOverTimeCoroutine());
+        StartCoroutine(PlayerStats.HealthRegenCoroutine());
         PlayerStatsDamageable.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
 
         statModifier = new StatModifier(10, StatModifierTypes.Flat);
