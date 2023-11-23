@@ -399,6 +399,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "FlipCameraAlignment",
+                    "type": "Button",
+                    "id": "7fe55177-4eb4-4799-ae5e-fff2afe23292",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -564,6 +573,17 @@
                     "processors": "",
                     "groups": "Mouse + Keyboard",
                     "action": "LockOn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "787f472e-55f5-437c-8ef1-66ef1a981000",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FlipCameraAlignment",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

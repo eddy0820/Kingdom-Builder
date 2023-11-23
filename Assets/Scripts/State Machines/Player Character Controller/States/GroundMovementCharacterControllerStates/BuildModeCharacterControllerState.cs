@@ -28,7 +28,8 @@ public class BuildModeCharacterControllerState : GroundMovementCharacterControll
     public override void OnEnterState(PlayerCharacterControllerState fromState)
     {
         inputManager.GridBuilding.Enable();
-        PlayerCamera.DoBuildModeCamera(true);
+
+        if(!PlayerCamera.inFirstPerson) PlayerCamera.TweenToBuildModeFollowPointFraming();
 
         playerCanvas.ToggleCrosshair(true);
         playerCanvas.ToggleBuildHotbar(true);
@@ -40,7 +41,8 @@ public class BuildModeCharacterControllerState : GroundMovementCharacterControll
     public override void OnExitState(PlayerCharacterControllerState toState)
     {
         inputManager.GridBuilding.Disable();
-        PlayerCamera.DoBuildModeCamera(false);
+        
+        if(!PlayerCamera.inFirstPerson) PlayerCamera.TweenToDefaultFollowPointFraming();
 
         playerCanvas.ToggleBuildHotbar(false);
         playerCanvas.ToggleBuildMenu(false);

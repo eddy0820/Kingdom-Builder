@@ -421,6 +421,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FlipCameraAlignment"",
+                    ""type"": ""Button"",
+                    ""id"": ""7fe55177-4eb4-4799-ae5e-fff2afe23292"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -588,6 +597,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""LockOn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""787f472e-55f5-437c-8ef1-66ef1a981000"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FlipCameraAlignment"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -730,6 +750,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_PlayerMechanics_NumberKey8 = m_PlayerMechanics.FindAction("NumberKey8", throwIfNotFound: true);
         m_PlayerMechanics_NumberKey9 = m_PlayerMechanics.FindAction("NumberKey9", throwIfNotFound: true);
         m_PlayerMechanics_LockOn = m_PlayerMechanics.FindAction("LockOn", throwIfNotFound: true);
+        m_PlayerMechanics_FlipCameraAlignment = m_PlayerMechanics.FindAction("FlipCameraAlignment", throwIfNotFound: true);
         // GridBuilding
         m_GridBuilding = asset.FindActionMap("GridBuilding", throwIfNotFound: true);
         m_GridBuilding_Demolish = m_GridBuilding.FindAction("Demolish", throwIfNotFound: true);
@@ -940,6 +961,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMechanics_NumberKey8;
     private readonly InputAction m_PlayerMechanics_NumberKey9;
     private readonly InputAction m_PlayerMechanics_LockOn;
+    private readonly InputAction m_PlayerMechanics_FlipCameraAlignment;
     public struct PlayerMechanicsActions
     {
         private @PlayerControls m_Wrapper;
@@ -959,6 +981,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @NumberKey8 => m_Wrapper.m_PlayerMechanics_NumberKey8;
         public InputAction @NumberKey9 => m_Wrapper.m_PlayerMechanics_NumberKey9;
         public InputAction @LockOn => m_Wrapper.m_PlayerMechanics_LockOn;
+        public InputAction @FlipCameraAlignment => m_Wrapper.m_PlayerMechanics_FlipCameraAlignment;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMechanics; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1013,6 +1036,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @LockOn.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnLockOn;
                 @LockOn.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnLockOn;
                 @LockOn.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnLockOn;
+                @FlipCameraAlignment.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnFlipCameraAlignment;
+                @FlipCameraAlignment.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnFlipCameraAlignment;
+                @FlipCameraAlignment.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnFlipCameraAlignment;
             }
             m_Wrapper.m_PlayerMechanicsActionsCallbackInterface = instance;
             if (instance != null)
@@ -1062,6 +1088,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @LockOn.started += instance.OnLockOn;
                 @LockOn.performed += instance.OnLockOn;
                 @LockOn.canceled += instance.OnLockOn;
+                @FlipCameraAlignment.started += instance.OnFlipCameraAlignment;
+                @FlipCameraAlignment.performed += instance.OnFlipCameraAlignment;
+                @FlipCameraAlignment.canceled += instance.OnFlipCameraAlignment;
             }
         }
     }
@@ -1165,6 +1194,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnNumberKey8(InputAction.CallbackContext context);
         void OnNumberKey9(InputAction.CallbackContext context);
         void OnLockOn(InputAction.CallbackContext context);
+        void OnFlipCameraAlignment(InputAction.CallbackContext context);
     }
     public interface IGridBuildingActions
     {

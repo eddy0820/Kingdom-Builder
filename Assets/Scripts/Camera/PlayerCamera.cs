@@ -12,11 +12,11 @@ public class PlayerCamera : MonoBehaviour
     public CinemachineVirtualCamera LockOnCamera;
 
     [Header("Follow Camera Framing")]
-    public Vector2 FollowPointFraming = new Vector2(0f, 0f);
     public Vector2 DefaultFollowPointFraming = new Vector2(0f, 0f);
     public Vector2 BuildModeFollowPointFraming = new Vector2(0f, 0f);
-    [SerializeField] float buildModeLerpDuration = 1f;
+    [SerializeField] float followPointFramingTweenDuration = 1f;
     public float FollowingSharpness = 10000f;
+    [ReadOnly, SerializeField] Vector2 FollowPointFraming = new Vector2(0f, 0f);
 
     [Header("Distance")]
     public float DefaultDistance = 6f;
@@ -59,6 +59,7 @@ public class PlayerCamera : MonoBehaviour
     [Header("Camera Switch")]
 
     [ReadOnly] public bool inFirstPerson;
+    [ReadOnly] public bool rightAligned;
 
     public Transform FollowCameraTransform { get; private set; }
     public Transform LockOnCameraTransform { get; private set; }
@@ -80,6 +81,9 @@ public class PlayerCamera : MonoBehaviour
 
     private const int MaxObstructions = 32;
 
+    public Action OnEnterFirstPerson;
+    public Action OnExitFirstPerson;
+
     void OnValidate()
     {
         DefaultDistance = Mathf.Clamp(DefaultDistance, MinDistance, MaxDistance);
@@ -97,12 +101,16 @@ public class PlayerCamera : MonoBehaviour
         lockOnFramingTransposer.m_CameraDistance = DefaultDistance;
         TargetDistance = _currentDistance;
 
+        rightAligned = true;
+
         _targetVerticalAngle = 0f;
 
         PlanarDirection = Vector3.forward;
 
-        PlayerController.Instance.OnEnterFirstPerson += OnEnterFirstPerson;
-        PlayerController.Instance.OnExitFirstPerson += OnExitFirstPerson;
+        FollowPointFraming = DefaultFollowPointFraming;
+
+        OnEnterFirstPerson += EnterFirstPerson;
+        OnExitFirstPerson += ExitFirstPerson;
     }
 
     // Set the transform that the camera will orbit around
@@ -221,60 +229,84 @@ public class PlayerCamera : MonoBehaviour
 
             if(PlayerController.Instance.LockedOn && !GetComponentInChildren<CinemachineStateDrivenCamera>().IsBlending)
             {
-                FollowCameraTransform.position = Camera.main.transform.position;
-                FollowCameraTransform.rotation = Camera.main.transform.rotation;
+                FollowCameraTransform.SetPositionAndRotation(Camera.main.transform.position, Camera.main.transform.rotation);
             }
         }
     }
 
-    public void DoBuildModeCamera(bool enabled)
+    public void FlipCameraPerspective()
     {
-        StopAllCoroutines();
-        if(inFirstPerson) return;
-
-        if(enabled)
+        if(TargetDistance == 0f)
         {
-            StartCoroutine(DoCameraLerp(DefaultFollowPointFraming, BuildModeFollowPointFraming));
+            TargetDistance = DefaultDistance;
         }
         else
         {
-            StartCoroutine(DoCameraLerp(BuildModeFollowPointFraming, DefaultFollowPointFraming));
+            TargetDistance = 0f;
         }
     }
 
-    private void OnEnterFirstPerson()
+    public void CheckIfFirstPerson()
+    {
+        PlayerCharacterController character = PlayerController.Instance.Character;
+
+        bool lastFrameFirstPersonState = inFirstPerson;
+
+        if(TargetDistance == 0f)
+        {
+            inFirstPerson = true;
+            character.ChangeOrientationMethod(OrientationMethod.TowardsCamera);
+            character.MeshRoot.gameObject.SetActive(false);
+
+            if(lastFrameFirstPersonState != inFirstPerson) OnEnterFirstPerson?.Invoke();
+        }
+        else
+        {
+            inFirstPerson = false;
+            character.ChangeOrientationMethod(OrientationMethod.TowardsMovement);
+            character.MeshRoot.gameObject.SetActive(true);
+            
+            if(lastFrameFirstPersonState != inFirstPerson) OnExitFirstPerson?.Invoke();
+        }
+    }
+
+    public void FlipCameraAlignment()
+    {
+        rightAligned = !rightAligned;
+
+        if(PlayerController.Instance.BuildModeEnabled)
+            TweenToBuildModeFollowPointFraming();
+        else
+            TweenToDefaultFollowPointFraming();
+
+    }
+
+    private void EnterFirstPerson()
     {
         if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 1f)
             DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 0f, 0f), 0.5f);
 
-        if(!PlayerController.Instance.BuildModeEnabled) return;
-        
-        StartCoroutine(DoCameraLerp(BuildModeFollowPointFraming, DefaultFollowPointFraming));
+        if(PlayerController.Instance.BuildModeEnabled)
+            TweenToDefaultFollowPointFraming();
     }
 
-    private void OnExitFirstPerson()
+    private void ExitFirstPerson()
     {
         if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 0f)
             DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 1f, 0f), 0.5f);
 
-        if(!PlayerController.Instance.BuildModeEnabled) return;
-
-        StartCoroutine(DoCameraLerp(DefaultFollowPointFraming, BuildModeFollowPointFraming));
+        if(PlayerController.Instance.BuildModeEnabled)
+            TweenToBuildModeFollowPointFraming();
     }
 
-    IEnumerator DoCameraLerp(Vector2 startPosition, Vector2 targetPosition)
+    public void TweenToDefaultFollowPointFraming() => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(DefaultFollowPointFraming), followPointFramingTweenDuration);
+    public void TweenToBuildModeFollowPointFraming() => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(BuildModeFollowPointFraming), followPointFramingTweenDuration);
+
+    private Vector2 FlipFollowPointFramingAlignment(Vector2 followPointFraming)
     {
-        float time = 0;
-
-        while(time < buildModeLerpDuration)
-        {
-            FollowPointFraming = Vector2.Lerp(startPosition, targetPosition, time / buildModeLerpDuration);
-            time += Time.deltaTime;
-            yield return null;
-        }
-
-        FollowPointFraming = targetPosition;
-
-        yield break;
+        if(rightAligned)
+            return new Vector2(Mathf.Abs(followPointFraming.x), followPointFraming.y);
+        else
+            return new Vector2(-followPointFraming.x, followPointFraming.y);        
     }
 }

@@ -46,9 +46,6 @@ public class PlayerController : MonoBehaviour
     bool lockedOn => stateMachine.CurrentState is LockedOnCharacterControllerState;
     public bool LockedOn => lockedOn;
 
-    public Action OnEnterFirstPerson;
-    public Action OnExitFirstPerson;
-
     private void Awake()
     {
         if(Instance == null)
@@ -80,13 +77,11 @@ public class PlayerController : MonoBehaviour
     StatModifier statModifier;
     private void Update()
     {
-        //if(Input.GetMouseButtonDown(0)) Cursor.lockState = CursorLockMode.Locked;
-
         HandleCharacterInput();
 
-        CheckIfFirstPerson();
+        characterCamera.CheckIfFirstPerson();
 
-        if(Input.GetKeyUp(KeyCode.N))
+        /*if(Input.GetKeyUp(KeyCode.N))
         {
             PlayerStatsDamageable.TakeDamageInstant(10);
         }
@@ -114,7 +109,7 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyUp(KeyCode.X))
         {
             playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
-        }
+        }*/
     }
 
     private void LateUpdate()
@@ -178,39 +173,5 @@ public class PlayerController : MonoBehaviour
         mouseXInput = _mouseX * characterCamera.SensitivityX;
         mouseYInput = _mouseY * characterCamera.SensitivityY;
         mouseScrollInput = _mouseScroll / characterCamera.ScrollSensitivity;
-    }
-
-    public void DoCameraSwitch()
-    {
-        if(characterCamera.TargetDistance == 0f)
-        {
-            characterCamera.TargetDistance = characterCamera.DefaultDistance;
-        }
-        else
-        {
-            characterCamera.TargetDistance = 0f;
-        }
-    }
-
-    private void CheckIfFirstPerson()
-    {
-        bool lastFrameFirstPersonState = characterCamera.inFirstPerson;
-
-        if(characterCamera.TargetDistance == 0f)
-        {
-            characterCamera.inFirstPerson = true;
-            character.ChangeOrientationMethod(OrientationMethod.TowardsCamera);
-            character.MeshRoot.gameObject.SetActive(false);
-
-            if(lastFrameFirstPersonState != characterCamera.inFirstPerson) OnEnterFirstPerson?.Invoke();
-        }
-        else
-        {
-            characterCamera.inFirstPerson = false;
-            character.ChangeOrientationMethod(OrientationMethod.TowardsMovement);
-            character.MeshRoot.gameObject.SetActive(true);
-            
-            if(lastFrameFirstPersonState != characterCamera.inFirstPerson) OnExitFirstPerson?.Invoke();
-        }
     }
 }

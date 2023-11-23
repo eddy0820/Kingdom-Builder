@@ -22,6 +22,7 @@ public class InputManager : MonoBehaviour
     public PlayerControls.GridBuildingActions GridBuilding => gridBuilding;
 
     PlayerController playerController;
+    PlayerCamera playerCamera;
     BuildModeCharacterControllerState buildModeState;
     LockedOnCharacterControllerState lockedOnState;
 
@@ -42,6 +43,7 @@ public class InputManager : MonoBehaviour
         OnNumberKeyPressed = new InputManagerEvent();
 
         playerController = GetComponent<PlayerController>();
+        playerCamera = playerController.CharacterCamera;
         playerController.StateMachine.OnStateMachineInitialized += () =>
         {
             playerController.StateMachine.GetState(out buildModeState);
@@ -76,8 +78,11 @@ public class InputManager : MonoBehaviour
         playerMechanics.MouseY.performed += ctx =>
             mouseY = ctx.ReadValue<float>();
 
-        playerMechanics.CameraSwitch.performed += ctx =>
-            playerController.DoCameraSwitch();
+        playerMechanics.CameraSwitch.performed += _ =>
+            playerCamera.FlipCameraPerspective();
+
+        playerMechanics.FlipCameraAlignment.performed += _ =>
+            playerCamera.FlipCameraAlignment();
 
         if(PlayerSpawner.Instance.GridBuildingInfo.EnableBuilding)
         {
