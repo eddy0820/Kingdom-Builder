@@ -70,9 +70,13 @@ public class PlayerController : MonoBehaviour
         characterCamera.IgnoredColliders.Clear();
         characterCamera.IgnoredColliders.AddRange(character.GetComponentsInChildren<Collider>());
 
-        playerStats.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
+        StartCoroutine(PlayerStatsDamageable.HealOverTimeCoroutine());
+        PlayerStatsDamageable.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
+
+        statModifier = new StatModifier(10, StatModifierTypes.Flat);
     }
     
+    StatModifier statModifier;
     private void Update()
     {
         //if(Input.GetMouseButtonDown(0)) Cursor.lockState = CursorLockMode.Locked;
@@ -88,7 +92,27 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetKeyUp(KeyCode.M))
         {
-            PlayerStatsDamageable.HealOverTimeToPercent(90, 5);
+            PlayerStatsDamageable.HealOverTimeToPercent(80, 10);
+        }
+
+        if(Input.GetKeyUp(KeyCode.B))
+        {
+            PlayerStatsDamageable.HealOverTime(10, 5);
+        }
+
+        if(Input.GetKeyUp(KeyCode.V))
+        {
+            PlayerStatsDamageable.HealInstant(20);
+        }
+
+        if(Input.GetKeyUp(KeyCode.C))
+        {
+            playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+        }
+
+        if(Input.GetKeyUp(KeyCode.X))
+        {
+            playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
         }
     }
 
