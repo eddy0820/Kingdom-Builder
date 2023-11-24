@@ -289,8 +289,7 @@ public class PlayerCamera : MonoBehaviour
         if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 1f)
             DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 0f, 0f), 0.5f);
 
-        if(PlayerController.Instance.BuildModeEnabled)
-            TweenToZeroFollowPointFraming(buildModeCameraTweenDuration);
+        TweenToZeroFollowPointFraming(buildModeCameraTweenDuration);
     }
 
     private void ExitFirstPerson()

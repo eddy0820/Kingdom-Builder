@@ -1288,7 +1288,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.086998306, y: -0.068733804, z: 0.032802057, w: -0.99329305}
+  m_LocalRotation: {x: -0.086998306, y: -0.068733804, z: 0.03280234, w: -0.99329305}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1899,10 +1899,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FollowCamera: {fileID: 1814969515}
   LockOnCamera: {fileID: 1882958745}
-  DefaultFollowPointFraming: {x: 0.4, y: 0}
-  BuildModeFollowPointFraming: {x: 0.8, y: 0.2}
+  DefaultFollowPointFraming: {x: 0.55, y: 0.2}
+  BuildModeFollowPointFraming: {x: 0.55, y: 0.2}
   flipAlignmentTweenDuration: 0.4
-  buildModeCameraTweenDuration: 0.25
+  buildModeCameraTweenDuration: 0.3
   FollowingSharpness: 10000
   FollowPointFraming: {x: 0, y: 0}
   DefaultDistance: 3
@@ -3154,8 +3154,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.14023559, y: -0.6321549, z: 0.7509389, w: 0.12963368}
-  m_LocalPosition: {x: -2.718236, y: 27.43177, z: -26.691072}
+  m_LocalRotation: {x: 0.14032933, y: -0.63213336, z: 0.75091976, w: 0.12974866}
+  m_LocalPosition: {x: -2.7182379, y: 27.431765, z: -26.691078}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
