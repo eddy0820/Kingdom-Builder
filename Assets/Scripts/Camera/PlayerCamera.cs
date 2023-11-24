@@ -14,7 +14,8 @@ public class PlayerCamera : MonoBehaviour
     [Header("Follow Camera Framing")]
     public Vector2 DefaultFollowPointFraming = new Vector2(0f, 0f);
     public Vector2 BuildModeFollowPointFraming = new Vector2(0f, 0f);
-    [SerializeField] float followPointFramingTweenDuration = 1f;
+    [SerializeField] float flipAlignmentTweenDuration = 1f;
+    [SerializeField] float buildModeCameraTweenDuration = 1f;
     public float FollowingSharpness = 10000f;
     [ReadOnly, SerializeField] Vector2 FollowPointFraming = new Vector2(0f, 0f);
 
@@ -272,12 +273,14 @@ public class PlayerCamera : MonoBehaviour
 
     public void FlipCameraAlignment()
     {
+        if(inFirstPerson) return;
+
         rightAligned = !rightAligned;
 
         if(PlayerController.Instance.BuildModeEnabled)
-            TweenToBuildModeFollowPointFraming();
+            TweenToBuildModeFollowPointFraming(flipAlignmentTweenDuration);
         else
-            TweenToDefaultFollowPointFraming();
+            TweenToDefaultFollowPointFraming(flipAlignmentTweenDuration);
 
     }
 
@@ -287,7 +290,7 @@ public class PlayerCamera : MonoBehaviour
             DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 0f, 0f), 0.5f);
 
         if(PlayerController.Instance.BuildModeEnabled)
-            TweenToDefaultFollowPointFraming();
+            TweenToZeroFollowPointFraming(buildModeCameraTweenDuration);
     }
 
     private void ExitFirstPerson()
@@ -296,12 +299,16 @@ public class PlayerCamera : MonoBehaviour
             DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 1f, 0f), 0.5f);
 
         if(PlayerController.Instance.BuildModeEnabled)
-            TweenToBuildModeFollowPointFraming();
+            TweenToBuildModeFollowPointFraming(buildModeCameraTweenDuration);
     }
 
-    public void TweenToDefaultFollowPointFraming() => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(DefaultFollowPointFraming), followPointFramingTweenDuration);
-    public void TweenToBuildModeFollowPointFraming() => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(BuildModeFollowPointFraming), followPointFramingTweenDuration);
+    public void TweenToDefaultFollowPointFraming() => TweenToDefaultFollowPointFraming(buildModeCameraTweenDuration);
+    public void TweenToBuildModeFollowPointFraming() => TweenToBuildModeFollowPointFraming(buildModeCameraTweenDuration);
 
+    private void TweenToDefaultFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(DefaultFollowPointFraming), duration);
+    private void TweenToBuildModeFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(BuildModeFollowPointFraming), duration);
+
+    private void TweenToZeroFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, new Vector2(0f, 0f), duration);
     private Vector2 FlipFollowPointFramingAlignment(Vector2 followPointFraming)
     {
         if(rightAligned)
