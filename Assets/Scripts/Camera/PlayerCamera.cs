@@ -216,7 +216,7 @@ public class PlayerCamera : MonoBehaviour
             
 
             // Find the smoothed camera orbit position
-            Vector3 targetPosition = _currentFollowPosition - ((targetRotation * Vector3.forward) * _currentDistance);
+            Vector3 targetPosition = _currentFollowPosition - (targetRotation * Vector3.forward * _currentDistance);
 
             // Handle framing
             targetPosition += FollowCameraTransform.right * FollowPointFraming.x;
@@ -299,15 +299,18 @@ public class PlayerCamera : MonoBehaviour
 
         if(PlayerController.Instance.BuildModeEnabled)
             TweenToBuildModeFollowPointFraming(buildModeCameraTweenDuration);
+        else
+            TweenToDefaultFollowPointFraming(buildModeCameraTweenDuration);
+
     }
 
     public void TweenToDefaultFollowPointFraming() => TweenToDefaultFollowPointFraming(buildModeCameraTweenDuration);
     public void TweenToBuildModeFollowPointFraming() => TweenToBuildModeFollowPointFraming(buildModeCameraTweenDuration);
 
-    private void TweenToDefaultFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(DefaultFollowPointFraming), duration);
-    private void TweenToBuildModeFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(BuildModeFollowPointFraming), duration);
+    private void TweenToDefaultFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(DefaultFollowPointFraming), duration).SetEase(Ease.Linear);
+    private void TweenToBuildModeFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(BuildModeFollowPointFraming), duration).SetEase(Ease.Linear);
 
-    private void TweenToZeroFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, new Vector2(0f, 0f), duration);
+    private void TweenToZeroFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, new Vector2(0f, 0f), duration).SetEase(Ease.Linear);
     private Vector2 FlipFollowPointFramingAlignment(Vector2 followPointFraming)
     {
         if(rightAligned)
