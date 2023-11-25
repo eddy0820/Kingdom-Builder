@@ -21,13 +21,13 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
     [SerializeField] float noticeZone = 10f;
     [SerializeField] float maxNoticeAngle = 60;
 
-    Targetable currentTargetable;
+    ITargetable currentTargetable;
 
     Vector3 currentLockOnPosition;
     Vector3 lookAtDirectionVector;
 
-    protected MovementSpeedSettings LockOnWalkingSpeedSettings => playerCharacterController.Attributes.LockOnWalkingSpeedSettings;
-    protected MovementSpeedSettings LockOnRunningSpeedSettings => playerCharacterController.Attributes.LockOnRunningSpeedSettings;
+    protected MovementSpeedSettings LockOnWalkingSpeedSettings => PlayerCharacterController.Attributes.LockOnWalkingSpeedSettings;
+    protected MovementSpeedSettings LockOnRunningSpeedSettings => PlayerCharacterController.Attributes.LockOnRunningSpeedSettings;
 
     DefaultCharacterControllerState defaultState;
 
@@ -80,14 +80,14 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     public void DecideLockOn()
     {
-        if(currentTargetable)
+        if(currentTargetable != null)
         {
             //If there is already a target, Reset.
             ResetTarget();
             return;
         }
         
-        if(currentTargetable = ScanNearBy()) 
+        if((currentTargetable = ScanNearBy()) != null) 
             FoundTarget();
         else 
             ResetTarget();
@@ -105,18 +105,18 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
         stateMachine.SwitchState(defaultState);
     }
 
-    private Targetable ScanNearBy()
+    private ITargetable ScanNearBy()
     {
         Collider[] nearbyTargets = Physics.OverlapSphere(Motor.Transform.position, noticeZone, targetLayers);
-        Targetable[] nearbyTargetables = nearbyTargets.Select(x => x.GetComponent<Targetable>()).Where(x => x != null).ToArray();
+        ITargetable[] nearbyTargetables = nearbyTargets.Select(x => x.GetComponent<MonoBehaviour>()).Select(x => (ITargetable)x).Where(x => x != null).ToArray();
         float closestAngle = maxNoticeAngle;
-        Targetable closestTarget = null;
+        ITargetable closestTarget = null;
 
         if(nearbyTargetables.Length <= 0) return null;
 
         for(int i = 0; i < nearbyTargetables.Length; i++)
         {
-            Vector3 dir = nearbyTargetables[i].transform.position - Camera.main.transform.position;
+            Vector3 dir = nearbyTargetables[i].LockOnLocation.position - Camera.main.transform.position;
             dir.y = 0;
             float _angle = Vector3.Angle(Camera.main.transform.forward, dir);
             
@@ -127,7 +127,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
             }
         }
 
-        if(!closestTarget ) return null;
+        if(closestTarget == null) return null;
 
         if(Blocked(closestTarget.LockOnLocation.position)) return null;
 
@@ -160,7 +160,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
             case OrientationMethod.TowardsCamera:
                 return cameraPlanarDirection;
             case OrientationMethod.TowardsMovement:
-                if(playerCharacterController.IsSprinting || playerCharacterController.IsCrouching)
+                if(PlayerCharacterController.IsSprinting || PlayerCharacterController.IsCrouching)
                     return normalizedMoveInputVector;
                 else
                     return lookAtDirectionVector.normalized;

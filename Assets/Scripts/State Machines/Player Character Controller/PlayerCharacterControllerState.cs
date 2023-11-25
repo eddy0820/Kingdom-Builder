@@ -5,14 +5,13 @@ using UnityEngine;
 public abstract class PlayerCharacterControllerState : DecentralizedStateMachine<PlayerCharacterControllerState>.DecentralizedState
 {
     protected new PlayerCharacterStateMachine stateMachine;
-    protected PlayerCharacterController playerCharacterController;
+    protected PlayerCharacterController PlayerCharacterController => PlayerController.Instance.Character;
+    protected PlayerController PlayerController => PlayerController.Instance;
 
     public override void Initialize(StateMachine<PlayerCharacterControllerState> stateMachine)
     {
         base.Initialize(stateMachine);
         this.stateMachine = stateMachine as PlayerCharacterStateMachine;
-
-        playerCharacterController = PlayerController.Instance.Character;
     }
 
     public override void OnAwake()
@@ -31,6 +30,16 @@ public abstract class PlayerCharacterControllerState : DecentralizedStateMachine
     }
 
     public override void OnUpdateState()
+    {
+        
+    }
+
+    public override void OnFixedUpdate()
+    {
+        
+    }
+
+    public override void OnFixedUpdateState()
     {
         
     }

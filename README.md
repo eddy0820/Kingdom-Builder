@@ -59,3 +59,6 @@ https://assetstore.unity.com/packages/audio/sound-fx/universal-sound-fx-17256
 
 DOTween by Demigiant
 https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676
+
+Font Nation
+https://assetstore.unity.com/packages/2d/fonts/font-nation-217414

@@ -24,6 +24,12 @@ public class PlayerCanvas : MonoBehaviour
     [SerializeField] float numSecondsToWaitBeforeHidingHealthBar = 2f;
     Sequence currentHealthBarFadeSequence;
 
+    [HorizontalLine]
+
+    [Header("Interaction")]
+    [SerializeField] TweenedUIComponent interactionCrosshair;
+    [Space(10)]
+    [SerializeField] List<InteractionEntry> interactionEntries;
 
     [HorizontalLine]
 
@@ -62,6 +68,9 @@ public class PlayerCanvas : MonoBehaviour
 
         playerStatsDamageable.OnHealthChanged += UpdateHealthBar;
         playerStats.OnStatModifierChanged += OnStatModifierChanged;
+
+        interactionCrosshair.GameObj.SetActive(false);
+        HideInteractions();
     }
 
 #region HUD
@@ -120,6 +129,35 @@ public class PlayerCanvas : MonoBehaviour
 
 #endregion
 
+#region Interaction
+
+    public Action GetInteractionEntryActionFromIndex(int index)
+    {
+        return interactionEntries[index].OnInteract;
+    }
+    public void ToggleInteractionCrosshair(bool b)
+    {
+        TweenUIComponent(b, interactionCrosshair);
+    }
+
+    public void ShowInteractions(IInteractable interactable, List<InteractionTypeSO> interactionTypes)
+    {
+        for(int i = 0; i < interactionTypes.Count; i++)
+        {
+            InteractionTypeSO interactionType = interactionTypes[i];
+            InteractionEntry interactionEntry = interactionEntries[i];
+
+            interactionEntry.SetInteraction(InputManager.Instance.GetEffectiveBindingPathForInteractionIndex(i), interactionType.Name, () => interactionType.Interact(interactable));
+        }
+    }
+
+    public void HideInteractions()
+    {
+        interactionEntries.ForEach(entry => entry.HideInteraction());
+    }
+
+#endregion
+
 #region Build Mode
 
     public void ToggleBuildMenu()
@@ -132,7 +170,7 @@ public class PlayerCanvas : MonoBehaviour
     {
         buildMenuEnabled = b;
         TweenUIComponent(b, buildMenu);
-        ToggleCrosshair(!b);
+        ToggleBuildModeCrosshair(!b);
         healthHUD.GameObj.SetActive(!b);
 
 
@@ -146,7 +184,7 @@ public class PlayerCanvas : MonoBehaviour
         TweenUIComponent(b, healthHUD, new(){ETweenType.MoveY}, false);
     }
 
-    public void ToggleCrosshair(bool b)
+    public void ToggleBuildModeCrosshair(bool b)
     {
         TweenUIComponent(b, crosshair);
     }
@@ -185,6 +223,9 @@ public class PlayerCanvas : MonoBehaviour
                     case ETweenType.Fade:
                         sequence.Join(tween.TweenValues.CanvasGroup.DOFade(tween.TweenValues.FadeValues.EndAlpha, tween.TweenDuration).SetEase(tween.Ease));
                     break;
+                    case ETweenType.Rotate360:
+                        sequence.Join(tweenedUIComponent.RectTransform.DORotate(new Vector3(0, 0, tween.TweenValues.Rotate360Values.EndRotation), tween.TweenDuration, RotateMode.FastBeyond360).SetEase(tween.Ease));
+                    break;
                     default:
                     break;
                 }
@@ -202,21 +243,28 @@ public class PlayerCanvas : MonoBehaviour
                 switch(tween.TweenValues.TweenType)
                 {
                     case ETweenType.Scale:
-                        sequence.Join(tweenedUIComponent.RectTransform.DOScale(tween.TweenValues.ScaleValues.StartScale, tween.TweenDuration).SetEase(tween.Ease).OnComplete(() => 
+                        sequence.Join(tweenedUIComponent.RectTransform.DOScale(tween.TweenValues.ScaleValues.StartScale, tween.TweenDuration).SetEase(tween.UseInverseEaseForEndTween ? DOTweenExtensions.GetInverseEase(tween.Ease) : tween.Ease).OnComplete(() => 
                         {
                             if(setActiveGameObject)
                                 tweenedUIComponent.GameObj.SetActive(b);
                         }));
                     break;
                     case ETweenType.MoveY:
-                        sequence.Join(tweenedUIComponent.RectTransform.DOAnchorPosY(tween.TweenValues.MoveYValues.StartPosY, tween.TweenDuration).SetEase(tween.Ease).OnComplete(() => 
+                        sequence.Join(tweenedUIComponent.RectTransform.DOAnchorPosY(tween.TweenValues.MoveYValues.StartPosY, tween.TweenDuration).SetEase(tween.UseInverseEaseForEndTween ? DOTweenExtensions.GetInverseEase(tween.Ease) : tween.Ease).OnComplete(() => 
                         {
                             if(setActiveGameObject)
                                 tweenedUIComponent.GameObj.SetActive(b);
                         }));
                     break;
                     case ETweenType.Fade:
-                        sequence.Join(tween.TweenValues.CanvasGroup.DOFade(tween.TweenValues.FadeValues.StartAlpha, tween.TweenDuration).SetEase(tween.Ease).OnComplete(() => 
+                        sequence.Join(tween.TweenValues.CanvasGroup.DOFade(tween.TweenValues.FadeValues.StartAlpha, tween.TweenDuration).SetEase(tween.UseInverseEaseForEndTween ? DOTweenExtensions.GetInverseEase(tween.Ease) : tween.Ease).OnComplete(() => 
+                        {
+                            if(setActiveGameObject)
+                                tweenedUIComponent.GameObj.SetActive(b);
+                        }));
+                    break;
+                    case ETweenType.Rotate360:
+                        sequence.Join(tweenedUIComponent.RectTransform.DORotate(new Vector3(0, 0, tween.TweenValues.Rotate360Values.StartRotation), tween.TweenDuration, RotateMode.FastBeyond360).SetEase(DOTweenExtensions.GetInverseEase(tween.Ease)).OnComplete(() => 
                         {
                             if(setActiveGameObject)
                                 tweenedUIComponent.GameObj.SetActive(b);
@@ -259,6 +307,9 @@ public class PlayerCanvas : MonoBehaviour
 
         [SerializeField] Ease ease;
         public Ease Ease => ease;
+
+        [SerializeField] bool useInverseEaseForEndTween;
+        public bool UseInverseEaseForEndTween => useInverseEaseForEndTween;
     }
 
     [System.Serializable]
@@ -282,6 +333,10 @@ public class PlayerCanvas : MonoBehaviour
         [AllowNesting]
         [ShowIf("tweenType", ETweenType.Fade), SerializeField] Fade fadeValues;
         public Fade FadeValues => fadeValues;
+
+        [AllowNesting]
+        [ShowIf("tweenType", ETweenType.Rotate360), SerializeField] Rotate360 rotate360Values;
+        public Rotate360 Rotate360Values => rotate360Values;
     }
 
     [System.Serializable]
@@ -315,11 +370,22 @@ public class PlayerCanvas : MonoBehaviour
     }
 
     [System.Serializable]
+    public class Rotate360
+    {
+        [SerializeField] float startRotation;
+        public float StartRotation => startRotation;
+
+        [SerializeField] float endRotation;
+        public float EndRotation => endRotation;
+    }
+
+    [System.Serializable]
     public enum ETweenType
     {
         Scale,
         MoveY,
-        Fade
+        Fade,
+        Rotate360
     }
 
 #endregion

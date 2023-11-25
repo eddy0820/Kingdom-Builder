@@ -1,0 +1,367 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ea1accc6b359e448b6cb62bd5ed698d, type: 3}
+  m_Name: InputKeyEntries
+  m_EditorClassIdentifier: 
+  emptyDarkModeSprite: {fileID: 21300000, guid: db214e5e8e7b79649b152178a753752a, type: 3}
+  emptyLightModeSprite: {fileID: 21300000, guid: 4fe43734466e3394aa0105c9e6216ca7, type: 3}
+  inputKeyEntries:
+  - keyCode: 97
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: A
+  - keyCode: 98
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: B
+  - keyCode: 99
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: C
+  - keyCode: 100
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: D
+  - keyCode: 101
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: E
+  - keyCode: 102
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F
+  - keyCode: 103
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: G
+  - keyCode: 104
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: H
+  - keyCode: 105
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: I
+  - keyCode: 106
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: J
+  - keyCode: 107
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: K
+  - keyCode: 108
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: L
+  - keyCode: 109
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: M
+  - keyCode: 110
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: N
+  - keyCode: 111
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: O
+  - keyCode: 112
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: P
+  - keyCode: 113
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: Q
+  - keyCode: 114
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: R
+  - keyCode: 115
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: S
+  - keyCode: 116
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: T
+  - keyCode: 117
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: U
+  - keyCode: 118
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: V
+  - keyCode: 119
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: W
+  - keyCode: 120
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: X
+  - keyCode: 121
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: Y
+  - keyCode: 122
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: Z
+  - keyCode: 48
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 0
+  - keyCode: 49
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 1
+  - keyCode: 50
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 2
+  - keyCode: 51
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 3
+  - keyCode: 52
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 4
+  - keyCode: 53
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 5
+  - keyCode: 54
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 6
+  - keyCode: 55
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 7
+  - keyCode: 56
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 8
+  - keyCode: 57
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 9
+  - keyCode: 308
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'LEFT
+
+      ALT'
+  - keyCode: 307
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'RIGHT
+
+      ALT'
+  - keyCode: 274
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'DOWN
+
+      ARROW'
+  - keyCode: 276
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'LEFT
+
+      ARROW'
+  - keyCode: 275
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'RIGHT
+
+      ARROW'
+  - keyCode: 273
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'UP
+
+      ARROW'
+  - keyCode: 8
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: BACK
+  - keyCode: 306
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'LEFT
+
+      CTRL'
+  - keyCode: 305
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'RIGHT
+
+      CTRL'
+  - keyCode: 13
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: ENTER
+  - keyCode: 27
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: ESC
+  - keyCode: 282
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F1
+  - keyCode: 283
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F2
+  - keyCode: 284
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F3
+  - keyCode: 285
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F4
+  - keyCode: 286
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F5
+  - keyCode: 287
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F6
+  - keyCode: 288
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F7
+  - keyCode: 289
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F8
+  - keyCode: 290
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F9
+  - keyCode: 291
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F10
+  - keyCode: 292
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F11
+  - keyCode: 293
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: F12
+  - keyCode: 323
+    replaceSprite: 1
+    darkModeSprite: {fileID: 21300000, guid: e94b16c3d56d38c44aae21bb0c82db75, type: 3}
+    lightModeSprite: {fileID: 21300000, guid: 963a437998f104440ab4aefe7a5e704d, type: 3}
+    text: 
+  - keyCode: 324
+    replaceSprite: 1
+    darkModeSprite: {fileID: 21300000, guid: 3dcf85b5005ab784bbb32a8a628904be, type: 3}
+    lightModeSprite: {fileID: 21300000, guid: 0f3468348e6ee1341a9aeb034a4c2a97, type: 3}
+    text: 
+  - keyCode: 325
+    replaceSprite: 1
+    darkModeSprite: {fileID: 21300000, guid: aafaa09f73dc5de41b5fbeb5f15fa850, type: 3}
+    lightModeSprite: {fileID: 21300000, guid: d5af0430ce4d9924abd39731e2057040, type: 3}
+    text: 
+  - keyCode: 304
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'LEFT
+
+      SHIFT'
+  - keyCode: 303
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: 'RIGHT
+
+      SHIFT'
+  - keyCode: 32
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: SPACE
+  - keyCode: 9
+    replaceSprite: 0
+    darkModeSprite: {fileID: 0}
+    lightModeSprite: {fileID: 0}
+    text: TAB

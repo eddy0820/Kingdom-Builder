@@ -15,6 +15,9 @@ public class InputManager : MonoBehaviour
     [ReadOnly, SerializeField] float mouseY;
     [ReadOnly, SerializeField] float mouseScroll;
 
+    [Header("Misc")]
+    [SerializeField] string mouseKeyboardSchemeName = "Mouse + Keyboard";
+
     PlayerControls controls;
     PlayerControls.GroundMovementActions groundMovement;
     PlayerControls.PlayerMechanicsActions playerMechanics;
@@ -23,6 +26,7 @@ public class InputManager : MonoBehaviour
 
     PlayerController playerController;
     PlayerCamera playerCamera;
+    PlayerCanvas playerCanvas;
     BuildModeCharacterControllerState buildModeState;
     LockedOnCharacterControllerState lockedOnState;
 
@@ -44,6 +48,7 @@ public class InputManager : MonoBehaviour
 
         playerController = GetComponent<PlayerController>();
         playerCamera = playerController.CharacterCamera;
+        playerCanvas = playerController.UICanvas;
         playerController.StateMachine.OnStateMachineInitialized += () =>
         {
             playerController.StateMachine.GetState(out buildModeState);
@@ -83,6 +88,15 @@ public class InputManager : MonoBehaviour
 
         playerMechanics.FlipCameraAlignment.performed += _ =>
             playerCamera.FlipCameraAlignment();
+        
+        playerMechanics.PrimaryInteraction.performed += _ =>
+            playerCanvas.GetInteractionEntryActionFromIndex(0)?.Invoke();
+
+        playerMechanics.SecondaryInteraction.performed += _ =>
+            playerCanvas.GetInteractionEntryActionFromIndex(1)?.Invoke();
+
+        playerMechanics.TertiaryInteraction.performed += _ =>
+            playerCanvas.GetInteractionEntryActionFromIndex(2)?.Invoke();
 
         if(PlayerSpawner.Instance.GridBuildingInfo.EnableBuilding)
         {
@@ -144,7 +158,7 @@ public class InputManager : MonoBehaviour
                 GridBuildingManager.Instance.Rotate(ctx.ReadValue<float>());
             
             gridBuilding.ToggleBuildMenu.performed += ctx =>
-                playerController.UICanvas.ToggleBuildMenu();
+                playerCanvas.ToggleBuildMenu();
         }
     }
 
@@ -177,6 +191,37 @@ public class InputManager : MonoBehaviour
         {
             mouseScroll = _mouseScroll;
         }
+    }
+
+    public string GetEffectiveBindingPathForInteractionIndex(int index)
+    {
+        switch(index)
+        {
+            case 0:
+                return GetEffectPathFromInteractionAction(playerMechanics.PrimaryInteraction);
+            case 1:
+                return GetEffectPathFromInteractionAction(playerMechanics.SecondaryInteraction);
+            case 2:
+                return GetEffectPathFromInteractionAction(playerMechanics.TertiaryInteraction);
+            default:
+                return "";
+        }
+    }
+
+    private string GetEffectPathFromInteractionAction(InputAction action)
+    {
+        List<InputBinding> bindings = new();
+
+        foreach(InputBinding binding in action.bindings)
+        {
+            if(binding.groups.Contains(mouseKeyboardSchemeName))
+                bindings.Add(binding);
+        }
+
+        if(bindings.Count > 0)
+            return bindings[0].effectivePath;
+        else
+            return "";
     }
 
     [System.Serializable]

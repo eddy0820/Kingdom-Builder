@@ -430,6 +430,33 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrimaryInteraction"",
+                    ""type"": ""Button"",
+                    ""id"": ""8bb18766-fc91-49af-b170-8858e3f6bd40"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondaryInteraction"",
+                    ""type"": ""Button"",
+                    ""id"": ""7389acf2-a331-48df-b83e-1576f4e5970d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TertiaryInteraction"",
+                    ""type"": ""Button"",
+                    ""id"": ""9fa77cdd-a697-4bb9-ad00-d55f0af40125"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -458,7 +485,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""4cf66f00-c9b7-4475-8919-2856610b9710"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse + Keyboard"",
@@ -608,6 +635,39 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""FlipCameraAlignment"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a8f90f20-2e4d-493f-9b45-c2e3af10660f"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""PrimaryInteraction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e1f026c1-7963-4d2f-8830-63dd6e40ac99"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""SecondaryInteraction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e743fb47-ab73-4835-bf84-98622872d951"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""TertiaryInteraction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -751,6 +811,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_PlayerMechanics_NumberKey9 = m_PlayerMechanics.FindAction("NumberKey9", throwIfNotFound: true);
         m_PlayerMechanics_LockOn = m_PlayerMechanics.FindAction("LockOn", throwIfNotFound: true);
         m_PlayerMechanics_FlipCameraAlignment = m_PlayerMechanics.FindAction("FlipCameraAlignment", throwIfNotFound: true);
+        m_PlayerMechanics_PrimaryInteraction = m_PlayerMechanics.FindAction("PrimaryInteraction", throwIfNotFound: true);
+        m_PlayerMechanics_SecondaryInteraction = m_PlayerMechanics.FindAction("SecondaryInteraction", throwIfNotFound: true);
+        m_PlayerMechanics_TertiaryInteraction = m_PlayerMechanics.FindAction("TertiaryInteraction", throwIfNotFound: true);
         // GridBuilding
         m_GridBuilding = asset.FindActionMap("GridBuilding", throwIfNotFound: true);
         m_GridBuilding_Demolish = m_GridBuilding.FindAction("Demolish", throwIfNotFound: true);
@@ -962,6 +1025,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMechanics_NumberKey9;
     private readonly InputAction m_PlayerMechanics_LockOn;
     private readonly InputAction m_PlayerMechanics_FlipCameraAlignment;
+    private readonly InputAction m_PlayerMechanics_PrimaryInteraction;
+    private readonly InputAction m_PlayerMechanics_SecondaryInteraction;
+    private readonly InputAction m_PlayerMechanics_TertiaryInteraction;
     public struct PlayerMechanicsActions
     {
         private @PlayerControls m_Wrapper;
@@ -982,6 +1048,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @NumberKey9 => m_Wrapper.m_PlayerMechanics_NumberKey9;
         public InputAction @LockOn => m_Wrapper.m_PlayerMechanics_LockOn;
         public InputAction @FlipCameraAlignment => m_Wrapper.m_PlayerMechanics_FlipCameraAlignment;
+        public InputAction @PrimaryInteraction => m_Wrapper.m_PlayerMechanics_PrimaryInteraction;
+        public InputAction @SecondaryInteraction => m_Wrapper.m_PlayerMechanics_SecondaryInteraction;
+        public InputAction @TertiaryInteraction => m_Wrapper.m_PlayerMechanics_TertiaryInteraction;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMechanics; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1039,6 +1108,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @FlipCameraAlignment.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnFlipCameraAlignment;
                 @FlipCameraAlignment.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnFlipCameraAlignment;
                 @FlipCameraAlignment.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnFlipCameraAlignment;
+                @PrimaryInteraction.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnPrimaryInteraction;
+                @PrimaryInteraction.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnPrimaryInteraction;
+                @PrimaryInteraction.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnPrimaryInteraction;
+                @SecondaryInteraction.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnSecondaryInteraction;
+                @SecondaryInteraction.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnSecondaryInteraction;
+                @SecondaryInteraction.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnSecondaryInteraction;
+                @TertiaryInteraction.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnTertiaryInteraction;
+                @TertiaryInteraction.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnTertiaryInteraction;
+                @TertiaryInteraction.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnTertiaryInteraction;
             }
             m_Wrapper.m_PlayerMechanicsActionsCallbackInterface = instance;
             if (instance != null)
@@ -1091,6 +1169,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @FlipCameraAlignment.started += instance.OnFlipCameraAlignment;
                 @FlipCameraAlignment.performed += instance.OnFlipCameraAlignment;
                 @FlipCameraAlignment.canceled += instance.OnFlipCameraAlignment;
+                @PrimaryInteraction.started += instance.OnPrimaryInteraction;
+                @PrimaryInteraction.performed += instance.OnPrimaryInteraction;
+                @PrimaryInteraction.canceled += instance.OnPrimaryInteraction;
+                @SecondaryInteraction.started += instance.OnSecondaryInteraction;
+                @SecondaryInteraction.performed += instance.OnSecondaryInteraction;
+                @SecondaryInteraction.canceled += instance.OnSecondaryInteraction;
+                @TertiaryInteraction.started += instance.OnTertiaryInteraction;
+                @TertiaryInteraction.performed += instance.OnTertiaryInteraction;
+                @TertiaryInteraction.canceled += instance.OnTertiaryInteraction;
             }
         }
     }
@@ -1195,6 +1282,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnNumberKey9(InputAction.CallbackContext context);
         void OnLockOn(InputAction.CallbackContext context);
         void OnFlipCameraAlignment(InputAction.CallbackContext context);
+        void OnPrimaryInteraction(InputAction.CallbackContext context);
+        void OnSecondaryInteraction(InputAction.CallbackContext context);
+        void OnTertiaryInteraction(InputAction.CallbackContext context);
     }
     public interface IGridBuildingActions
     {

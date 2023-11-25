@@ -13,4 +13,6 @@ public class PlayerCharacterStateMachine : DecentralizedStateMachine<PlayerChara
     }
 
     protected override void OnUpdate() {}
+
+    protected override void OnFixedUpdate() {}
 }

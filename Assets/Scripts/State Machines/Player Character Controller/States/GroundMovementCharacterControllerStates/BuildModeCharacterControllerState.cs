@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class BuildModeCharacterControllerState : GroundMovementCharacterControllerState
 {
-    InputManager inputManager => InputManager.Instance;
-    PlayerCanvas playerCanvas => PlayerController.Instance.UICanvas;
-    GridBuildingManager gridBuildingManager => GridBuildingManager.Instance;
-    BuildingGhost buildingGhost => gridBuildingManager.BuildingGhost;
-    GridBuildingSoundController gridBuildingSoundController => gridBuildingManager.SoundController;
+    InputManager InputManager => InputManager.Instance;
+    PlayerCanvas PlayerCanvas => PlayerController.Instance.UICanvas;
+    GridBuildingManager GridBuildingManager => GridBuildingManager.Instance;
+    BuildingGhost BuildingGhost => GridBuildingManager.BuildingGhost;
+    GridBuildingSoundController GridBuildingSoundController => GridBuildingManager.SoundController;
 
     DefaultCharacterControllerState defaultState;
 
@@ -27,28 +27,28 @@ public class BuildModeCharacterControllerState : GroundMovementCharacterControll
 
     public override void OnEnterState(PlayerCharacterControllerState fromState)
     {
-        inputManager.GridBuilding.Enable();
+        InputManager.GridBuilding.Enable();
 
         if(!PlayerCamera.inFirstPerson) PlayerCamera.TweenToBuildModeFollowPointFraming();
 
-        playerCanvas.ToggleCrosshair(true);
-        playerCanvas.ToggleBuildHotbar(true);
+        PlayerCanvas.ToggleBuildModeCrosshair(true);
+        PlayerCanvas.ToggleBuildHotbar(true);
 
-        buildingGhost.RefreshVisual();
-        gridBuildingSoundController.PlayToggleBuildingSound(true);
+        BuildingGhost.RefreshVisual();
+        GridBuildingSoundController.PlayToggleBuildingSound(true);
     }
 
     public override void OnExitState(PlayerCharacterControllerState toState)
     {
-        inputManager.GridBuilding.Disable();
+        InputManager.GridBuilding.Disable();
         
         if(!PlayerCamera.inFirstPerson) PlayerCamera.TweenToDefaultFollowPointFraming();
 
-        playerCanvas.ToggleBuildHotbar(false);
-        playerCanvas.ToggleBuildMenu(false);
-        playerCanvas.ToggleCrosshair(false);
+        PlayerCanvas.ToggleBuildHotbar(false);
+        PlayerCanvas.ToggleBuildMenu(false);
+        PlayerCanvas.ToggleBuildModeCrosshair(false);
 
-        buildingGhost.RefreshVisual();
-        gridBuildingSoundController.PlayToggleBuildingSound(false);
+        BuildingGhost.RefreshVisual();
+        GridBuildingSoundController.PlayToggleBuildingSound(false);
     }
 }

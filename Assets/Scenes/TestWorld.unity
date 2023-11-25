@@ -618,6 +618,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockOnLocation: {fileID: 1042857215}
+  interactionTypes:
+  - {fileID: 11400000, guid: 570a56bf26dbadd4f8412ccf07018c58, type: 2}
 --- !u!1 &681836449
 GameObject:
   m_ObjectHideFlags: 0

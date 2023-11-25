@@ -5,35 +5,35 @@ using KinematicCharacterController;
 
 public abstract class GroundMovementCharacterControllerState : PlayerCharacterControllerState
 {   
-    protected MovementSpeedSettings WalkingSpeedSettings => playerCharacterController.Attributes.WalkingSpeedSettings;
-    protected MovementSpeedSettings RunningSpeedSettings => playerCharacterController.Attributes.RunningSpeedSettings;
-    protected MovementSpeedSettings SprintingSpeedSettings => playerCharacterController.Attributes.SprintingSpeedSettings;
-    protected MovementSpeedSettings CrouchingSpeedSettings => playerCharacterController.Attributes.CrouchingSpeedSettings;
+    protected MovementSpeedSettings WalkingSpeedSettings => PlayerCharacterController.Attributes.WalkingSpeedSettings;
+    protected MovementSpeedSettings RunningSpeedSettings => PlayerCharacterController.Attributes.RunningSpeedSettings;
+    protected MovementSpeedSettings SprintingSpeedSettings => PlayerCharacterController.Attributes.SprintingSpeedSettings;
+    protected MovementSpeedSettings CrouchingSpeedSettings => PlayerCharacterController.Attributes.CrouchingSpeedSettings;
 
-    protected float StableMovementSharpness => playerCharacterController.Attributes.StableMovementSharpness;
-    protected float OrientationSharpness => playerCharacterController.Attributes.OrientationSharpness;
-    protected float BonusOrientationSharpness => playerCharacterController.Attributes.BonusOrientationSharpness;
+    protected float StableMovementSharpness => PlayerCharacterController.Attributes.StableMovementSharpness;
+    protected float OrientationSharpness => PlayerCharacterController.Attributes.OrientationSharpness;
+    protected float BonusOrientationSharpness => PlayerCharacterController.Attributes.BonusOrientationSharpness;
     
-    protected MovementSpeedSettings AirSpeedSettings => playerCharacterController.Attributes.AirSpeedSettings;
-    protected float Drag => playerCharacterController.Attributes.Drag;
+    protected MovementSpeedSettings AirSpeedSettings => PlayerCharacterController.Attributes.AirSpeedSettings;
+    protected float Drag => PlayerCharacterController.Attributes.Drag;
     
-    protected bool AllowJumpingWhenSliding => playerCharacterController.Attributes.AllowJumpingWhenSliding;
-    protected float JumpUpSpeed => playerCharacterController.Attributes.JumpUpSpeed;
-    protected float JumpScalableForwardSpeed => playerCharacterController.Attributes.JumpScalableForwardSpeed;
-    protected float JumpPreGroundingGraceTime => playerCharacterController.Attributes.JumpPreGroundingGraceTime;
-    protected float JumpPostGroundingGraceTime => playerCharacterController.Attributes.JumpPostGroundingGraceTime;
+    protected bool AllowJumpingWhenSliding => PlayerCharacterController.Attributes.AllowJumpingWhenSliding;
+    protected float JumpUpSpeed => PlayerCharacterController.Attributes.JumpUpSpeed;
+    protected float JumpScalableForwardSpeed => PlayerCharacterController.Attributes.JumpScalableForwardSpeed;
+    protected float JumpPreGroundingGraceTime => PlayerCharacterController.Attributes.JumpPreGroundingGraceTime;
+    protected float JumpPostGroundingGraceTime => PlayerCharacterController.Attributes.JumpPostGroundingGraceTime;
 
-    protected float CrouchedCapsuleHeight => playerCharacterController.Attributes.CrouchedCapsuleHeight;
+    protected float CrouchedCapsuleHeight => PlayerCharacterController.Attributes.CrouchedCapsuleHeight;
 
-    protected BonusOrientationMethod CurrentBonusOrientationMethod => playerCharacterController.CurrentBonusOrientationMethod;
-    protected bool IsWalking => playerCharacterController.IsWalking;
-    protected bool IsSprinting => playerCharacterController.IsSprinting;
-    protected bool IsCrouching => playerCharacterController.IsCrouching;
+    protected BonusOrientationMethod CurrentBonusOrientationMethod => PlayerCharacterController.CurrentBonusOrientationMethod;
+    protected bool IsWalking => PlayerCharacterController.IsWalking;
+    protected bool IsSprinting => PlayerCharacterController.IsSprinting;
+    protected bool IsCrouching => PlayerCharacterController.IsCrouching;
 
     protected PlayerAnimationController AnimationController => PlayerController.Instance.AnimationController;
     protected PlayerCamera PlayerCamera => PlayerController.Instance.CharacterCamera;
-    protected KinematicCharacterMotor Motor => playerCharacterController.Motor;
-    protected Transform MeshRoot => playerCharacterController.MeshRoot;
+    protected KinematicCharacterMotor Motor => PlayerCharacterController.Motor;
+    protected Transform MeshRoot => PlayerCharacterController.MeshRoot;
     protected Vector3 Gravity => GameSettings.Instance.Gravity;  
 
     public override Vector3 SetMoveInputVectorFromInputs(Quaternion cameraPlanarRotation, Vector3 clampedMoveInputVector)

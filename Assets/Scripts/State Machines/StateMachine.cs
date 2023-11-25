@@ -63,9 +63,19 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
         currentState?.OnUpdateState();
     }
 
+    private void FixedUpdate()
+    {
+        if(!initialized) return;
+
+        OnFixedUpdate();
+        states.ForEach(x => x.OnFixedUpdate());
+        currentState?.OnFixedUpdateState();
+    }
+
     protected abstract void OnAwake();
     protected abstract void OnStart();
     protected abstract void OnUpdate();
+    protected abstract void OnFixedUpdate();
 
     public bool GetState<F>(out F t) where F : T
     {
@@ -95,6 +105,8 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
         public abstract void OnExitState(T toState);
         public abstract void OnUpdate();
         public abstract void OnUpdateState();
+        public abstract void OnFixedUpdate();
+        public abstract void OnFixedUpdateState();
 
         public Action<T> OnEnterStateEvent;
         public Action<T> OnExitStateEvent;

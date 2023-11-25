@@ -408,6 +408,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PrimaryInteraction",
+                    "type": "Button",
+                    "id": "8bb18766-fc91-49af-b170-8858e3f6bd40",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryInteraction",
+                    "type": "Button",
+                    "id": "7389acf2-a331-48df-b83e-1576f4e5970d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TertiaryInteraction",
+                    "type": "Button",
+                    "id": "9fa77cdd-a697-4bb9-ad00-d55f0af40125",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -436,7 +463,7 @@
                 {
                     "name": "",
                     "id": "4cf66f00-c9b7-4475-8919-2856610b9710",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse + Keyboard",
@@ -584,6 +611,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "FlipCameraAlignment",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8f90f20-2e4d-493f-9b45-c2e3af10660f",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "PrimaryInteraction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1f026c1-7963-4d2f-8830-63dd6e40ac99",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "SecondaryInteraction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e743fb47-ab73-4835-bf84-98622872d951",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "TertiaryInteraction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
