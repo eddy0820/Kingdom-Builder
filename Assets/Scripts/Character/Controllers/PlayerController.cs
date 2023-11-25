@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
         characterCamera.CheckIfFirstPerson();
 
-        /*if(Input.GetKeyUp(KeyCode.N))
+        if(Input.GetKeyUp(KeyCode.N))
         {
             PlayerStatsDamageable.TakeDamageInstant(10);
         }
@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyUp(KeyCode.X))
         {
             playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
-        }*/
+        }
     }
 
     private void LateUpdate()
