@@ -62,3 +62,6 @@ https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676
 
 Font Nation
 https://assetstore.unity.com/packages/2d/fonts/font-nation-217414
+
+Damage Numbers Pro
+https://assetstore.unity.com/packages/2d/gui/damage-numbers-pro-186447
