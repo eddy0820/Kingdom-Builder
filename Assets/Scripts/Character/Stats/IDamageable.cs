@@ -21,4 +21,6 @@ public interface IDamageable
     public bool IsDead();
 
     public Action<float, float, float> OnHealthChanged { get; set; }
+
+    public string GetDamageableName();
 }

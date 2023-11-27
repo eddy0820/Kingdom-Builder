@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class LockedOnCharacterControllerState : GroundMovementCharacterControllerState
 {
@@ -22,6 +23,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
     [SerializeField] float maxNoticeAngle = 60;
 
     ITargetable currentTargetable;
+    public ITargetable CurrentTargetable => currentTargetable;
 
     Vector3 currentLockOnPosition;
     Vector3 lookAtDirectionVector;
@@ -30,6 +32,9 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
     protected MovementSpeedSettings LockOnRunningSpeedSettings => PlayerCharacterController.Attributes.LockOnRunningSpeedSettings;
 
     DefaultCharacterControllerState defaultState;
+
+    public Action<ITargetable> OnAcquiredTarget;
+    public Action<ITargetable> OnLostTarget;
 
     public override void OnAwake()
     {
@@ -47,6 +52,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
     {
         AnimationController.SetVelocityX(0);
 
+        if(currentTargetable != null) OnLostTarget?.Invoke(currentTargetable);
         currentTargetable = null;
         cameraAnimator.Play(followAnimatorState);
         lockOnReticleCanvas.gameObject.SetActive(false);
@@ -86,24 +92,32 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
             ResetTarget();
             return;
         }
-        
-        if((currentTargetable = ScanNearBy()) != null) 
-            FoundTarget();
+
+        ITargetable newTargetable;
+        if((newTargetable = ScanNearBy()) != null) 
+            FoundTarget(newTargetable);
         else 
             ResetTarget();
     }
 
-    private void FoundTarget()
+    private void FoundTarget(ITargetable newTargetable)
     {
+        currentTargetable = newTargetable;
+
         stateMachine.SwitchState(this);
+        OnAcquiredTarget?.Invoke(currentTargetable);
     }
 
     private void ResetTarget()
     {
         if(stateMachine.CurrentState != this) return;
+
+        OnLostTarget?.Invoke(currentTargetable);
+        currentTargetable = null;
         
         stateMachine.SwitchState(defaultState);
     }
+        
 
     private ITargetable ScanNearBy()
     {

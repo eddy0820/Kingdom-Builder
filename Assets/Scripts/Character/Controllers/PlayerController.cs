@@ -5,7 +5,7 @@ using UnityEngine;
 using KinematicCharacterController;
 using NaughtyAttributes;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IHoldStats
 {
     public static PlayerController Instance { get; private set; }
 
@@ -28,8 +28,8 @@ public class PlayerController : MonoBehaviour
     public BaseStatsSO BaseStatsSO => baseStatsSO;
 
     PlayerStats playerStats;
-    public PlayerStats PlayerStats => playerStats;
-    public IDamageable PlayerStatsDamageable => playerStats;
+    public CharacterStats Stats => playerStats;
+    public IDamageable IDamageable => playerStats;
 
     [Expandable, SerializeField] PlayerAttributesSO attributesSO;
     public PlayerAttributesSO AttributesSO => attributesSO;
@@ -67,9 +67,9 @@ public class PlayerController : MonoBehaviour
         characterCamera.IgnoredColliders.Clear();
         characterCamera.IgnoredColliders.AddRange(character.GetComponentsInChildren<Collider>());
 
-        StartCoroutine(PlayerStatsDamageable.HealOverTimeCoroutine());
-        StartCoroutine(PlayerStats.HealthRegenCoroutine());
-        PlayerStatsDamageable.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
+        StartCoroutine(IDamageable.HealOverTimeCoroutine());
+        StartCoroutine(playerStats.HealthRegenCoroutine());
+        IDamageable.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
 
         statModifier = new StatModifier(10, StatModifierTypes.Flat);
     }
@@ -83,22 +83,22 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetKeyUp(KeyCode.N))
         {
-            PlayerStatsDamageable.TakeDamageInstant(10);
+            IDamageable.TakeDamageInstant(10);
         }
 
         if(Input.GetKeyUp(KeyCode.M))
         {
-            PlayerStatsDamageable.HealOverTimeToPercent(80, 10);
+            IDamageable.HealOverTimeToPercent(80, 10);
         }
 
         if(Input.GetKeyUp(KeyCode.B))
         {
-            PlayerStatsDamageable.HealOverTime(10, 5);
+            IDamageable.HealOverTime(10, 5);
         }
 
         if(Input.GetKeyUp(KeyCode.V))
         {
-            PlayerStatsDamageable.HealInstant(20);
+            IDamageable.HealInstant(20);
         }
 
         if(Input.GetKeyUp(KeyCode.C))

@@ -36,4 +36,9 @@ public class PlayerStats : DamageableCharacterStats
             yield return new WaitForSeconds(1);
         }
     }
+
+    protected override string GetDamageableNameInternal()
+    {
+        return "Player";
+    }
 }

@@ -21,7 +21,7 @@ public class PlayerCanvas : MonoBehaviour
     [SerializeField] float healthBarRightPaddingMax = 390;
     [Space(10)]
     [SerializeField] float numSecondsAfterShowToDoCallback = 0.25f;
-    [SerializeField] float numSecondsToWaitBeforeHidingHealthBar = 2f;
+    [SerializeField] float numSecondsToWaitBeforeHidingHealthBarPadding = 2f;
     Sequence currentHealthBarFadeSequence;
 
     [HorizontalLine]
@@ -47,11 +47,28 @@ public class PlayerCanvas : MonoBehaviour
     [ReadOnly, SerializeField] bool buildMenuEnabled = false;
     public bool BuildMenuEnabled => buildMenuEnabled;
 
+    [HorizontalLine]
+
+    [Header("Single Target Health Bar")]
+    [SerializeField] Transform singleTargetHealthHUD;
+    [SerializeField] RectMask2D singleTargetHealthBarMask;
+    [SerializeField] RectMask2D singleTargetHealthBarGhostMask;
+    [SerializeField] TextMeshProUGUI singleTargetHealthText;
+    [SerializeField] TextMeshProUGUI singleTargetNameText;
+
+    [Space(10)]
+
+    [SerializeField] float singleTargetHealthBarRightPaddingMin = 15;
+    [SerializeField] float singleTargetHealthBarRightPaddingMax = 390;
+
     BuildHotbarInterface buildHotbarInterface;
     public BuildHotbarInterface BuildHotbarInterface => buildHotbarInterface;
 
     IDamageable playerStatsDamageable;
     PlayerStats playerStats;
+
+    Stat MaxHealthStat => playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
+    Stat OutOfCombatHealthRegenCooldownStat => playerStats.GetStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown];
 
     private void Awake()
     {
@@ -63,14 +80,16 @@ public class PlayerCanvas : MonoBehaviour
         crosshair.GameObj.SetActive(false);
         crosshair.RectTransform.localScale = Vector3.zero;
 
-        playerStats = PlayerController.Instance.PlayerStats;
-        playerStatsDamageable = PlayerController.Instance.PlayerStatsDamageable;
+        playerStats = PlayerController.Instance.Stats as PlayerStats;
+        playerStatsDamageable = PlayerController.Instance.IDamageable;
 
         playerStatsDamageable.OnHealthChanged += UpdateHealthBar;
         playerStats.OnStatModifierChanged += OnStatModifierChanged;
 
         interactionCrosshair.GameObj.SetActive(false);
         HideInteractions();
+
+        singleTargetHealthHUD.gameObject.SetActive(false);
     }
 
 #region HUD
@@ -93,7 +112,7 @@ public class PlayerCanvas : MonoBehaviour
 
     public void OnStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
     {
-        if(stat.type != playerStats.GetStatTypeFromName[CommonStatTypeNames.MaxHealth]) return;
+        if(stat.type != MaxHealthStat.type) return;
         
         UpdateHealthBar(playerStatsDamageable.GetCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
     }
@@ -122,8 +141,13 @@ public class PlayerCanvas : MonoBehaviour
             currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallback);
             currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
         }
-        currentHealthBarFadeSequence.AppendInterval(numSecondsToWaitBeforeHidingHealthBar);
-        currentHealthBarFadeSequence.AppendCallback(() => TweenUIComponent(true, tweenedUIComponent, new(){ETweenType.Fade}, false));
+
+        float cooldown = numSecondsToWaitBeforeHidingHealthBarPadding;
+        if(playerStatsDamageable.GetCurrentHealth() != MaxHealthStat.Value)
+            cooldown += OutOfCombatHealthRegenCooldownStat.Value;
+
+        currentHealthBarFadeSequence.AppendInterval(cooldown);
+        currentHealthBarFadeSequence.AppendCallback(() => tweenedUIComponent.TweenUIComponent(true, new(){ETweenType.Fade}, false));
         currentHealthBarFadeSequence.Play();
     }
 
@@ -137,7 +161,7 @@ public class PlayerCanvas : MonoBehaviour
     }
     public void ToggleInteractionCrosshair(bool b)
     {
-        TweenUIComponent(b, interactionCrosshair);
+        interactionCrosshair.TweenUIComponent(b);
     }
 
     public void ShowInteractions(IInteractable interactable, List<InteractionTypeSO> interactionTypes)
@@ -169,7 +193,7 @@ public class PlayerCanvas : MonoBehaviour
     public void ToggleBuildMenu(bool b)
     {
         buildMenuEnabled = b;
-        TweenUIComponent(b, buildMenu);
+        buildMenu.TweenUIComponent(b);
         ToggleBuildModeCrosshair(!b);
         healthHUD.GameObj.SetActive(!b);
 
@@ -180,213 +204,55 @@ public class PlayerCanvas : MonoBehaviour
 
     public void ToggleBuildHotbar(bool b)
     {
-        TweenUIComponent(b, buildHotbar);
-        TweenUIComponent(b, healthHUD, new(){ETweenType.MoveY}, false);
+        buildHotbar.TweenUIComponent(b);
+        healthHUD.TweenUIComponent(b, new(){ETweenType.MoveY}, false);
     }
 
     public void ToggleBuildModeCrosshair(bool b)
     {
-        TweenUIComponent(b, crosshair);
+        crosshair.TweenUIComponent(b);
     }
 
 #endregion
 
-#region Tween UI Component
+#region Single Target Health Bar
 
-    private void TweenUIComponent(bool b, TweenedUIComponent tweenedUIComponent, List<ETweenType> tweensToDo = null, bool setActiveGameObject = true)
+    public void UpdateSingleTargetHealthBar(float currentHealth, float projectedHealth, float maxHealth)
     {
-        tweenedUIComponent.RectTransform.DOKill();
+        float projectedHealthPercentage = projectedHealth / maxHealth;
+        float currentHealthPercentage = currentHealth / maxHealth;
+
+        singleTargetHealthBarGhostMask.padding = new Vector4(singleTargetHealthBarGhostMask.padding.x, singleTargetHealthBarGhostMask.padding.y, Mathf.Lerp(singleTargetHealthBarRightPaddingMax, singleTargetHealthBarRightPaddingMin, projectedHealthPercentage), singleTargetHealthBarGhostMask.padding.w);
+        singleTargetHealthBarMask.padding = new Vector4(singleTargetHealthBarMask.padding.x, singleTargetHealthBarMask.padding.y, Mathf.Lerp(singleTargetHealthBarRightPaddingMax, singleTargetHealthBarRightPaddingMin, currentHealthPercentage), singleTargetHealthBarMask.padding.w);
+        singleTargetHealthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+    }
+
+    public void OnSingleTargetStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    {
+        if(stat.type != MaxHealthStat.type) return;
         
-        tweenedUIComponent.CurrentSequence?.Kill();
-        Sequence sequence = DOTween.Sequence();
+        UpdateSingleTargetHealthBar(playerStatsDamageable.GetCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
+    }
+
+    public void ToggleSingleTargetHealthBar(bool b, CharacterStats stats, IDamageable damageable)
+    {
+        singleTargetHealthHUD.gameObject.SetActive(b);
 
         if(b)
         {
-            if(setActiveGameObject)
-                tweenedUIComponent.GameObj.SetActive(b);
+            singleTargetNameText.text = damageable.GetDamageableName();
+            UpdateSingleTargetHealthBar(damageable.GetCurrentHealth(), damageable.GetProjectedHealth(), stats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
 
-            foreach(Tween tween in tweenedUIComponent.Tweens)
-            {
-                if(tween.TweenValues.CanvasGroup != null)
-                    tween.TweenValues.CanvasGroup.DOKill();
-
-                if(tweensToDo != null && !tweensToDo.Contains(tween.TweenValues.TweenType)) continue;
-
-                switch(tween.TweenValues.TweenType)
-                {
-                    case ETweenType.Scale:
-                        sequence.Join(tweenedUIComponent.RectTransform.DOScale(tween.TweenValues.ScaleValues.EndScale, tween.TweenDuration).SetEase(tween.Ease));
-                    break;
-                    case ETweenType.MoveY:
-                        sequence.Join(tweenedUIComponent.RectTransform.DOAnchorPosY(tween.TweenValues.MoveYValues.EndPosY, tween.TweenDuration).SetEase(tween.Ease));
-                    break;
-                    case ETweenType.Fade:
-                        sequence.Join(tween.TweenValues.CanvasGroup.DOFade(tween.TweenValues.FadeValues.EndAlpha, tween.TweenDuration).SetEase(tween.Ease));
-                    break;
-                    case ETweenType.Rotate360:
-                        sequence.Join(tweenedUIComponent.RectTransform.DORotate(new Vector3(0, 0, tween.TweenValues.Rotate360Values.EndRotation), tween.TweenDuration, RotateMode.FastBeyond360).SetEase(tween.Ease));
-                    break;
-                    default:
-                    break;
-                }
-            }
+            damageable.OnHealthChanged += UpdateSingleTargetHealthBar;
+            stats.OnStatModifierChanged += OnSingleTargetStatModifierChanged;
         }
         else
         {
-            foreach(Tween tween in tweenedUIComponent.Tweens)
-            {
-                if(tween.TweenValues.CanvasGroup != null)
-                    tween.TweenValues.CanvasGroup.DOKill();
-
-                if(tweensToDo != null && !tweensToDo.Contains(tween.TweenValues.TweenType)) continue;
-
-                switch(tween.TweenValues.TweenType)
-                {
-                    case ETweenType.Scale:
-                        sequence.Join(tweenedUIComponent.RectTransform.DOScale(tween.TweenValues.ScaleValues.StartScale, tween.TweenDuration).SetEase(tween.UseInverseEaseForEndTween ? DOTweenExtensions.GetInverseEase(tween.Ease) : tween.Ease).OnComplete(() => 
-                        {
-                            if(setActiveGameObject)
-                                tweenedUIComponent.GameObj.SetActive(b);
-                        }));
-                    break;
-                    case ETweenType.MoveY:
-                        sequence.Join(tweenedUIComponent.RectTransform.DOAnchorPosY(tween.TweenValues.MoveYValues.StartPosY, tween.TweenDuration).SetEase(tween.UseInverseEaseForEndTween ? DOTweenExtensions.GetInverseEase(tween.Ease) : tween.Ease).OnComplete(() => 
-                        {
-                            if(setActiveGameObject)
-                                tweenedUIComponent.GameObj.SetActive(b);
-                        }));
-                    break;
-                    case ETweenType.Fade:
-                        sequence.Join(tween.TweenValues.CanvasGroup.DOFade(tween.TweenValues.FadeValues.StartAlpha, tween.TweenDuration).SetEase(tween.UseInverseEaseForEndTween ? DOTweenExtensions.GetInverseEase(tween.Ease) : tween.Ease).OnComplete(() => 
-                        {
-                            if(setActiveGameObject)
-                                tweenedUIComponent.GameObj.SetActive(b);
-                        }));
-                    break;
-                    case ETweenType.Rotate360:
-                        sequence.Join(tweenedUIComponent.RectTransform.DORotate(new Vector3(0, 0, tween.TweenValues.Rotate360Values.StartRotation), tween.TweenDuration, RotateMode.FastBeyond360).SetEase(DOTweenExtensions.GetInverseEase(tween.Ease)).OnComplete(() => 
-                        {
-                            if(setActiveGameObject)
-                                tweenedUIComponent.GameObj.SetActive(b);
-                        }));
-                    break;
-                    default:
-                    break;
-                }
-            }
+            damageable.OnHealthChanged -= UpdateSingleTargetHealthBar;
+            stats.OnStatModifierChanged -= OnSingleTargetStatModifierChanged;
         }
-
-        tweenedUIComponent.SetCurrentSequence(sequence);
-        tweenedUIComponent.CurrentSequence.Play();
-    }
-
-    [System.Serializable]
-    public class TweenedUIComponent
-    {
-        [SerializeField] GameObject gameObj;
-        public GameObject GameObj => gameObj;
-        public RectTransform RectTransform => gameObj.GetComponent<RectTransform>();
-
-        [SerializeField] List<Tween> tweens;
-        public List<Tween> Tweens => tweens;
-
-        Sequence currentSequence;
-        public Sequence CurrentSequence => currentSequence;
-
-        public void SetCurrentSequence(Sequence sequence) => currentSequence = sequence;
-    }
-
-    [System.Serializable]
-    public class Tween
-    {
-        [SerializeField] TweenValues tweenValues;
-        public TweenValues TweenValues => tweenValues;
-
-        [SerializeField] float tweenDuration;
-        public float TweenDuration => tweenDuration;
-
-        [SerializeField] Ease ease;
-        public Ease Ease => ease;
-
-        [SerializeField] bool useInverseEaseForEndTween;
-        public bool UseInverseEaseForEndTween => useInverseEaseForEndTween;
-    }
-
-    [System.Serializable]
-    public class TweenValues 
-    {
-        [SerializeField] ETweenType tweenType;
-        public ETweenType TweenType => tweenType;
-
-        [AllowNesting]
-        [ShowIf("tweenType", ETweenType.MoveY), SerializeField]  MoveY moveYValues;
-        public MoveY MoveYValues => moveYValues;
-
-        [AllowNesting]
-        [ShowIf("tweenType", ETweenType.Scale), SerializeField] Scale scaleValues;
-        public Scale ScaleValues => scaleValues;
-        
-        [AllowNesting]
-        [ShowIf("tweenType", ETweenType.Fade), SerializeField] CanvasGroup canvasGroup;
-        public CanvasGroup CanvasGroup => canvasGroup;
-
-        [AllowNesting]
-        [ShowIf("tweenType", ETweenType.Fade), SerializeField] Fade fadeValues;
-        public Fade FadeValues => fadeValues;
-
-        [AllowNesting]
-        [ShowIf("tweenType", ETweenType.Rotate360), SerializeField] Rotate360 rotate360Values;
-        public Rotate360 Rotate360Values => rotate360Values;
-    }
-
-    [System.Serializable]
-    public class MoveY
-    {
-        [SerializeField] float startPosY;
-        public float StartPosY => startPosY;
-
-        [SerializeField] float endPosY;
-        public float EndPosY => endPosY;
-    }
-
-    [System.Serializable]
-    public class Scale
-    {
-        [SerializeField] float startScale;
-        public float StartScale => startScale;
-
-        [SerializeField] float endScale;
-        public float EndScale => endScale;
-    }
-
-    [System.Serializable]
-    public class Fade
-    {
-        [SerializeField] float startAlpha;
-        public float StartAlpha => startAlpha;
-
-        [SerializeField] float endAlpha;
-        public float EndAlpha => endAlpha;
-    }
-
-    [System.Serializable]
-    public class Rotate360
-    {
-        [SerializeField] float startRotation;
-        public float StartRotation => startRotation;
-
-        [SerializeField] float endRotation;
-        public float EndRotation => endRotation;
-    }
-
-    [System.Serializable]
-    public enum ETweenType
-    {
-        Scale,
-        MoveY,
-        Fade,
-        Rotate360
     }
 
 #endregion
+
 }

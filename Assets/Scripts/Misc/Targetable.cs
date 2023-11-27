@@ -5,7 +5,7 @@ using NaughtyAttributes;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
-public class Targetable : MonoBehaviour, ITargetable, IInteractable
+public class Targetable : MonoBehaviour, ITargetable, IInteractable, IHoldStats
 {
     [SerializeField] Transform lockOnLocation;
     public Transform LockOnLocation => lockOnLocation;
@@ -18,8 +18,7 @@ public class Targetable : MonoBehaviour, ITargetable, IInteractable
 
     TargetableStats targetableStats;
     public IDamageable IDamageable => targetableStats;
-
-    
+    public CharacterStats Stats => targetableStats;
 
     private void Awake()
     {
@@ -28,9 +27,19 @@ public class Targetable : MonoBehaviour, ITargetable, IInteractable
         StartCoroutine(targetableStats.HealOverTimeCoroutine());
         targetableStats.SetHealth(targetableStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
     }
+
+    public string GetDamageableName()
+    {
+        return targetableStats.GetDamageableName();
+    }
 }
 
 public class TargetableStats : DamageableCharacterStats
 {
     public TargetableStats(BaseStatsSO _baseStatsSO) : base(_baseStatsSO) {}
+
+    protected override string GetDamageableNameInternal()
+    {
+        return "Targetable";
+    }
 }

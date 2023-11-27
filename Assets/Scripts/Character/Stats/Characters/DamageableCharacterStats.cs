@@ -167,14 +167,18 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     protected void InvokeOnHealthChanged()
     {
-        Debug.Log($"Current health: {currentHealth}, Projected health: {projectedHealth}, Max health: {MaxHealthStat.Value}");
+        if(PlayerSpawner.Instance.EnableHealthDebugMessages)
+            Debug.Log($"Name: {GetDamageableName()} | Current health: {currentHealth}, Projected health: {projectedHealth}, Max health: {MaxHealthStat.Value}");
+        
         OnHealthChanged?.Invoke(currentHealth, projectedHealth, MaxHealthStat.Value);
     }
 
     public void Die()
     {
         isDead = true;
-        Debug.Log("Character died");
+
+        if(PlayerSpawner.Instance.EnableHealthDebugMessages)
+            Debug.Log($"{GetDamageableName()} died");
     } 
 
     public bool IsDead()
@@ -192,4 +196,11 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
         return false;
     }
+
+    public string GetDamageableName()
+    {
+        return GetDamageableNameInternal();
+    }
+
+    protected abstract string GetDamageableNameInternal();
 }

@@ -9,7 +9,7 @@ public class DefaultCharacterControllerState : GroundMovementCharacterController
     [SerializeField] LayerMask interactionLayerMask;
 
     PlayerCanvas PlayerCanvas => PlayerController.UICanvas;
-    Stat InteractionRangeStat => PlayerController.PlayerStats.GetStatFromType[interactionRangeStatType];
+    Stat InteractionRangeStat => PlayerController.Stats.GetStatFromType[interactionRangeStatType];
 
     bool canInteractWithSomething = false;
     public bool CanInteractWithSomething => canInteractWithSomething;
@@ -29,7 +29,7 @@ public class DefaultCharacterControllerState : GroundMovementCharacterController
 
     public override void OnFixedUpdateState()
     {
-        if(PlayerController.PlayerStatsDamageable.IsDead()) return;
+        if(PlayerController.IDamageable.IsDead()) return;
 
         Vector3 screenCenter = new(Screen.width / 2f, Screen.height / 2f, 0f);
         Ray ray = Camera.main.ScreenPointToRay(screenCenter);

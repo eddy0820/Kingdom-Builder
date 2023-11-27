@@ -39,6 +39,9 @@ public class PlayerSpawner : MonoBehaviour
     [SerializeField] bool enableLockOn = true;
     public bool EnableLockOn => enableLockOn;
 
+    [SerializeField] bool enableHealthDebugMessages = true;
+    public bool EnableHealthDebugMessages => enableHealthDebugMessages;
+
     private void Awake()
     {
         if(Instance == null)
