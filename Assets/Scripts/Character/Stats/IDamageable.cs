@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DamageNumbersPro;
 
 public interface IDamageable
 {
     public void SetHealth(float amount);
 
     public float GetCurrentHealth();
+    public float GetRoundedCurrentHealth();
     public float GetProjectedHealth();
 
     public void TakeDamageInstant(float damage);
@@ -20,7 +22,7 @@ public interface IDamageable
     public void Die();
     public bool IsDead();
 
-    public Action<float, float, float> OnHealthChanged { get; set; }
+    public Action<float, float, float, EHealthChangedOperation, float> OnHealthChanged { get; set; }
 
     public string GetDamageableName();
 }

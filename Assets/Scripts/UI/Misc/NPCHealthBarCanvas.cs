@@ -98,7 +98,7 @@ public class NPCHealthBarCanvas : MonoBehaviour
         PlayerCanvas.ToggleSingleTargetHealthBar(false, Stats, IDamageable);
     }
 
-    public void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth)
+    public void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
         ShowThenHideFadeTweenUIComponent(healthHUDFade, () =>
         {
@@ -107,7 +107,11 @@ public class NPCHealthBarCanvas : MonoBehaviour
 
             healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
             healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
-            healthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+            healthText.text = currentHealth.ToString("F1") + " / " + maxHealth.ToString("F0");
+
+            healthText.text = currentHealth % 1 == 0
+            ? currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0")
+            : currentHealth.ToString("F1") + " / " + maxHealth.ToString("F0");
         });
     }
 
@@ -115,7 +119,7 @@ public class NPCHealthBarCanvas : MonoBehaviour
     {
         if(stat.type != Stats.GetStatTypeFromName[CommonStatTypeNames.MaxHealth]) return;
         
-        UpdateHealthBar(IDamageable.GetCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
+        UpdateHealthBar(IDamageable.GetRoundedCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
     }
 
     public void ShowThenHideFadeTweenUIComponent(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)

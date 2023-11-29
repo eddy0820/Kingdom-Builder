@@ -13,6 +13,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         get => m_currentHealth;
         set
         {
+            //m_currentHealth = Mathf.Round(value * 10) / 10f;
             m_currentHealth = value;
             if(m_currentHealth <= 0)
                 Die();
@@ -25,8 +26,8 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     protected Stat MaxHealthStat => getStatFromName[CommonStatTypeNames.MaxHealth];
 
-    public Action<float, float, float> OnHealthChanged { get => OnHealthChangedInternal; set => OnHealthChangedInternal = value; }
-    private Action<float, float, float> OnHealthChangedInternal;
+    public Action<float, float, float, EHealthChangedOperation, float> OnHealthChanged { get => OnHealthChangedInternal; set => OnHealthChangedInternal = value; }
+    private Action<float, float, float, EHealthChangedOperation, float> OnHealthChangedInternal;
 
     protected bool isDead = false;
 
@@ -42,15 +43,31 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
             return;
         }
 
+        float oldCurrentHealth = currentHealth;
+
         projectedHealth = amount;
         currentHealth = amount;
 
-        InvokeOnHealthChanged();
+        EHealthChangedOperation operation;
+
+        if(currentHealth > oldCurrentHealth)
+            operation = EHealthChangedOperation.Heal;
+        else if(currentHealth < oldCurrentHealth)
+            operation = EHealthChangedOperation.TakeDamage;
+        else
+            operation = EHealthChangedOperation.NoChange;
+
+        InvokeOnHealthChanged(operation, Mathf.Abs(currentHealth - oldCurrentHealth));
     }
 
     public float GetCurrentHealth()
     {
         return currentHealth;
+    }
+
+    public float GetRoundedCurrentHealth()
+    {
+        return Mathf.Round(currentHealth * 10) / 10f;
     }
 
     public float GetProjectedHealth()
@@ -76,7 +93,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
             lastTimeCurrentHealthActivelyChanged = Time.time;
         }    
 
-        InvokeOnHealthChanged();
+        InvokeOnHealthChanged(EHealthChangedOperation.TakeDamage, damage);
     }
 
     public void HealInstant(float amount)
@@ -99,7 +116,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         if(projectedHealth <= currentHealth)
             projectedHealth = currentHealth;
 
-        InvokeOnHealthChanged();
+        InvokeOnHealthChanged(EHealthChangedOperation.Heal, amount);
     }
 
     public void HealOverTime(float percentAmount, float percentPerSecond)
@@ -157,20 +174,38 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
                 continue;
             }
 
+            float lastCurrentHealth = currentHealth;
+            lastCurrentHealth = Mathf.Round(lastCurrentHealth * 10) / 10f;
+
             currentHealth = Mathf.MoveTowards(currentHealth, projectedHealth, MaxHealthStat.Value * (currentPercentPerSecond / 100) * Time.deltaTime);
+
             lastTimeCurrentHealthActivelyChanged = Time.time;
-            InvokeOnHealthChanged();
+
+            EHealthChangedOperation operation;
+
+            if(currentHealth > lastCurrentHealth)
+                operation = EHealthChangedOperation.Heal;
+            else
+                operation = EHealthChangedOperation.NoChange;
+
+            float newCurrentHealth = currentHealth;
+            newCurrentHealth = Mathf.Round(newCurrentHealth * 10) / 10f;
+
+            InvokeOnHealthChanged(operation, newCurrentHealth - lastCurrentHealth);
 
             yield return null;
         }
     }
 
-    protected void InvokeOnHealthChanged()
+    protected void InvokeOnHealthChanged(EHealthChangedOperation operation, float healthChangeAmount)
     {
         if(PlayerSpawner.Instance.EnableHealthDebugMessages)
             Debug.Log($"Name: {GetDamageableName()} | Current health: {currentHealth}, Projected health: {projectedHealth}, Max health: {MaxHealthStat.Value}");
         
-        OnHealthChanged?.Invoke(currentHealth, projectedHealth, MaxHealthStat.Value);
+        Debug.Log(healthChangeAmount);
+        healthChangeAmount = Mathf.Round(healthChangeAmount * 10) / 10f;
+        Debug.Log("new " + healthChangeAmount);
+        OnHealthChanged?.Invoke(currentHealth, projectedHealth, MaxHealthStat.Value, operation, healthChangeAmount);
     }
 
     public void Die()

@@ -6,6 +6,8 @@ using DG.Tweening;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using DamageNumbersPro;
+using KinematicCharacterController;
 
 public class PlayerCanvas : MonoBehaviour
 {
@@ -25,6 +27,18 @@ public class PlayerCanvas : MonoBehaviour
     Sequence currentHealthBarFadeSequence;
 
     [HorizontalLine]
+
+    [Header("Damage Popups")]
+
+    [SerializeField] float damagePopupMinThreshold = 1f;
+    [Space(10)]
+    [SerializeField] DamageNumberMesh takeDamageNumberMesh;
+    [SerializeField] DamageNumberMesh healNumberMesh;
+    [SerializeField] DamageNumberMesh healthRegenHealNumberMesh;
+    [SerializeField] DamageNumberMesh increaseMaxHealthNumberMesh;
+    [SerializeField] DamageNumberMesh decreaseMaxHealthNumberMesh;
+
+    float currentHealthWaitingToBeShown = 0;
 
     [Header("Interaction")]
     [SerializeField] TweenedUIComponent interactionCrosshair;
@@ -94,8 +108,10 @@ public class PlayerCanvas : MonoBehaviour
 
 #region HUD
 
-    public void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth)
+    public void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
+        DoDamagePopup(operation, healthChangeAmount);
+
         ShowThenHideFadeTweenUIComponent(healthHUDFade, () =>
         {
             float projectedHealthPercentage = projectedHealth / maxHealth;
@@ -103,7 +119,10 @@ public class PlayerCanvas : MonoBehaviour
 
             healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
             healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
-            healthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+            
+            healthText.text = currentHealth % 1 == 0
+            ? currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0")
+            : currentHealth.ToString("F1") + " / " + maxHealth.ToString("F0");
         });
 
         if(buildMenuEnabled)
@@ -217,14 +236,17 @@ public class PlayerCanvas : MonoBehaviour
 
 #region Single Target Health Bar
 
-    public void UpdateSingleTargetHealthBar(float currentHealth, float projectedHealth, float maxHealth)
+    public void UpdateSingleTargetHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
         float projectedHealthPercentage = projectedHealth / maxHealth;
         float currentHealthPercentage = currentHealth / maxHealth;
 
         singleTargetHealthBarGhostMask.padding = new Vector4(singleTargetHealthBarGhostMask.padding.x, singleTargetHealthBarGhostMask.padding.y, Mathf.Lerp(singleTargetHealthBarRightPaddingMax, singleTargetHealthBarRightPaddingMin, projectedHealthPercentage), singleTargetHealthBarGhostMask.padding.w);
         singleTargetHealthBarMask.padding = new Vector4(singleTargetHealthBarMask.padding.x, singleTargetHealthBarMask.padding.y, Mathf.Lerp(singleTargetHealthBarRightPaddingMax, singleTargetHealthBarRightPaddingMin, currentHealthPercentage), singleTargetHealthBarMask.padding.w);
-        singleTargetHealthText.text = currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0");
+
+        singleTargetHealthText.text = currentHealth % 1 == 0
+        ? currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0")
+        : currentHealth.ToString("F1") + " / " + maxHealth.ToString("F0");
     }
 
     public void OnSingleTargetStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
@@ -254,5 +276,64 @@ public class PlayerCanvas : MonoBehaviour
     }
 
 #endregion
+
+    private void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
+    {
+        DamageNumberMesh damageNumberMesh;
+        
+        switch(eHealthChangedOperation)
+        {
+            case EHealthChangedOperation.TakeDamage:
+                damageNumberMesh = takeDamageNumberMesh;
+                
+                if(healthChangeAmount > 0)
+                    healthChangeAmount *= -1;
+            break;
+
+            case EHealthChangedOperation.Heal:
+
+                currentHealthWaitingToBeShown += healthChangeAmount;
+                currentHealthWaitingToBeShown = Mathf.Round(currentHealthWaitingToBeShown * 10f) / 10f;
+
+                if(currentHealthWaitingToBeShown < damagePopupMinThreshold && playerStatsDamageable.GetRoundedCurrentHealth() != playerStatsDamageable.GetProjectedHealth())
+                    return;
+
+                float leftOverHealth = Mathf.Round(currentHealthWaitingToBeShown % damagePopupMinThreshold * 10f) / 10f;
+                
+                if(leftOverHealth > 0) currentHealthWaitingToBeShown -= leftOverHealth;
+
+                healthChangeAmount = currentHealthWaitingToBeShown;
+
+                currentHealthWaitingToBeShown = 0;
+
+                if(leftOverHealth > 0) 
+                {
+                    if(playerStatsDamageable.GetRoundedCurrentHealth() == playerStatsDamageable.GetProjectedHealth())
+                    {
+                        healthChangeAmount += leftOverHealth;
+                    }
+                    else
+                    {
+                        currentHealthWaitingToBeShown += leftOverHealth;
+                    }
+                }
+
+                damageNumberMesh = healNumberMesh;
+
+            break;
+
+            case EHealthChangedOperation.HealthRegenHeal:
+                damageNumberMesh = healthRegenHealNumberMesh;
+            break;
+
+            case EHealthChangedOperation.NoChange:
+            default:
+                return;
+        }
+
+        KinematicCharacterMotor motor = PlayerController.Instance.Character.Motor;
+        Transform damageNumberTransform = motor.Transform;
+        damageNumberMesh.Spawn(damageNumberTransform.position + new Vector3(0f, motor.Capsule.height, 0f), healthChangeAmount);
+    }
 
 }

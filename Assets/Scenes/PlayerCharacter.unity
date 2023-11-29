@@ -1690,7 +1690,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.032998335, w: -0.99328655}
+  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.032999147, w: -0.99328655}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1758,7 +1758,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -4068,8 +4068,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.19650681, y: -0.61638284, z: 0.7361663, w: 0.19878739}
-  m_LocalPosition: {x: -2.7212975, y: 27.42963, z: -26.696133}
+  m_LocalRotation: {x: 0.19671613, y: -0.61631346, z: 0.7360988, w: 0.19904533}
+  m_LocalPosition: {x: -2.7213144, y: 27.429619, z: -26.696156}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5065,6 +5065,12 @@ MonoBehaviour:
   healthBarRightPaddingMax: 390
   numSecondsAfterShowToDoCallback: 0.1
   numSecondsToWaitBeforeHidingHealthBarPadding: 2
+  damagePopupMinThreshold: 1
+  takeDamageNumberMesh: {fileID: 773487178781459159, guid: f54bd850a5b5bf74f8d583a02f3d598b, type: 3}
+  healNumberMesh: {fileID: 7676034915615045201, guid: 94b440bb25433a24e96f22aad9f4b21e, type: 3}
+  healthRegenHealNumberMesh: {fileID: 6449027957963938247, guid: 2228212c132e2284ba1f08f290723aa5, type: 3}
+  increaseMaxHealthNumberMesh: {fileID: 0}
+  decreaseMaxHealthNumberMesh: {fileID: 0}
   interactionCrosshair:
     gameObj: {fileID: 652586753}
     tweens:

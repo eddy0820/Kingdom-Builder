@@ -31,7 +31,7 @@ public class PlayerStats : DamageableCharacterStats
             currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealthStat.Value);
             projectedHealth = currentHealth;
 
-            InvokeOnHealthChanged();
+            InvokeOnHealthChanged(EHealthChangedOperation.HealthRegenHeal, amount);
 
             yield return new WaitForSeconds(1);
         }
