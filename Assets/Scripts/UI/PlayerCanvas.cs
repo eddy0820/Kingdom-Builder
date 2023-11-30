@@ -133,7 +133,7 @@ public class PlayerCanvas : MonoBehaviour
     {
         if(stat.type != MaxHealthStat.type) return;
         
-        UpdateHealthBar(playerStatsDamageable.GetCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
+        UpdateHealthBar(playerStatsDamageable.GetRoundedCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
     }
 
     public void ShowThenHideFadeTweenUIComponent(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
@@ -162,7 +162,7 @@ public class PlayerCanvas : MonoBehaviour
         }
 
         float cooldown = numSecondsToWaitBeforeHidingHealthBarPadding;
-        if(playerStatsDamageable.GetCurrentHealth() != MaxHealthStat.Value)
+        if(playerStatsDamageable.GetRoundedCurrentHealth() != MaxHealthStat.Value)
             cooldown += OutOfCombatHealthRegenCooldownStat.Value;
 
         currentHealthBarFadeSequence.AppendInterval(cooldown);
@@ -253,7 +253,7 @@ public class PlayerCanvas : MonoBehaviour
     {
         if(stat.type != MaxHealthStat.type) return;
         
-        UpdateSingleTargetHealthBar(playerStatsDamageable.GetCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
+        UpdateSingleTargetHealthBar(playerStatsDamageable.GetRoundedCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
     }
 
     public void ToggleSingleTargetHealthBar(bool b, CharacterStats stats, IDamageable damageable)
@@ -263,7 +263,7 @@ public class PlayerCanvas : MonoBehaviour
         if(b)
         {
             singleTargetNameText.text = damageable.GetDamageableName();
-            UpdateSingleTargetHealthBar(damageable.GetCurrentHealth(), damageable.GetProjectedHealth(), stats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
+            UpdateSingleTargetHealthBar(damageable.GetRoundedCurrentHealth(), damageable.GetProjectedHealth(), stats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
 
             damageable.OnHealthChanged += UpdateSingleTargetHealthBar;
             stats.OnStatModifierChanged += OnSingleTargetStatModifierChanged;
