@@ -123,9 +123,15 @@ public class PlayerCanvas : MonoBehaviour
             healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
             healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
             
-            healthText.text = currentHealth % 1 == 0
-            ? currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0")
-            : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString) + " / " + maxHealth.ToString("F0");
+            string maxHealthString = maxHealth % 1 == 0
+            ? maxHealth.ToString("F0")
+            : maxHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+
+            string currentHealthString = currentHealth % 1 == 0
+            ? currentHealth.ToString("F0")
+            : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+
+            healthText.text = currentHealthString + " / " + maxHealthString;
         });
 
         if(buildMenuEnabled)
@@ -135,6 +141,25 @@ public class PlayerCanvas : MonoBehaviour
     public void OnStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
     {
         if(stat.type != MaxHealthStat.type) return;
+
+        float maxHealthChangedAmount;
+
+        switch(operation)
+        {
+            case EStatModifierChangedOperation.Added:
+                maxHealthChangedAmount = statModifier.value;
+            break;
+
+            case EStatModifierChangedOperation.Removed:
+            case EStatModifierChangedOperation.RemovedAllFromSource:
+                maxHealthChangedAmount = -statModifier.value;
+            break;
+
+            default:
+                return;
+        }
+
+        DoMaxHealthChangePopup(operation, maxHealthChangedAmount);
         
         UpdateHealthBar(playerStatsDamageable.GetRoundedCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
     }
@@ -247,9 +272,15 @@ public class PlayerCanvas : MonoBehaviour
         singleTargetHealthBarGhostMask.padding = new Vector4(singleTargetHealthBarGhostMask.padding.x, singleTargetHealthBarGhostMask.padding.y, Mathf.Lerp(singleTargetHealthBarRightPaddingMax, singleTargetHealthBarRightPaddingMin, projectedHealthPercentage), singleTargetHealthBarGhostMask.padding.w);
         singleTargetHealthBarMask.padding = new Vector4(singleTargetHealthBarMask.padding.x, singleTargetHealthBarMask.padding.y, Mathf.Lerp(singleTargetHealthBarRightPaddingMax, singleTargetHealthBarRightPaddingMin, currentHealthPercentage), singleTargetHealthBarMask.padding.w);
 
-        singleTargetHealthText.text = currentHealth % 1 == 0
-        ? currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0")
-        : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString) + " / " + maxHealth.ToString("F0");
+        string maxHealthString = maxHealth % 1 == 0
+        ? maxHealth.ToString("F0")
+        : maxHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+
+        string currentHealthString = currentHealth % 1 == 0
+        ? currentHealth.ToString("F0")
+        : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+
+        singleTargetHealthText.text = currentHealthString + " / " + maxHealthString;
     }
 
     public void OnSingleTargetStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
@@ -334,6 +365,30 @@ public class PlayerCanvas : MonoBehaviour
             break;
 
             case EHealthChangedOperation.NoChange:
+            default:
+                return;
+        }
+
+        damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
+
+        damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
+    }
+
+    private void DoMaxHealthChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float healthChangeAmount)
+    {
+        DamageNumberMesh damageNumberMesh;
+        
+        switch(eStatModifierChangedOperation)
+        {
+            case EStatModifierChangedOperation.Added:
+                damageNumberMesh = increaseMaxHealthNumberMesh;
+            break;
+
+            case EStatModifierChangedOperation.Removed:
+            case EStatModifierChangedOperation.RemovedAllFromSource:
+                damageNumberMesh = decreaseMaxHealthNumberMesh;
+            break;
+            
             default:
                 return;
         }

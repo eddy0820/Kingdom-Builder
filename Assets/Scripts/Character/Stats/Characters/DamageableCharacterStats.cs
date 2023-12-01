@@ -10,7 +10,13 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
     float m_currentHealth;
     protected float currentHealth
     {
-        get => m_currentHealth;
+        get
+        {
+            if(m_currentHealth > MaxHealthStat.Value)
+                m_currentHealth = MaxHealthStat.Value;
+
+            return m_currentHealth;
+        }
         set
         {
             m_currentHealth = value;
@@ -18,8 +24,23 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
                 Die();
         }
     }
+
+    float m_projectedHealth;
     
-    protected float projectedHealth;
+    protected float projectedHealth
+    {
+        get 
+        {
+            if(m_projectedHealth > MaxHealthStat.Value)
+                m_projectedHealth = MaxHealthStat.Value;
+
+            return m_projectedHealth;
+        }
+        set
+        {
+            m_projectedHealth = value;
+        }
+    }
     protected float currentPercentPerSecond;
     protected float lastTimeCurrentHealthActivelyChanged;
 

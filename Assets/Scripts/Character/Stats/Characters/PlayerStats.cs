@@ -27,6 +27,8 @@ public class PlayerStats : DamageableCharacterStats
             if(amount > MaxHealthStat.Value - projectedHealth)
                 amount = MaxHealthStat.Value - projectedHealth;
 
+            if(amount < 0) continue;
+
             currentHealth += amount;
             currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealthStat.Value);
             projectedHealth = currentHealth;

@@ -1690,7 +1690,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.03299978, w: -0.9932865}
+  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.033000063, w: -0.9932865}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4068,8 +4068,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.19682778, y: -0.6162764, z: 0.73606294, w: 0.1991825}
-  m_LocalPosition: {x: -2.7213368, y: 27.429613, z: -26.696167}
+  m_LocalRotation: {x: 0.19686382, y: -0.6162644, z: 0.7360514, w: 0.1992267}
+  m_LocalPosition: {x: -2.7213473, y: 27.429611, z: -26.69617}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5069,8 +5069,8 @@ MonoBehaviour:
   takeDamageNumberMesh: {fileID: 773487178781459159, guid: f54bd850a5b5bf74f8d583a02f3d598b, type: 3}
   healNumberMesh: {fileID: 7676034915615045201, guid: 94b440bb25433a24e96f22aad9f4b21e, type: 3}
   healthRegenHealNumberMesh: {fileID: 6449027957963938247, guid: 2228212c132e2284ba1f08f290723aa5, type: 3}
-  increaseMaxHealthNumberMesh: {fileID: 0}
-  decreaseMaxHealthNumberMesh: {fileID: 0}
+  increaseMaxHealthNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
+  decreaseMaxHealthNumberMesh: {fileID: 8459268305018523655, guid: a91f66bd951016544ac43de478bd3e67, type: 3}
   interactionCrosshair:
     gameObj: {fileID: 652586753}
     tweens:

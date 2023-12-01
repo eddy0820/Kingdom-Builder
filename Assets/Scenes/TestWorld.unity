@@ -643,7 +643,7 @@ MonoBehaviour:
   interactionTypes:
   - {fileID: 11400000, guid: 570a56bf26dbadd4f8412ccf07018c58, type: 2}
   baseStatsSO: {fileID: 11400000, guid: ba4b73b0079a2a247804236bf2ca0587, type: 2}
-  damageNumberMesh: {fileID: 6449027957963938247, guid: 2228212c132e2284ba1f08f290723aa5, type: 3}
+  damageNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
 --- !u!1 &681836449
 GameObject:
   m_ObjectHideFlags: 0
