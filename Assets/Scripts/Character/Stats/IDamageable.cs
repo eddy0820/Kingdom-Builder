@@ -6,7 +6,7 @@ using DamageNumbersPro;
 
 public interface IDamageable
 {
-    public void SetHealth(float amount);
+    public void SetHealth(float amount, bool setAsNoChange = false);
 
     public float GetCurrentHealth();
     public float GetRoundedCurrentHealth();

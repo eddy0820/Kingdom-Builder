@@ -38,6 +38,9 @@ public class PlayerCanvas : MonoBehaviour
     [SerializeField] DamageNumberMesh increaseMaxHealthNumberMesh;
     [SerializeField] DamageNumberMesh decreaseMaxHealthNumberMesh;
 
+    public Transform DamageNumberSpawnTransform => PlayerController.Instance.Character.Motor.Transform;
+    public Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position + new Vector3(0f, PlayerController.Instance.Character.Motor.Capsule.height, 0f);
+
     float currentHealthWaitingToBeShown = 0;
 
     [Header("Interaction")]
@@ -122,7 +125,7 @@ public class PlayerCanvas : MonoBehaviour
             
             healthText.text = currentHealth % 1 == 0
             ? currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0")
-            : currentHealth.ToString("F1") + " / " + maxHealth.ToString("F0");
+            : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString) + " / " + maxHealth.ToString("F0");
         });
 
         if(buildMenuEnabled)
@@ -246,7 +249,7 @@ public class PlayerCanvas : MonoBehaviour
 
         singleTargetHealthText.text = currentHealth % 1 == 0
         ? currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0")
-        : currentHealth.ToString("F1") + " / " + maxHealth.ToString("F0");
+        : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString) + " / " + maxHealth.ToString("F0");
     }
 
     public void OnSingleTargetStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
@@ -288,6 +291,7 @@ public class PlayerCanvas : MonoBehaviour
                 
                 if(healthChangeAmount > 0)
                     healthChangeAmount *= -1;
+
             break;
 
             case EHealthChangedOperation.Heal:
@@ -295,7 +299,10 @@ public class PlayerCanvas : MonoBehaviour
                 currentHealthWaitingToBeShown += healthChangeAmount;
                 currentHealthWaitingToBeShown = Mathf.Round(currentHealthWaitingToBeShown * 10f) / 10f;
 
-                if(currentHealthWaitingToBeShown < damagePopupMinThreshold && playerStatsDamageable.GetRoundedCurrentHealth() != playerStatsDamageable.GetProjectedHealth())
+                int threshold = (int)(MaxHealthStat.Value / 100);
+                threshold = (int)Mathf.Clamp(threshold, damagePopupMinThreshold, 10);
+
+                if(currentHealthWaitingToBeShown < threshold && playerStatsDamageable.GetRoundedCurrentHealth() != playerStatsDamageable.GetProjectedHealth())
                     return;
 
                 float leftOverHealth = Mathf.Round(currentHealthWaitingToBeShown % damagePopupMinThreshold * 10f) / 10f;
@@ -331,9 +338,8 @@ public class PlayerCanvas : MonoBehaviour
                 return;
         }
 
-        KinematicCharacterMotor motor = PlayerController.Instance.Character.Motor;
-        Transform damageNumberTransform = motor.Transform;
-        damageNumberMesh.Spawn(damageNumberTransform.position + new Vector3(0f, motor.Capsule.height, 0f), healthChangeAmount);
-    }
+        damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
 
+        damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
+    }
 }

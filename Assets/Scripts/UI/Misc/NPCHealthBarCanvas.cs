@@ -107,11 +107,10 @@ public class NPCHealthBarCanvas : MonoBehaviour
 
             healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
             healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
-            healthText.text = currentHealth.ToString("F1") + " / " + maxHealth.ToString("F0");
 
             healthText.text = currentHealth % 1 == 0
             ? currentHealth.ToString("F0") + " / " + maxHealth.ToString("F0")
-            : currentHealth.ToString("F1") + " / " + maxHealth.ToString("F0");
+            : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString) + " / " + maxHealth.ToString("F0");
         });
     }
 

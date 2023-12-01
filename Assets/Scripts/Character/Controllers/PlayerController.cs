@@ -69,9 +69,9 @@ public class PlayerController : MonoBehaviour, IHoldStats
 
         StartCoroutine(IDamageable.HealOverTimeCoroutine());
         StartCoroutine(playerStats.HealthRegenCoroutine());
-        IDamageable.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
+        IDamageable.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value, true);
 
-        statModifier = new StatModifier(1, StatModifierTypes.Flat);
+        statModifier = new StatModifier(10, StatModifierTypes.Flat);
     }
     
     StatModifier statModifier;

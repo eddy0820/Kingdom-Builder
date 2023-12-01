@@ -278,7 +278,7 @@ MonoBehaviour:
   enableRightText: 1
   rightText: ' HP'
   rightTextSettings:
-    bold: 0
+    bold: 1
     italic: 0
     underline: 0
     strike: 0
@@ -453,12 +453,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  enableScaleByNumber: 1
+  enableScaleByNumber: 0
   scaleByNumberSettings:
     fromNumber: 0
-    toNumber: 100
+    toNumber: 1000
     fromScale: 1
-    toScale: 2
+    toScale: 1.5
   enableScaleOverTime: 0
   scaleOverTime:
     serializedVersion: 2
@@ -488,7 +488,7 @@ MonoBehaviour:
   enableCombination: 1
   combinationSettings:
     method: 0
-    maxDistance: 3
+    maxDistance: 1
     spawnDelay: 0
     absorbDuration: 0.8
     scaleCurve:

@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: GlobalGameplaySettings
   m_EditorClassIdentifier: 
   defaultGameplaySettings: {fileID: 11400000, guid: 3271f2ea08c95ca44beeaee8e57c0aa2, type: 2}
+  defaultMiscSettings: {fileID: 11400000, guid: 23973c25fe0e6724c94dfe4bbe172e87, type: 2}

@@ -290,9 +290,9 @@ MonoBehaviour:
   enableScaleByNumber: 0
   scaleByNumberSettings:
     fromNumber: 0
-    toNumber: 100
+    toNumber: 1000
     fromScale: 1
-    toScale: 2
+    toScale: 1.5
   enableScaleOverTime: 0
   scaleOverTime:
     serializedVersion: 2
@@ -322,7 +322,7 @@ MonoBehaviour:
   enableCombination: 1
   combinationSettings:
     method: 0
-    maxDistance: 3
+    maxDistance: 1
     spawnDelay: 0
     absorbDuration: 0.8
     scaleCurve:
@@ -650,7 +650,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>1</b><b> HP</b>
+  m_text: <b>+</b><b>1</b><b> HP</b>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c5d60c87f58cb741846160f52875d39, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 1a262a662b3baf74b83ecac05fabc7b5, type: 2}

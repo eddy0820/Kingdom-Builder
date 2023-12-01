@@ -13,7 +13,6 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         get => m_currentHealth;
         set
         {
-            //m_currentHealth = Mathf.Round(value * 10) / 10f;
             m_currentHealth = value;
             if(m_currentHealth <= 0)
                 Die();
@@ -33,7 +32,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     public DamageableCharacterStats(BaseStatsSO _baseStatsSO) : base(_baseStatsSO) {}
 
-    public void SetHealth(float amount)
+    public void SetHealth(float amount, bool setAsNoChange = false)
     {
         if(AssertIsDead("Can't set health when dead.")) return;
 
@@ -50,9 +49,9 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
         EHealthChangedOperation operation;
 
-        if(currentHealth > oldCurrentHealth)
+        if(currentHealth > oldCurrentHealth && !setAsNoChange)
             operation = EHealthChangedOperation.Heal;
-        else if(currentHealth < oldCurrentHealth)
+        else if(currentHealth < oldCurrentHealth && !setAsNoChange)
             operation = EHealthChangedOperation.TakeDamage;
         else
             operation = EHealthChangedOperation.NoChange;
@@ -67,7 +66,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     public float GetRoundedCurrentHealth()
     {
-        return Mathf.Round(currentHealth * 10) / 10f;
+        return CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(currentHealth);
     }
 
     public float GetProjectedHealth()
@@ -154,7 +153,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         float newProjectedHealth = MaxHealthStat.Value * (percent / 100);
         newProjectedHealth = Mathf.Clamp(newProjectedHealth, 0, MaxHealthStat.Value);
 
-        if(projectedHealth < oldProjectedHealth)
+        if(newProjectedHealth < oldProjectedHealth)
         {
             Debug.LogWarning("Health is already higher than the percent you're trying to heal to.");
             return;
@@ -175,7 +174,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
             }
 
             float lastCurrentHealth = currentHealth;
-            lastCurrentHealth = Mathf.Round(lastCurrentHealth * 10) / 10f;
+            lastCurrentHealth = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(lastCurrentHealth);
 
             currentHealth = Mathf.MoveTowards(currentHealth, projectedHealth, MaxHealthStat.Value * (currentPercentPerSecond / 100) * Time.deltaTime);
 
@@ -189,7 +188,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
                 operation = EHealthChangedOperation.NoChange;
 
             float newCurrentHealth = currentHealth;
-            newCurrentHealth = Mathf.Round(newCurrentHealth * 10) / 10f;
+            newCurrentHealth = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(newCurrentHealth);
 
             InvokeOnHealthChanged(operation, newCurrentHealth - lastCurrentHealth);
 
@@ -202,9 +201,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         if(PlayerSpawner.Instance.EnableHealthDebugMessages)
             Debug.Log($"Name: {GetDamageableName()} | Current health: {currentHealth}, Projected health: {projectedHealth}, Max health: {MaxHealthStat.Value}");
         
-        Debug.Log(healthChangeAmount);
-        healthChangeAmount = Mathf.Round(healthChangeAmount * 10) / 10f;
-        Debug.Log("new " + healthChangeAmount);
+        healthChangeAmount = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(healthChangeAmount);
         OnHealthChanged?.Invoke(currentHealth, projectedHealth, MaxHealthStat.Value, operation, healthChangeAmount);
     }
 
