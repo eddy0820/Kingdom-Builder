@@ -13,35 +13,12 @@ public class PlayerCanvas : MonoBehaviour
 {
     [Header("Health Bar")]
     [SerializeField] TweenedUIComponent healthHUD;
-    [SerializeField] TweenedUIComponent healthHUDFade;
-    [Space(10)]
-    [SerializeField] RectMask2D healthBarMask;
-    [SerializeField] RectMask2D healthBarGhostMask;
-    [SerializeField] TextMeshProUGUI healthText;
-    [Space(10)]
-    [SerializeField] float healthBarRightPaddingMin = 15;
-    [SerializeField] float healthBarRightPaddingMax = 390;
-    [Space(10)]
-    [SerializeField] float numSecondsAfterShowToDoCallback = 0.25f;
-    [SerializeField] float numSecondsToWaitBeforeHidingHealthBarPadding = 2f;
-    Sequence currentHealthBarFadeSequence;
+    
+    [Header("")]
+    [SerializeField] PlayerStatUI playerStatUI;
+    public PlayerStatUI PlayerStatUI => playerStatUI;
 
     [HorizontalLine]
-
-    [Header("Damage Popups")]
-
-    [SerializeField] float damagePopupMinThreshold = 1f;
-    [Space(10)]
-    [SerializeField] DamageNumberMesh takeDamageNumberMesh;
-    [SerializeField] DamageNumberMesh healNumberMesh;
-    [SerializeField] DamageNumberMesh healthRegenHealNumberMesh;
-    [SerializeField] DamageNumberMesh increaseMaxHealthNumberMesh;
-    [SerializeField] DamageNumberMesh decreaseMaxHealthNumberMesh;
-
-    public Transform DamageNumberSpawnTransform => PlayerController.Instance.Character.Motor.Transform;
-    public Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position + new Vector3(0f, PlayerController.Instance.Character.Motor.Capsule.height, 0f);
-
-    float currentHealthWaitingToBeShown = 0;
 
     [Header("Interaction")]
     [SerializeField] TweenedUIComponent interactionCrosshair;
@@ -64,28 +41,11 @@ public class PlayerCanvas : MonoBehaviour
     [ReadOnly, SerializeField] bool buildMenuEnabled = false;
     public bool BuildMenuEnabled => buildMenuEnabled;
 
-    [HorizontalLine]
-
-    [Header("Single Target Health Bar")]
-    [SerializeField] Transform singleTargetHealthHUD;
-    [SerializeField] RectMask2D singleTargetHealthBarMask;
-    [SerializeField] RectMask2D singleTargetHealthBarGhostMask;
-    [SerializeField] TextMeshProUGUI singleTargetHealthText;
-    [SerializeField] TextMeshProUGUI singleTargetNameText;
-
-    [Space(10)]
-
-    [SerializeField] float singleTargetHealthBarRightPaddingMin = 15;
-    [SerializeField] float singleTargetHealthBarRightPaddingMax = 390;
-
     BuildHotbarInterface buildHotbarInterface;
     public BuildHotbarInterface BuildHotbarInterface => buildHotbarInterface;
 
-    IDamageable playerStatsDamageable;
-    PlayerStats playerStats;
-
-    Stat MaxHealthStat => playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
-    Stat OutOfCombatHealthRegenCooldownStat => playerStats.GetStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown];
+    IDamageable PlayerStatsDamageable => PlayerController.Instance.IDamageable;
+    PlayerStats PlayerStats => PlayerController.Instance.Stats as PlayerStats;
 
     private void Awake()
     {
@@ -97,108 +57,14 @@ public class PlayerCanvas : MonoBehaviour
         crosshair.GameObj.SetActive(false);
         crosshair.RectTransform.localScale = Vector3.zero;
 
-        playerStats = PlayerController.Instance.Stats as PlayerStats;
-        playerStatsDamageable = PlayerController.Instance.IDamageable;
-
-        playerStatsDamageable.OnHealthChanged += UpdateHealthBar;
-        playerStats.OnStatModifierChanged += OnStatModifierChanged;
+        PlayerStatsDamageable.OnHealthChanged += playerStatUI.UpdateHealthBar;
+        PlayerStats.OnStatModifierChanged += playerStatUI.OnStatModifierChanged;
 
         interactionCrosshair.GameObj.SetActive(false);
         HideInteractions();
 
-        singleTargetHealthHUD.gameObject.SetActive(false);
+        playerStatUI.SingleTargetHealthHUD.gameObject.SetActive(false);
     }
-
-#region HUD
-
-    public void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
-    {
-        DoDamagePopup(operation, healthChangeAmount);
-
-        ShowThenHideFadeTweenUIComponent(healthHUDFade, () =>
-        {
-            float projectedHealthPercentage = projectedHealth / maxHealth;
-            float currentHealthPercentage = currentHealth / maxHealth;
-
-            healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
-            healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
-            
-            string maxHealthString = maxHealth % 1 == 0
-            ? maxHealth.ToString("F0")
-            : maxHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-            string currentHealthString = currentHealth % 1 == 0
-            ? currentHealth.ToString("F0")
-            : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-            healthText.text = currentHealthString + " / " + maxHealthString;
-        });
-
-        if(buildMenuEnabled)
-            ToggleBuildMenu();
-    }
-
-    public void OnStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
-    {
-        if(stat.type != MaxHealthStat.type) return;
-
-        float maxHealthChangedAmount;
-
-        switch(operation)
-        {
-            case EStatModifierChangedOperation.Added:
-                maxHealthChangedAmount = statModifier.value;
-            break;
-
-            case EStatModifierChangedOperation.Removed:
-            case EStatModifierChangedOperation.RemovedAllFromSource:
-                maxHealthChangedAmount = -statModifier.value;
-            break;
-
-            default:
-                return;
-        }
-
-        DoMaxHealthChangePopup(operation, maxHealthChangedAmount);
-        
-        UpdateHealthBar(playerStatsDamageable.GetRoundedCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
-    }
-
-    public void ShowThenHideFadeTweenUIComponent(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
-    {
-        Tween fadeTween = tweenedUIComponent.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade);
-        if(fadeTween == null) return;
-
-        currentHealthBarFadeSequence?.Kill();
-        tweenedUIComponent.CurrentSequence?.Kill();
-        fadeTween.TweenValues.CanvasGroup.DOKill();
-
-        bool doActionBeforeFade = fadeTween.TweenValues.CanvasGroup.alpha == fadeTween.TweenValues.FadeValues.StartAlpha;
-
-        if(doActionBeforeFade)
-        {
-            actionToDoOnShow?.Invoke();
-        }
-
-        fadeTween.TweenValues.CanvasGroup.alpha = fadeTween.TweenValues.FadeValues.StartAlpha;
-
-        currentHealthBarFadeSequence = DOTween.Sequence();
-        if(!doActionBeforeFade) 
-        {   
-            currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallback);
-            currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
-        }
-
-        float cooldown = numSecondsToWaitBeforeHidingHealthBarPadding;
-        if(playerStatsDamageable.GetRoundedCurrentHealth() != MaxHealthStat.Value)
-            cooldown += OutOfCombatHealthRegenCooldownStat.Value;
-
-        currentHealthBarFadeSequence.AppendInterval(cooldown);
-        currentHealthBarFadeSequence.AppendCallback(() => tweenedUIComponent.TweenUIComponent(true, new(){ETweenType.Fade}, false));
-        currentHealthBarFadeSequence.Play();
-    }
-
-#endregion
 
 #region Interaction
 
@@ -262,9 +128,85 @@ public class PlayerCanvas : MonoBehaviour
 
 #endregion
 
-#region Single Target Health Bar
+}
 
-    public void UpdateSingleTargetHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
+[Serializable]
+public class PlayerStatUI : StatUI
+{
+    [BoxGroup("Damage Popups"), SerializeField] DamageNumberMesh healthRegenHealNumberMesh;
+
+    [Header("Single Target Health Bar")]
+    [SerializeField] Transform singleTargetHealthHUD;
+    public Transform SingleTargetHealthHUD => singleTargetHealthHUD;
+    [SerializeField] RectMask2D singleTargetHealthBarMask;
+    [SerializeField] RectMask2D singleTargetHealthBarGhostMask;
+    [SerializeField] TextMeshProUGUI singleTargetHealthText;
+    [SerializeField] TextMeshProUGUI singleTargetNameText;
+
+    [Space(10)]
+
+    [SerializeField] float singleTargetHealthBarRightPaddingMin = 15;
+    [SerializeField] float singleTargetHealthBarRightPaddingMax = 390;
+
+    PlayerController PlayerController => PlayerController.Instance;
+    KinematicCharacterMotor Motor => PlayerController.Character.Motor;
+    PlayerCanvas PlayerCanvas => PlayerController.UICanvas;
+    PlayerStats PlayerStats => PlayerController.Stats as PlayerStats;
+
+    protected override IDamageable IDamageable => PlayerController.IDamageable;
+    protected override Transform DamageNumberSpawnTransform => Motor.Transform;
+    protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position + new Vector3(0f, Motor.Capsule.height, 0f);
+    protected override Stat MaxHealthStat => PlayerStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
+    protected Stat OutOfCombatHealthRegenCooldownStat => PlayerStats.GetStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown];
+
+    public override void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
+    {
+        base.UpdateHealthBar(currentHealth, projectedHealth, maxHealth, operation, healthChangeAmount);
+
+        if(PlayerCanvas.BuildMenuEnabled)
+            PlayerCanvas.ToggleBuildMenu();
+    }
+
+    protected override void ShowThenHideFadeTweenUIComponent(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
+    {
+        Tween fadeTween = tweenedUIComponent.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade);
+        if(fadeTween == null) return;
+
+        currentHealthBarFadeSequence?.Kill();
+        tweenedUIComponent.CurrentSequence?.Kill();
+        fadeTween.TweenValues.CanvasGroup.DOKill();
+
+        bool doActionBeforeFade = fadeTween.TweenValues.CanvasGroup.alpha == fadeTween.TweenValues.FadeValues.StartAlpha;
+
+        if(doActionBeforeFade)
+        {
+            actionToDoOnShow?.Invoke();
+        }
+
+        fadeTween.TweenValues.CanvasGroup.alpha = fadeTween.TweenValues.FadeValues.StartAlpha;
+
+        currentHealthBarFadeSequence = DOTween.Sequence();
+        if(!doActionBeforeFade) 
+        {   
+            currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallback);
+            currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
+        }
+
+        float cooldown = numSecondsToWaitBeforeHidingHealthBar;
+        if(IDamageable.GetRoundedCurrentHealth() != MaxHealthStat.Value)
+            cooldown += OutOfCombatHealthRegenCooldownStat.Value;
+
+        currentHealthBarFadeSequence.AppendInterval(cooldown);
+        currentHealthBarFadeSequence.AppendCallback(() => tweenedUIComponent.TweenUIComponent(true, new(){ETweenType.Fade}, false));
+        currentHealthBarFadeSequence.Play();
+    }
+
+    protected override DamageNumberMesh HealOverTimeOperation(ref float healthChangeAmount)
+    {
+        return healthRegenHealNumberMesh;
+    }
+
+    private void UpdateSingleTargetHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
         float projectedHealthPercentage = projectedHealth / maxHealth;
         float currentHealthPercentage = currentHealth / maxHealth;
@@ -283,11 +225,11 @@ public class PlayerCanvas : MonoBehaviour
         singleTargetHealthText.text = currentHealthString + " / " + maxHealthString;
     }
 
-    public void OnSingleTargetStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    private void OnSingleTargetStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
     {
         if(stat.type != MaxHealthStat.type) return;
         
-        UpdateSingleTargetHealthBar(playerStatsDamageable.GetRoundedCurrentHealth(), playerStatsDamageable.GetProjectedHealth(), stat.Value);
+        UpdateSingleTargetHealthBar(IDamageable.GetRoundedCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
     }
 
     public void ToggleSingleTargetHealthBar(bool b, CharacterStats stats, IDamageable damageable)
@@ -307,94 +249,5 @@ public class PlayerCanvas : MonoBehaviour
             damageable.OnHealthChanged -= UpdateSingleTargetHealthBar;
             stats.OnStatModifierChanged -= OnSingleTargetStatModifierChanged;
         }
-    }
-
-#endregion
-
-    private void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
-    {
-        DamageNumberMesh damageNumberMesh;
-        
-        switch(eHealthChangedOperation)
-        {
-            case EHealthChangedOperation.TakeDamage:
-                damageNumberMesh = takeDamageNumberMesh;
-                
-                if(healthChangeAmount > 0)
-                    healthChangeAmount *= -1;
-
-            break;
-
-            case EHealthChangedOperation.Heal:
-
-                currentHealthWaitingToBeShown += healthChangeAmount;
-                currentHealthWaitingToBeShown = Mathf.Round(currentHealthWaitingToBeShown * 10f) / 10f;
-
-                int threshold = (int)(MaxHealthStat.Value / 100);
-                threshold = (int)Mathf.Clamp(threshold, damagePopupMinThreshold, 10);
-
-                if(currentHealthWaitingToBeShown < threshold && playerStatsDamageable.GetRoundedCurrentHealth() != playerStatsDamageable.GetProjectedHealth())
-                    return;
-
-                float leftOverHealth = Mathf.Round(currentHealthWaitingToBeShown % damagePopupMinThreshold * 10f) / 10f;
-                
-                if(leftOverHealth > 0) currentHealthWaitingToBeShown -= leftOverHealth;
-
-                healthChangeAmount = currentHealthWaitingToBeShown;
-
-                currentHealthWaitingToBeShown = 0;
-
-                if(leftOverHealth > 0) 
-                {
-                    if(playerStatsDamageable.GetRoundedCurrentHealth() == playerStatsDamageable.GetProjectedHealth())
-                    {
-                        healthChangeAmount += leftOverHealth;
-                    }
-                    else
-                    {
-                        currentHealthWaitingToBeShown += leftOverHealth;
-                    }
-                }
-
-                damageNumberMesh = healNumberMesh;
-
-            break;
-
-            case EHealthChangedOperation.HealthRegenHeal:
-                damageNumberMesh = healthRegenHealNumberMesh;
-            break;
-
-            case EHealthChangedOperation.NoChange:
-            default:
-                return;
-        }
-
-        damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
-
-        damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
-    }
-
-    private void DoMaxHealthChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float healthChangeAmount)
-    {
-        DamageNumberMesh damageNumberMesh;
-        
-        switch(eStatModifierChangedOperation)
-        {
-            case EStatModifierChangedOperation.Added:
-                damageNumberMesh = increaseMaxHealthNumberMesh;
-            break;
-
-            case EStatModifierChangedOperation.Removed:
-            case EStatModifierChangedOperation.RemovedAllFromSource:
-                damageNumberMesh = decreaseMaxHealthNumberMesh;
-            break;
-            
-            default:
-                return;
-        }
-
-        damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
-
-        damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
     }
 }

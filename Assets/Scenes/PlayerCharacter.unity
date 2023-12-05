@@ -1690,7 +1690,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.033000063, w: -0.9932865}
+  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.033001464, w: -0.99328643}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4068,8 +4068,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.19686382, y: -0.6162644, z: 0.7360514, w: 0.1992267}
-  m_LocalPosition: {x: -2.7213473, y: 27.429611, z: -26.69617}
+  m_LocalRotation: {x: 0.19699943, y: -0.61621916, z: 0.736008, w: 0.1993925}
+  m_LocalPosition: {x: -2.7214108, y: 27.429598, z: -26.69619}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5037,40 +5037,48 @@ MonoBehaviour:
       tweenDuration: 1
       ease: 15
       useInverseEaseForEndTween: 0
-  healthHUDFade:
-    gameObj: {fileID: 1816204514}
-    tweens:
-    - tweenValues:
-        tweenType: 2
-        moveYValues:
-          startPosY: 0
-          endPosY: 0
-        scaleValues:
-          startScale: 0
-          endScale: 0
-        canvasGroup: {fileID: 1816204518}
-        fadeValues:
-          startAlpha: 1
-          endAlpha: 0
-        rotate360Values:
-          startRotation: 0
-          endRotation: 0
-      tweenDuration: 1
-      ease: 1
-      useInverseEaseForEndTween: 0
-  healthBarMask: {fileID: 1020202765}
-  healthBarGhostMask: {fileID: 128557178}
-  healthText: {fileID: 426039014}
-  healthBarRightPaddingMin: 15
-  healthBarRightPaddingMax: 390
-  numSecondsAfterShowToDoCallback: 0.1
-  numSecondsToWaitBeforeHidingHealthBarPadding: 2
-  damagePopupMinThreshold: 1
-  takeDamageNumberMesh: {fileID: 773487178781459159, guid: f54bd850a5b5bf74f8d583a02f3d598b, type: 3}
-  healNumberMesh: {fileID: 7676034915615045201, guid: 94b440bb25433a24e96f22aad9f4b21e, type: 3}
-  healthRegenHealNumberMesh: {fileID: 6449027957963938247, guid: 2228212c132e2284ba1f08f290723aa5, type: 3}
-  increaseMaxHealthNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
-  decreaseMaxHealthNumberMesh: {fileID: 8459268305018523655, guid: a91f66bd951016544ac43de478bd3e67, type: 3}
+  playerStatUI:
+    healthHUDFade:
+      gameObj: {fileID: 1816204514}
+      tweens:
+      - tweenValues:
+          tweenType: 2
+          moveYValues:
+            startPosY: 0
+            endPosY: 0
+          scaleValues:
+            startScale: 0
+            endScale: 0
+          canvasGroup: {fileID: 1816204518}
+          fadeValues:
+            startAlpha: 1
+            endAlpha: 0
+          rotate360Values:
+            startRotation: 0
+            endRotation: 0
+        tweenDuration: 1
+        ease: 1
+        useInverseEaseForEndTween: 0
+    healthBarMask: {fileID: 1020202765}
+    healthBarGhostMask: {fileID: 128557178}
+    healthText: {fileID: 426039014}
+    healthBarRightPaddingMin: 15
+    healthBarRightPaddingMax: 390
+    numSecondsAfterShowToDoCallback: 0.1
+    numSecondsToWaitBeforeHidingHealthBar: 2
+    damagePopupMinThreshold: 1
+    takeDamageNumberMesh: {fileID: 773487178781459159, guid: f54bd850a5b5bf74f8d583a02f3d598b, type: 3}
+    healNumberMesh: {fileID: 7676034915615045201, guid: 94b440bb25433a24e96f22aad9f4b21e, type: 3}
+    increaseMaxHealthNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
+    decreaseMaxHealthNumberMesh: {fileID: 8459268305018523655, guid: a91f66bd951016544ac43de478bd3e67, type: 3}
+    healthRegenHealNumberMesh: {fileID: 6449027957963938247, guid: 2228212c132e2284ba1f08f290723aa5, type: 3}
+    singleTargetHealthHUD: {fileID: 2104993109}
+    singleTargetHealthBarMask: {fileID: 1616330022}
+    singleTargetHealthBarGhostMask: {fileID: 264687680}
+    singleTargetHealthText: {fileID: 1890739815}
+    singleTargetNameText: {fileID: 1147015951}
+    singleTargetHealthBarRightPaddingMin: 6
+    singleTargetHealthBarRightPaddingMax: 1219
   interactionCrosshair:
     gameObj: {fileID: 652586753}
     tweens:
@@ -5178,13 +5186,6 @@ MonoBehaviour:
       ease: 15
       useInverseEaseForEndTween: 0
   buildMenuEnabled: 0
-  singleTargetHealthHUD: {fileID: 2104993109}
-  singleTargetHealthBarMask: {fileID: 1616330022}
-  singleTargetHealthBarGhostMask: {fileID: 264687680}
-  singleTargetHealthText: {fileID: 1890739815}
-  singleTargetNameText: {fileID: 1147015951}
-  singleTargetHealthBarRightPaddingMin: 6
-  singleTargetHealthBarRightPaddingMax: 1219
 --- !u!1001 &2134725590
 PrefabInstance:
   m_ObjectHideFlags: 0

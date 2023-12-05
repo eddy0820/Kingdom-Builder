@@ -8,18 +8,7 @@ using DG.Tweening;
 
 public class NPCHealthBarCanvas : MonoBehaviour
 {
-    [SerializeField] TweenedUIComponent healthHUDFade;
-    [Space(10)]
-    [SerializeField] RectMask2D healthBarMask;
-    [SerializeField] RectMask2D healthBarGhostMask;
-    [SerializeField] TextMeshProUGUI healthText;
-    [Space(10)]
-    [SerializeField] float healthBarRightPaddingMin = 15;
-    [SerializeField] float healthBarRightPaddingMax = 390;
-    [Space(10)]
-    [SerializeField] float numSecondsAfterShowToDoCallback = 0.25f;
-    [SerializeField] float numSecondsToWaitBeforeHidingHealthBar = 2f;
-    Sequence currentHealthBarFadeSequence;
+    [SerializeField] NPCStatUI statUI;
 
     [Space(15)]
 
@@ -42,10 +31,11 @@ public class NPCHealthBarCanvas : MonoBehaviour
 
     private void Start()
     {
-        IDamageable.OnHealthChanged += UpdateHealthBar;
-        Stats.OnStatModifierChanged += OnStatModifierChanged;
+        statUI.SetupStatUI(this);
 
-        healthHUDFade.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade).TweenValues.CanvasGroup.alpha = 0;
+        IDamageable.OnHealthChanged += statUI.UpdateHealthBar;
+        Stats.OnStatModifierChanged += statUI.OnStatModifierChanged;
+        statUI.HealthHUDFade.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade).TweenValues.CanvasGroup.alpha = 0;
 
         PlayerController.StateMachine.GetState(out lockedOnCharacterControllerState);
 
@@ -63,12 +53,12 @@ public class NPCHealthBarCanvas : MonoBehaviour
         {
             if(hit.collider.gameObject != null)
             {
-                if(healthHUDFade.GameObj.activeSelf) healthHUDFade.GameObj.SetActive(false);
+                if(statUI.HealthHUDFade.GameObj.activeSelf) statUI.HealthHUDFade.GameObj.SetActive(false);
             }
         }
         else
         {
-            if(!healthHUDFade.GameObj.activeSelf) healthHUDFade.GameObj.SetActive(true);
+            if(!statUI.HealthHUDFade.GameObj.activeSelf) statUI.HealthHUDFade.GameObj.SetActive(true);
         }
     }
 
@@ -83,9 +73,9 @@ public class NPCHealthBarCanvas : MonoBehaviour
         if(aquiuredTarget != ITargetable) return;
 
         doRaycast = false;
-        healthHUDFade.GameObj.SetActive(false);
+        statUI.HealthHUDFade.GameObj.SetActive(false);
 
-        PlayerCanvas.ToggleSingleTargetHealthBar(true, Stats, IDamageable);
+        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(true, Stats, IDamageable);
     }
 
     private void OnLostTargetLockedOnState(ITargetable lostTarget)
@@ -93,66 +83,24 @@ public class NPCHealthBarCanvas : MonoBehaviour
         if(lostTarget != ITargetable) return;
 
         doRaycast = true;
-        healthHUDFade.GameObj.SetActive(true);
+        statUI.HealthHUDFade.GameObj.SetActive(true);
 
-        PlayerCanvas.ToggleSingleTargetHealthBar(false, Stats, IDamageable);
+        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(false, Stats, IDamageable);
     }
 
-    public void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
+    [Serializable]
+    public class NPCStatUI : StatUI
     {
-        ShowThenHideFadeTweenUIComponent(healthHUDFade, () =>
+        NPCHealthBarCanvas nPCHealthBarCanvas;
+
+        protected override IDamageable IDamageable => nPCHealthBarCanvas.IDamageable;
+        protected override Transform DamageNumberSpawnTransform => nPCHealthBarCanvas.transform;
+        protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position;
+        protected override Stat MaxHealthStat => nPCHealthBarCanvas.Stats.GetStatFromName[CommonStatTypeNames.MaxHealth];
+
+        public void SetupStatUI(NPCHealthBarCanvas _nPCHealthBarCanvas)
         {
-            float projectedHealthPercentage = projectedHealth / maxHealth;
-            float currentHealthPercentage = currentHealth / maxHealth;
-
-            healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
-            healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
-
-            string maxHealthString = maxHealth % 1 == 0
-            ? maxHealth.ToString("F0")
-            : maxHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-            string currentHealthString = currentHealth % 1 == 0
-            ? currentHealth.ToString("F0")
-            : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-            healthText.text = currentHealthString + "/" + maxHealthString;
-        });
-    }
-
-    public void OnStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
-    {
-        if(stat.type != Stats.GetStatTypeFromName[CommonStatTypeNames.MaxHealth]) return;
-        
-        UpdateHealthBar(IDamageable.GetRoundedCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
-    }
-
-    public void ShowThenHideFadeTweenUIComponent(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
-    {
-        Tween fadeTween = tweenedUIComponent.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade);
-        if(fadeTween == null) return;
-
-        currentHealthBarFadeSequence?.Kill();
-        tweenedUIComponent.CurrentSequence?.Kill();
-        fadeTween.TweenValues.CanvasGroup.DOKill();
-
-        bool doActionBeforeFade = fadeTween.TweenValues.CanvasGroup.alpha == fadeTween.TweenValues.FadeValues.StartAlpha;
-
-        if(doActionBeforeFade)
-        {
-            actionToDoOnShow?.Invoke();
+            nPCHealthBarCanvas = _nPCHealthBarCanvas;
         }
-
-        fadeTween.TweenValues.CanvasGroup.alpha = fadeTween.TweenValues.FadeValues.StartAlpha;
-
-        currentHealthBarFadeSequence = DOTween.Sequence();
-        if(!doActionBeforeFade) 
-        {   
-            currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallback);
-            currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
-        }
-        currentHealthBarFadeSequence.AppendInterval(numSecondsToWaitBeforeHidingHealthBar);
-        currentHealthBarFadeSequence.AppendCallback(() => tweenedUIComponent.TweenUIComponent(true, new(){ETweenType.Fade}, false));
-        currentHealthBarFadeSequence.Play();
     }
 }
