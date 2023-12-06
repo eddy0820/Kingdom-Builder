@@ -6,4 +6,5 @@ public interface IHoldStats
 {
     public CharacterStats Stats { get; }
     public IDamageable IDamageable { get; }
+    public IStamina IStamina { get; }
 }

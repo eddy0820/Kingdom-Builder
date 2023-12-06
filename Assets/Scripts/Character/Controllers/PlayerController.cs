@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour, IHoldStats
     PlayerStats playerStats;
     public CharacterStats Stats => playerStats;
     public IDamageable IDamageable => playerStats;
+    public IStamina IStamina => playerStats;
 
     [Expandable, SerializeField] PlayerAttributesSO attributesSO;
     public PlayerAttributesSO AttributesSO => attributesSO;
@@ -71,6 +72,10 @@ public class PlayerController : MonoBehaviour, IHoldStats
         StartCoroutine(playerStats.HealthRegenCoroutine());
         IDamageable.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value, true);
 
+        StartCoroutine(IStamina.GainStaminaOverTimeCoroutine());
+        StartCoroutine(playerStats.StaminaRegenCoroutine());
+        IStamina.SetStamina(playerStats.GetStatFromName[CommonStatTypeNames.MaxStamina].Value, true);
+
         statModifier = new StatModifier(10, StatModifierTypes.Flat);
     }
     
@@ -83,32 +88,38 @@ public class PlayerController : MonoBehaviour, IHoldStats
 
         if(Input.GetKeyUp(KeyCode.N))
         {
-            IDamageable.TakeDamageInstant(10);
+            IStamina.DepleteStaminaInstant(10);
+            //IDamageable.TakeDamageInstant(10);
         }
 
         if(Input.GetKeyUp(KeyCode.M))
         {
-            IDamageable.HealOverTimeToPercent(80, 10);
+            IStamina.GainStaminaOverTimeToPercent(80, 10);
+            //IDamageable.HealOverTimeToPercent(80, 10);
         }
 
         if(Input.GetKeyUp(KeyCode.B))
         {
-            IDamageable.HealOverTime(10, 5);
+            IStamina.GainStaminaOverTime(10, 5);
+            //IDamageable.HealOverTime(10, 5);
         }
 
         if(Input.GetKeyUp(KeyCode.V))
         {
-            IDamageable.HealInstant(20);
+            IStamina.GainStaminaInstant(20);
+            //IDamageable.HealInstant(20);
         }
 
         if(Input.GetKeyUp(KeyCode.C))
         {
-            playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+            playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
+            //playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
         }
 
         if(Input.GetKeyUp(KeyCode.X))
         {
-            playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+            playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
+            //playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
         }
     }
 

@@ -41,7 +41,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
             m_projectedHealth = value;
         }
     }
-    protected float currentPercentPerSecond;
+    protected float currentPercentPerSecondHealthOverTime;
     protected float lastTimeCurrentHealthActivelyChanged;
 
     protected Stat MaxHealthStat => getStatFromName[CommonStatTypeNames.MaxHealth];
@@ -156,7 +156,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         projectedHealth += amount;
         projectedHealth = Mathf.Clamp(projectedHealth, 0, MaxHealthStat.Value);
 
-        currentPercentPerSecond = percentPerSecond;
+        currentPercentPerSecondHealthOverTime = percentPerSecond;
     }
 
     public void HealOverTimeToPercent(float percent, float percentPerSecond)
@@ -181,7 +181,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         }
 
         projectedHealth = newProjectedHealth;
-        currentPercentPerSecond = percentPerSecond;
+        currentPercentPerSecondHealthOverTime = percentPerSecond;
     }
 
     public IEnumerator HealOverTimeCoroutine()
@@ -197,7 +197,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
             float lastCurrentHealth = currentHealth;
             lastCurrentHealth = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(lastCurrentHealth);
 
-            currentHealth = Mathf.MoveTowards(currentHealth, projectedHealth, MaxHealthStat.Value * (currentPercentPerSecond / 100) * Time.deltaTime);
+            currentHealth = Mathf.MoveTowards(currentHealth, projectedHealth, MaxHealthStat.Value * (currentPercentPerSecondHealthOverTime / 100) * Time.deltaTime);
 
             lastTimeCurrentHealthActivelyChanged = Time.time;
 
@@ -239,7 +239,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         return isDead;
     }
 
-    private bool AssertIsDead(string debugMessage)
+    protected bool AssertIsDead(string debugMessage)
     {
         if(isDead)
         {

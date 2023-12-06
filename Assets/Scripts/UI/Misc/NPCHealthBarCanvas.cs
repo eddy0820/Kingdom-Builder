@@ -34,7 +34,7 @@ public class NPCHealthBarCanvas : MonoBehaviour
         statUI.SetupStatUI(this);
 
         IDamageable.OnHealthChanged += statUI.UpdateHealthBar;
-        Stats.OnStatModifierChanged += statUI.OnStatModifierChanged;
+        Stats.OnStatModifierChanged += statUI.OnStatModifierChangedHealthChanged;
         statUI.HealthHUDFade.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade).TweenValues.CanvasGroup.alpha = 0;
 
         PlayerController.StateMachine.GetState(out lockedOnCharacterControllerState);

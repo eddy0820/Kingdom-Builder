@@ -22,6 +22,7 @@ public class Targetable : MonoBehaviour, ITargetable, IInteractable, IHoldStats
     TargetableStats targetableStats;
     public IDamageable IDamageable => targetableStats;
     public CharacterStats Stats => targetableStats;
+    public IStamina IStamina => null;
 
     private void Awake()
     {

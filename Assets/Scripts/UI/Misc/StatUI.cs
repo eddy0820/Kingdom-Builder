@@ -21,7 +21,7 @@ public abstract class StatUI
     [SerializeField] protected float healthBarRightPaddingMin = 15;
     [SerializeField] protected float healthBarRightPaddingMax = 390;
     [Space(10)]
-    [SerializeField] protected float numSecondsAfterShowToDoCallback = 0.25f;
+    [SerializeField] protected float numSecondsAfterShowToDoCallbackHealthChanged = 0.1f;
     [SerializeField] protected float numSecondsToWaitBeforeHidingHealthBar = 2f;
     protected Sequence currentHealthBarFadeSequence;
 
@@ -45,7 +45,7 @@ public abstract class StatUI
     {
         DoDamagePopup(operation, healthChangeAmount);
 
-        ShowThenHideFadeTweenUIComponent(healthHUDFade, () =>
+        ShowThenHideFadeTweenUIComponentHealthBar(healthHUDFade, () =>
         {
             float projectedHealthPercentage = projectedHealth / maxHealth;
             float currentHealthPercentage = currentHealth / maxHealth;
@@ -65,7 +65,7 @@ public abstract class StatUI
         });
     }
 
-    public void OnStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    public void OnStatModifierChangedHealthChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
     {
         if(stat.type != MaxHealthStat.type) return;
 
@@ -91,7 +91,7 @@ public abstract class StatUI
         UpdateHealthBar(IDamageable.GetRoundedCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
     }
 
-    protected virtual void ShowThenHideFadeTweenUIComponent(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
+    protected virtual void ShowThenHideFadeTweenUIComponentHealthBar(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
     {
         Tween fadeTween = tweenedUIComponent.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade);
         if(fadeTween == null) return;
@@ -112,7 +112,7 @@ public abstract class StatUI
         currentHealthBarFadeSequence = DOTween.Sequence();
         if(!doActionBeforeFade) 
         {   
-            currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallback);
+            currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallbackHealthChanged);
             currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
         }
         currentHealthBarFadeSequence.AppendInterval(numSecondsToWaitBeforeHidingHealthBar);
