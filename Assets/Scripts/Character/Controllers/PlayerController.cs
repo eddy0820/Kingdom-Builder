@@ -88,8 +88,8 @@ public class PlayerController : MonoBehaviour, IHoldStats
 
         if(Input.GetKeyUp(KeyCode.N))
         {
-            IStamina.DepleteStaminaInstant(10);
-            //IDamageable.TakeDamageInstant(10);
+            //IStamina.DepleteStaminaInstant(10);
+            IDamageable.TakeDamageInstant(10);
         }
 
         if(Input.GetKeyUp(KeyCode.M))
@@ -112,14 +112,14 @@ public class PlayerController : MonoBehaviour, IHoldStats
 
         if(Input.GetKeyUp(KeyCode.C))
         {
-            playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
-            //playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+            //playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
+            playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
         }
 
         if(Input.GetKeyUp(KeyCode.X))
         {
-            playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
-            //playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+            //playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
+            playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
         }
     }
 

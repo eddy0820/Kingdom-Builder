@@ -33,6 +33,8 @@ MonoBehaviour:
   stableMovementSharpness: 15
   orientationSharpness: 20
   bonusOrientationSharpness: 20
+  sprintingStaminaCostPerSecond: 2
+  crouchingStaminaCostPerSecond: 2
   airSpeedSettings:
     speed: 10
     acceleration: 30

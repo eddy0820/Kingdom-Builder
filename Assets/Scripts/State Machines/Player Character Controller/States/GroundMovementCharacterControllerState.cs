@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
+using System;
 
 public abstract class GroundMovementCharacterControllerState : PlayerCharacterControllerState
 {   
@@ -67,7 +68,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
         if(!isCrouching)
         {
             isCrouching = true;
-            AnimationController.ToggleCouch(true);
+            stateMachine.OnGroundedMovementCrouching?.Invoke(true);
             isWalking = false;
             isSprinting = false;
 
@@ -103,13 +104,9 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
             SetMovementAnim(currentVelocity, nonRelativeMoveInputVector);
 
             if(IsSprinting && moveInputVector.magnitude > 0f)
-            {
-                AnimationController.ToggleSpint(true);
-            }
+                stateMachine.OnGroundedMovementSprinting?.Invoke(true);
             else
-            {
-                AnimationController.ToggleSpint(false);
-            }
+                stateMachine.OnGroundedMovementSprinting?.Invoke(false);
         }
         // Air movement
         else
@@ -355,7 +352,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
             {
                 // If no obstructions, uncrouch
                 MeshRoot.localScale = new Vector3(1f, 1f, 1f);
-                AnimationController.ToggleCouch(false);
+                stateMachine.OnGroundedMovementCrouching?.Invoke(false);
                 _isCrouching = false;
             }
         };

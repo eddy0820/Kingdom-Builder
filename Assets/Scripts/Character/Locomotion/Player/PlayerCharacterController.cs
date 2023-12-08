@@ -44,6 +44,12 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         [ReadOnly, SerializeField] float bonusOrientationSharpness;
         public float BonusOrientationSharpness => bonusOrientationSharpness;
 
+        [Header("Stamina Costs")]
+        [ReadOnly, SerializeField] float sprintingStaminaCostPerSecond;
+        public float SprintingStaminaCostPerSecond => sprintingStaminaCostPerSecond;
+        [ReadOnly, SerializeField] float crouchingStaminaCostPerSecond;
+        public float CrouchingStaminaCostPerSecond => crouchingStaminaCostPerSecond;
+
         [Header("Air Movement")]
         [ReadOnly, SerializeField] MovementSpeedSettings airSpeedSettings;
         public MovementSpeedSettings AirSpeedSettings => airSpeedSettings;
@@ -79,6 +85,9 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
             stableMovementSharpness = attributesSO.StableMovementSharpness;
             orientationSharpness = attributesSO.OrientationSharpness;
             bonusOrientationSharpness = attributesSO.BonusOrientationSharpness;
+
+            sprintingStaminaCostPerSecond = attributesSO.SprintingStaminaCostPerSecond;
+            crouchingStaminaCostPerSecond = attributesSO.CrouchingStaminaCostPerSecond;
 
             airSpeedSettings = attributesSO.AirSpeedSettings;
             drag = attributesSO.Drag;
@@ -118,6 +127,10 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     [Space(10)]
     [SerializeField] List<Collider> ignoredColliders = new();
     
+    [Space(10)]
+
+    [SerializeField] float staminaDepletionInterval = 0.05f;
+    
 
     Collider[] _probedColliders = new Collider[8];
     RaycastHit[] _probedHits = new RaycastHit[8];
@@ -138,21 +151,22 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     Vector3 lastInnerNormal = Vector3.zero;
     Vector3 lastOuterNormal = Vector3.zero;
-
-    PlayerAnimationController animationController;
-    PlayerCharacterStateMachine stateMachine;
+    
+    PlayerController PlayerController => PlayerController.Instance;
+    PlayerAnimationController AnimationController => PlayerController.AnimationController;
+    PlayerCharacterStateMachine StateMachine => PlayerController.StateMachine;
 
     private void Awake()
     {
-        attributes = new MovementAttributes(PlayerController.Instance.AttributesSO.MovementAttributes as PlayerMovementAttributesSO);
-
-        stateMachine = PlayerController.Instance.StateMachine;
-        animationController = PlayerController.Instance.AnimationController;
+        attributes = new MovementAttributes(PlayerController.AttributesSO.MovementAttributes as PlayerMovementAttributesSO);
 
         currentOrientationMethod = startingOrientationMethod;
         currentBonusOrientationMethod = startingBonusOrientationMethod;
 
         motor.CharacterController = this;
+
+        StateMachine.OnGroundedMovementSprinting += DoStaminaReduction;
+        StateMachine.OnGroundedMovementCrouching += DoStaminaReductionCrouch;
     }
 
     public void SetInputs(ref PlayerCharacterInputs inputs)
@@ -171,8 +185,8 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
         Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, motor.CharacterUp);
 
-        _moveInputVector = stateMachine.CurrentState.SetMoveInputVectorFromInputs(cameraPlanarRotation, moveInputVector);
-        _lookInputVector = stateMachine.CurrentState.SetLookInputVectorFromInputs(currentOrientationMethod, cameraPlanarDirection, _moveInputVector.normalized);
+        _moveInputVector = StateMachine.CurrentState.SetMoveInputVectorFromInputs(cameraPlanarRotation, moveInputVector);
+        _lookInputVector = StateMachine.CurrentState.SetLookInputVectorFromInputs(currentOrientationMethod, cameraPlanarDirection, _moveInputVector.normalized);
     }
 
 #region State Transition Stuff
@@ -193,17 +207,17 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void DoJump()
     {
-        stateMachine.CurrentState.DoJump(ref _timeSinceJumpRequested, ref _jumpRequested);
+        StateMachine.CurrentState.DoJump(ref _timeSinceJumpRequested, ref _jumpRequested);
     }
 
     public void DoCrouchDown()
     {
-        stateMachine.CurrentState.DoCrouchDown(ref _shouldBeCrouching, ref _isCrouching, ref isWalking, ref isSprinting);
+        StateMachine.CurrentState.DoCrouchDown(ref _shouldBeCrouching, ref _isCrouching, ref isWalking, ref isSprinting);
     }
 
     public void DoCrouchUp()
     {
-        stateMachine.CurrentState.DoCrouchUp(ref _shouldBeCrouching);
+        StateMachine.CurrentState.DoCrouchUp(ref _shouldBeCrouching);
     }
 
     public void SetIsWalking(bool _bool)
@@ -244,22 +258,22 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
     {   
-        stateMachine.CurrentState.UpdateVelocity(ref currentVelocity, ref _moveInputVector, ref _jumpedThisFrame, ref _timeSinceJumpRequested, ref _jumpRequested, ref _jumpConsumed, ref _timeSinceLastAbleToJump, ref _internalVelocityAdd, ref targetSpeed, _nonRelativeMoveInputVector, deltaTime);
+        StateMachine.CurrentState.UpdateVelocity(ref currentVelocity, ref _moveInputVector, ref _jumpedThisFrame, ref _timeSinceJumpRequested, ref _jumpRequested, ref _jumpConsumed, ref _timeSinceLastAbleToJump, ref _internalVelocityAdd, ref targetSpeed, _nonRelativeMoveInputVector, deltaTime);
     }
 
     public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
     {
-        stateMachine.CurrentState.UpdateRotation(ref currentRotation, _lookInputVector, deltaTime);
+        StateMachine.CurrentState.UpdateRotation(ref currentRotation, _lookInputVector, deltaTime);
     }
 
     public void BeforeCharacterUpdate(float deltaTime)
     {
-        stateMachine.CurrentState.BeforeCharacterUpdate(deltaTime);
+        StateMachine.CurrentState.BeforeCharacterUpdate(deltaTime);
     }
 
     public void AfterCharacterUpdate(float deltaTime)
     {
-        stateMachine.CurrentState.AfterCharacterUpdate(ref _jumpRequested, ref _jumpConsumed, ref _timeSinceLastAbleToJump, ref _isCrouching, _timeSinceJumpRequested, _jumpedThisFrame, _shouldBeCrouching, _probedColliders, deltaTime);
+        StateMachine.CurrentState.AfterCharacterUpdate(ref _jumpRequested, ref _jumpConsumed, ref _timeSinceLastAbleToJump, ref _isCrouching, _timeSinceJumpRequested, _jumpedThisFrame, _shouldBeCrouching, _probedColliders, deltaTime);
     }
 
 #endregion
@@ -272,7 +286,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     {
         if(Time.timeSinceLevelLoad > 1 && motor.GroundingStatus.IsStableOnGround && !motor.LastGroundingStatus.IsStableOnGround)
         {
-            animationController.SetJumpStatus(EJumpStatus.Land);
+            AnimationController.SetJumpStatus(EJumpStatus.Land);
         }
     }
 
@@ -282,7 +296,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void AddVelocity(Vector3 velocity)
     {
-        stateMachine.CurrentState.AddVelocity(ref _internalVelocityAdd, velocity);
+        StateMachine.CurrentState.AddVelocity(ref _internalVelocityAdd, velocity);
     }
 
     public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
@@ -308,6 +322,46 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
 #endregion
 
+    float lastTimeStaminaReduced = 0;
+
+    private void DoStaminaReduction(bool shouldBeReducing)
+    {
+        if(shouldBeReducing)
+        {
+            if(Time.time - lastTimeStaminaReduced > staminaDepletionInterval)
+            {
+                PlayerController.IStamina.DepleteStaminaInstant(attributes.SprintingStaminaCostPerSecond * staminaDepletionInterval);
+                lastTimeStaminaReduced = Time.time;
+            }
+        }
+    }
+
+    Coroutine crouchStaminaCoroutine;
+
+    private void DoStaminaReductionCrouch(bool shouldBeReducing)
+    {
+        if(shouldBeReducing && crouchStaminaCoroutine == null)
+        {
+            crouchStaminaCoroutine = StartCoroutine(HandleCrouchingStaminaCoroutine());
+        }  
+        else
+        {
+            if(crouchStaminaCoroutine != null)
+            {
+                StopCoroutine(crouchStaminaCoroutine);
+                crouchStaminaCoroutine = null;
+            }
+        }
+    }
+
+    IEnumerator HandleCrouchingStaminaCoroutine()
+    {
+        while(true)
+        {
+            PlayerController.IStamina.DepleteStaminaInstant(attributes.CrouchingStaminaCostPerSecond * staminaDepletionInterval);
+            yield return new WaitForSeconds(staminaDepletionInterval);
+        }
+    }
 }
 
 public enum OrientationMethod

@@ -26,4 +26,11 @@ public abstract class MovementAttributesSO : ScriptableObject
     public float OrientationSharpness => orientationSharpness;
     [BoxGroup(" "), SerializeField] float bonusOrientationSharpness = 20f;
     public float BonusOrientationSharpness => bonusOrientationSharpness;
+    [Space(10)]
+    [Header("Stamina Costs")]
+    [BoxGroup("     "), SerializeField] float sprintingStaminaCostPerSecond;
+    public float SprintingStaminaCostPerSecond => sprintingStaminaCostPerSecond;
+    [BoxGroup("     "), SerializeField] float crouchingStaminaCostPerSecond;
+    public float CrouchingStaminaCostPerSecond => crouchingStaminaCostPerSecond;
+    
 }

@@ -7,9 +7,17 @@ public class PlayerAnimationController : MonoBehaviour
 {
     [SerializeField] Animator animator;
 
-    public void ToggleCouch(bool isCouch)
+    PlayerCharacterStateMachine PlayerCharacterStateMachine => PlayerController.Instance.StateMachine;
+
+    private void Awake()
     {
-        animator.SetBool(AnimationParameters.Crouch, isCouch);
+        PlayerCharacterStateMachine.OnGroundedMovementSprinting += ToggleSpint;
+        PlayerCharacterStateMachine.OnGroundedMovementCrouching += ToggleCrouch;
+    }
+
+    public void ToggleCrouch(bool isCrouch)
+    {
+        animator.SetBool(AnimationParameters.Crouch, isCrouch);
     }
 
     public void ToggleMoving(bool isMoving)
