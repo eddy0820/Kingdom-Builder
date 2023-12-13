@@ -542,6 +542,7 @@ GameObject:
   - component: {fileID: 240654089}
   - component: {fileID: 240654090}
   - component: {fileID: 240654091}
+  - component: {fileID: 240654092}
   m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
@@ -641,8 +642,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39a45d72845de214da71528e55dfa03b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionTypes:
-  - {fileID: 11400000, guid: 570a56bf26dbadd4f8412ccf07018c58, type: 2}
   damageNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
 --- !u!114 &240654090
 MonoBehaviour:
@@ -670,6 +669,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockOnLocation: {fileID: 1042857215}
+--- !u!114 &240654092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240654084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 636994a0869948741a8774ee69f3aa28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canTakeDamage: 1
+  damageableCharacterStats: {fileID: 240654090}
+  interactionTypes:
+  - {fileID: 11400000, guid: 570a56bf26dbadd4f8412ccf07018c58, type: 2}
 --- !u!1 &681836449
 GameObject:
   m_ObjectHideFlags: 0
