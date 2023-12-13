@@ -51,8 +51,6 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     protected bool isDead = false;
 
-    public DamageableCharacterStats(BaseStatsSO _baseStatsSO) : base(_baseStatsSO) {}
-
     public void SetHealth(float amount, bool setAsNoChange = false)
     {
         if(AssertIsDead("Can't set health when dead.")) return;

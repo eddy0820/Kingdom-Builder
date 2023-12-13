@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour, IHoldStats
             Instance = this;
         }
 
-        playerStats = new PlayerStats(baseStatsSO);
+        //playerStats = new PlayerStats(baseStatsSO);
     }
 
     private void Start()

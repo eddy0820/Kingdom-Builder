@@ -5,9 +5,9 @@ using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class CharacterStats
+public abstract class CharacterStats : MonoBehaviour
 {
-    protected BaseStatsSO baseStatsSO;
+    [SerializeField] protected BaseStatsSO baseStatsSO;
 
     protected Dictionary<string, Stat> getStatFromName = new();
     public Dictionary<string, Stat> GetStatFromName => getStatFromName;
@@ -18,9 +18,8 @@ public abstract class CharacterStats
 
     public Action<Stat, StatModifier, EStatModifierChangedOperation> OnStatModifierChanged;
 
-    public CharacterStats(BaseStatsSO _baseStatsSO)
+    private void Awake()
     {
-        baseStatsSO = _baseStatsSO;
         InitializeCharacterStats();
     }
 

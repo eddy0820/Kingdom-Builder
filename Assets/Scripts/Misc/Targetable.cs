@@ -26,7 +26,7 @@ public class Targetable : MonoBehaviour, ITargetable, IInteractable, IHoldStats
 
     private void Awake()
     {
-        targetableStats = new TargetableStats(baseStatsSO);
+        //targetableStats = new TargetableStats(baseStatsSO);
 
         StartCoroutine(targetableStats.HealOverTimeCoroutine());
         targetableStats.SetHealth(targetableStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
@@ -48,7 +48,7 @@ public class Targetable : MonoBehaviour, ITargetable, IInteractable, IHoldStats
 
 public class TargetableStats : DamageableCharacterStats
 {
-    public TargetableStats(BaseStatsSO _baseStatsSO) : base(_baseStatsSO) {}
+    //public TargetableStats(BaseStatsSO _baseStatsSO) : base(_baseStatsSO) {}
 
     protected override string GetDamageableNameInternal()
     {

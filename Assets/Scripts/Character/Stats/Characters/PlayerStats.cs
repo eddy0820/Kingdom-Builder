@@ -7,7 +7,6 @@ using DG.Tweening;
 [Serializable]
 public class PlayerStats : DamageableCharacterStats, IStamina
 {
-    public PlayerStats(BaseStatsSO _baseStatsSO) : base(_baseStatsSO) {}
     string playerName = "Player";
 
 #region Health Stuff 
