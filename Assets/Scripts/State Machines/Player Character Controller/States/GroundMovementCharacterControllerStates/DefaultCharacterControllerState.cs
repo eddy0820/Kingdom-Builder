@@ -29,6 +29,7 @@ public class DefaultCharacterControllerState : GroundMovementCharacterController
 
     public override void OnFixedUpdateState()
     {
+        if(!PlayerSpawner.Instance.EnableInteraction) return;
         if(PlayerController.PlayerStats.IsDead()) return;
 
         Vector3 screenCenter = new(Screen.width / 2f, Screen.height / 2f, 0f);

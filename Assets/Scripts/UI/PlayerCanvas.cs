@@ -215,7 +215,7 @@ public class PlayerStatUI : StatUI
         }
 
         float cooldown = numSecondsToWaitBeforeHidingHealthBar;
-        if(IDamageable.GetRoundedCurrentHealth() != MaxHealthStat.Value)
+        if(IDamageable.GetCurrentHealth() != MaxHealthStat.Value)
             cooldown += OutOfCombatHealthRegenCooldownStat.Value;
 
         currentHealthBarFadeSequence.AppendInterval(cooldown);
@@ -255,7 +255,7 @@ public class PlayerStatUI : StatUI
     {
         if(stat.type != MaxHealthStat.type) return;
         
-        UpdateSingleTargetHealthBar(IDamageable.GetRoundedCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
+        UpdateSingleTargetHealthBar(IDamageable.GetCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
     }
 
     public void ToggleSingleTargetHealthBar(bool b, CharacterStats stats, IDamageable damageable)
@@ -265,7 +265,7 @@ public class PlayerStatUI : StatUI
         if(b)
         {
             singleTargetNameText.text = damageable.GetDamageableName();
-            UpdateSingleTargetHealthBar(damageable.GetRoundedCurrentHealth(), damageable.GetProjectedHealth(), stats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
+            UpdateSingleTargetHealthBar(damageable.GetCurrentHealth(), damageable.GetProjectedHealth(), stats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
 
             damageable.OnHealthChanged += UpdateSingleTargetHealthBar;
             stats.OnStatModifierChanged += OnSingleTargetStatModifierChanged;

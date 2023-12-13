@@ -9,6 +9,12 @@ public class GameSettings : MonoBehaviour
 
     [Expandable, SerializeField] GameplaySettingsSO defaultGameplaySettings;
 
+    [Space(15)]
+    [SerializeField] bool enableHealthDebugMessages = true;
+    public bool EnableHealthDebugMessages => enableHealthDebugMessages;
+    [SerializeField] bool enableStaminaDebugMessages = true;
+    public bool EnableStaminaDebugMessages => enableStaminaDebugMessages;
+
     Vector3 gravity = Vector3.zero;
     public Vector3 Gravity =>  gravity;
 

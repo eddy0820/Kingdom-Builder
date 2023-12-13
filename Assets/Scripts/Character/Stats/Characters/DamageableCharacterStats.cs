@@ -86,17 +86,12 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     public float GetCurrentHealth()
     {
-        return currentHealth;
-    }
-
-    public float GetRoundedCurrentHealth()
-    {
         return CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(currentHealth);
     }
 
     public float GetProjectedHealth()
     {
-        return projectedHealth;
+        return CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(projectedHealth);
     }
 
     public void TakeDamageInstant(float damage)
@@ -223,8 +218,8 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     protected void InvokeOnHealthChanged(EHealthChangedOperation operation, float healthChangeAmount)
     {
-        if(PlayerSpawner.Instance.EnableHealthDebugMessages)
-            Debug.Log($"Name: {GetDamageableName()} | Current health: {currentHealth}, Projected health: {projectedHealth}, Max health: {MaxHealthStat.Value}");
+        if(GameSettings.Instance.EnableHealthDebugMessages)
+            Debug.Log($"Name: {GetDamageableName()} | Current health: {GetCurrentHealth()}, Projected health: {GetProjectedHealth()}, Max health: {MaxHealthStat.Value}");
         
         healthChangeAmount = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(healthChangeAmount);
         OnHealthChanged?.Invoke(currentHealth, projectedHealth, MaxHealthStat.Value, operation, healthChangeAmount);
@@ -234,7 +229,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
     {
         isDead = true;
 
-        if(PlayerSpawner.Instance.EnableHealthDebugMessages)
+        if(GameSettings.Instance.EnableHealthDebugMessages)
             Debug.Log($"{GetDamageableName()} died");
     } 
 

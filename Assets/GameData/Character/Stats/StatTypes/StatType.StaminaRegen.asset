@@ -15,4 +15,4 @@ MonoBehaviour:
   name: StaminaRegen
   defaultValue: 1
   defaultMinValue: 0
-  defaultMaxValue: 100
+  defaultMaxValue: Infinity

@@ -29,7 +29,7 @@ public class PlayerStats : DamageableCharacterStats, IStamina
         StateMachine.OnGroundedMovementSprinting += DoStaminaReduction;
         StateMachine.OnGroundedMovementCrouching += DoStaminaReductionCrouch;
 
-        statModifier = new StatModifier(10, StatModifierTypes.Flat);
+        statModifier = new StatModifier(1, StatModifierTypes.Flat);
     }
 
     StatModifier statModifier;
@@ -44,20 +44,20 @@ public class PlayerStats : DamageableCharacterStats, IStamina
 
         if(Input.GetKeyUp(KeyCode.M))
         {
-            GainStaminaOverTimeToPercent(80, 10);
-            //HealOverTimeToPercent(80, 10);
+            //GainStaminaOverTimeToPercent(80, 10);
+            HealOverTimeToPercent(80, 10);
         }
 
         if(Input.GetKeyUp(KeyCode.B))
         {
-            GainStaminaOverTime(10, 5);
-            //HealOverTime(10, 5);
+            //GainStaminaOverTime(10, 5);
+            HealOverTime(10, 5);
         }
 
         if(Input.GetKeyUp(KeyCode.V))
         {
-            GainStaminaInstant(20);
-            //HealInstant(20);
+            //GainStaminaInstant(20);
+            HealInstant(20);
         }
 
         if(Input.GetKeyUp(KeyCode.C))
@@ -87,7 +87,7 @@ public class PlayerStats : DamageableCharacterStats, IStamina
                 continue;
             }
 
-            float amount = MaxHealthStat.Value * (HealthRegenStat.Value / 100);
+            float amount = HealthRegenStat.Value;
 
             if(amount > MaxHealthStat.Value - projectedHealth)
                 amount = MaxHealthStat.Value - projectedHealth;
@@ -316,7 +316,7 @@ public class PlayerStats : DamageableCharacterStats, IStamina
 
     protected void InvokeOnStaminaChanged(EStaminaChangedOperation operation, float staminaChangeAmount)
     {
-        if(PlayerSpawner.Instance.EnableStaminaDebugMessages)
+        if(GameSettings.Instance.EnableStaminaDebugMessages)
             Debug.Log($"Name: {GetStaminaName()} | Current stamina: {currentStamina}, Projected stamina: {projectedStamina}, Max stamina: {MaxStaminaStat.Value}");
     
         staminaChangeAmount = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(staminaChangeAmount);
@@ -338,7 +338,7 @@ public class PlayerStats : DamageableCharacterStats, IStamina
                 continue;
             }
 
-            float amount = MaxStaminaStat.Value * (StaminaRegenStat.Value / 100);
+            float amount = StaminaRegenStat.Value;
 
             if(amount > MaxStaminaStat.Value - projectedStamina)
                 amount = MaxStaminaStat.Value - projectedStamina;

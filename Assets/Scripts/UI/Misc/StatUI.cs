@@ -93,7 +93,7 @@ public abstract class StatUI
 
         DoMaxHealthChangePopup(operation, maxHealthChangedAmount);
         
-        OnHealthChanged(IDamageable.GetRoundedCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
+        OnHealthChanged(IDamageable.GetCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
     }
 
     protected virtual void ShowThenHideFadeTweenUIComponentHealthBar(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
@@ -171,7 +171,7 @@ public abstract class StatUI
         int threshold = (int)(MaxHealthStat.Value / 100);
         threshold = (int)Mathf.Clamp(threshold, damagePopupMinThreshold, 10);
 
-        if(currentHealthWaitingToBeShown < threshold && IDamageable.GetRoundedCurrentHealth() != IDamageable.GetProjectedHealth())
+        if(currentHealthWaitingToBeShown < threshold && IDamageable.GetCurrentHealth() != IDamageable.GetProjectedHealth())
             return null;
 
         float leftOverHealth = Mathf.Round(currentHealthWaitingToBeShown % damagePopupMinThreshold * 10f) / 10f;
@@ -184,7 +184,7 @@ public abstract class StatUI
 
         if(leftOverHealth > 0) 
         {
-            if(IDamageable.GetRoundedCurrentHealth() == IDamageable.GetProjectedHealth())
+            if(IDamageable.GetCurrentHealth() == IDamageable.GetProjectedHealth())
             {
                 healthChangeAmount += leftOverHealth;
             }

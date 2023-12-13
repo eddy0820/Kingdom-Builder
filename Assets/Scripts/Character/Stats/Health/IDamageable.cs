@@ -9,7 +9,6 @@ public interface IDamageable
     public void SetHealth(float amount, bool setAsNoChange = false);
 
     public float GetCurrentHealth();
-    public float GetRoundedCurrentHealth();
     public float GetProjectedHealth();
 
     public void TakeDamageInstant(float damage);
