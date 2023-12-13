@@ -79,7 +79,7 @@ public class PlayerCanvas : MonoBehaviour
         interactionCrosshair.TweenUIComponent(b);
     }
 
-    public void ShowInteractions(IInteractable interactable, List<InteractionTypeSO> interactionTypes)
+    public void ShowInteractions(Interactable interactable, List<InteractionTypeSO> interactionTypes)
     {
         for(int i = 0; i < interactionTypes.Count; i++)
         {

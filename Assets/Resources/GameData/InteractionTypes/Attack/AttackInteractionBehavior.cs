@@ -9,7 +9,7 @@ public class AttackInteractionBehavior : InteractionTypeBehavior
 
     PlayerStats PlayerStats => PlayerController.PlayerStats;
 
-    public override void Interact(IInteractable interactable)
+    public override void Interact(Interactable interactable)
     {
         IDamageable damageable = interactable.IDamageable;
 

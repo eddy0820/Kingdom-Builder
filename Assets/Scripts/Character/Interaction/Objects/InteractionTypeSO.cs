@@ -30,7 +30,7 @@ public class InteractionTypeSO : ScriptableObject
     [ReadOnly, SerializeField] string actualPrefabPath = "";
     [Space(5)]
     [Required, ReadOnly, SerializeField] InteractionTypeBehavior interactionTypeBehavior;
-    public Action<IInteractable> Interact => interactionTypeBehavior.Interact;
+    public Action<Interactable> Interact => interactionTypeBehavior.Interact;
 
 
     [Button]
@@ -54,7 +54,7 @@ public class InteractionTypeSO : ScriptableObject
             sb.AppendLine("");
             sb.AppendLine("public class " + pathName + "InteractionBehavior : InteractionTypeBehavior");
             sb.AppendLine("{");
-            sb.AppendLine("    public override void Interact(IInteractable interactable)");
+            sb.AppendLine("    public override void Interact(Interactable interactable)");
             sb.AppendLine("    {");
             sb.AppendLine("        throw new System.NotImplementedException();");
             sb.AppendLine("    }");

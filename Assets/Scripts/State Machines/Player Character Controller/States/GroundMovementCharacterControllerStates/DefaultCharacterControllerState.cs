@@ -36,7 +36,7 @@ public class DefaultCharacterControllerState : GroundMovementCharacterController
 
         if(Physics.Raycast(ray, out RaycastHit hit, InteractionRangeStat.Value, interactionLayerMask, QueryTriggerInteraction.Collide))
         {
-            if(hit.collider.TryGetComponent(out IInteractable interactable))
+            if(hit.collider.TryGetComponent(out Interactable interactable))
             {
                 if(!canInteractWithSomething) ToggleInteractions(true, interactable, interactable.InteractionTypes);
             }
@@ -51,7 +51,7 @@ public class DefaultCharacterControllerState : GroundMovementCharacterController
         }
     }
 
-    private void ToggleInteractions(bool toggle, IInteractable interactable = null, List<InteractionTypeSO> interactionTypes = null)
+    private void ToggleInteractions(bool toggle, Interactable interactable = null, List<InteractionTypeSO> interactionTypes = null)
     {
         canInteractWithSomething = toggle;
         PlayerCanvas.ToggleInteractionCrosshair(toggle);

@@ -4,7 +4,7 @@ using NaughtyAttributes;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
-public class Interactable : MonoBehaviour, IInteractable
+public class Interactable : MonoBehaviour
 {
     [SerializeField] bool canTakeDamage = false;
     [ShowIf("canTakeDamage"), SerializeField] DamageableCharacterStats damageableCharacterStats;
