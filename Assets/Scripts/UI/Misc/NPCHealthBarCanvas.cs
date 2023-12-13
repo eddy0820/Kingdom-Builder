@@ -12,12 +12,9 @@ public class NPCHealthBarCanvas : MonoBehaviour
 
     [Space(15)]
 
-    [SerializeField] MonoBehaviour ITargetableMono;
-    ITargetable ITargetable => ITargetableMono as ITargetable;
-    [SerializeField] MonoBehaviour IHoldStatsMono;
-    IHoldStats IHoldStats => IHoldStatsMono as IHoldStats;
-    IDamageable IDamageable => IHoldStats.IDamageable;
-    CharacterStats Stats => IHoldStats.Stats;
+    [SerializeField] Targetable targetable;
+    [SerializeField] DamageableCharacterStats characterStats;
+    IDamageable IDamageable => characterStats;
 
     LockedOnCharacterControllerState lockedOnCharacterControllerState;
     PlayerController PlayerController => PlayerController.Instance;
@@ -33,8 +30,8 @@ public class NPCHealthBarCanvas : MonoBehaviour
     {
         statUI.SetupStatUI(this);
 
-        IDamageable.OnHealthChanged += statUI.UpdateHealthBar;
-        Stats.OnStatModifierChanged += statUI.OnStatModifierChangedHealthChanged;
+        IDamageable.OnHealthChanged += statUI.OnHealthChanged;
+        characterStats.OnStatModifierChanged += statUI.OnStatModifierChangedHealthChanged;
         statUI.HealthHUDFade.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade).TweenValues.CanvasGroup.alpha = 0;
 
         PlayerController.StateMachine.GetState(out lockedOnCharacterControllerState);
@@ -68,24 +65,24 @@ public class NPCHealthBarCanvas : MonoBehaviour
         transform.Rotate(0, 180, 0);
     }
 
-    private void OnAquiredTargetLockedOnState(ITargetable aquiuredTarget)
+    private void OnAquiredTargetLockedOnState(Targetable aquiuredTarget)
     {
-        if(aquiuredTarget != ITargetable) return;
+        if(aquiuredTarget != targetable) return;
 
         doRaycast = false;
         statUI.HealthHUDFade.GameObj.SetActive(false);
 
-        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(true, Stats, IDamageable);
+        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(true, characterStats, IDamageable);
     }
 
-    private void OnLostTargetLockedOnState(ITargetable lostTarget)
+    private void OnLostTargetLockedOnState(Targetable lostTarget)
     {
-        if(lostTarget != ITargetable) return;
+        if(lostTarget != targetable) return;
 
         doRaycast = true;
         statUI.HealthHUDFade.GameObj.SetActive(true);
 
-        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(false, Stats, IDamageable);
+        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(false, characterStats, IDamageable);
     }
 
     [Serializable]
@@ -96,11 +93,20 @@ public class NPCHealthBarCanvas : MonoBehaviour
         protected override IDamageable IDamageable => nPCHealthBarCanvas.IDamageable;
         protected override Transform DamageNumberSpawnTransform => nPCHealthBarCanvas.transform;
         protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position;
-        protected override Stat MaxHealthStat => nPCHealthBarCanvas.Stats.GetStatFromName[CommonStatTypeNames.MaxHealth];
+        protected override Stat MaxHealthStat => nPCHealthBarCanvas.characterStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
 
         public void SetupStatUI(NPCHealthBarCanvas _nPCHealthBarCanvas)
         {
             nPCHealthBarCanvas = _nPCHealthBarCanvas;
+        }
+
+        public override void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
+        {
+            DoDamagePopup(operation, healthChangeAmount);
+
+            if(operation == EHealthChangedOperation.NoChange) return;
+
+            UpdateHealthBar(currentHealth, projectedHealth, maxHealth);
         }
     }
 }

@@ -41,10 +41,15 @@ public abstract class StatUI
 
     protected abstract IDamageable IDamageable { get; }
 
-    public virtual void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
+    public virtual void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
         DoDamagePopup(operation, healthChangeAmount);
 
+        UpdateHealthBar(currentHealth, projectedHealth, maxHealth);
+    }
+
+    protected void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth)
+    {
         ShowThenHideFadeTweenUIComponentHealthBar(healthHUDFade, () =>
         {
             float projectedHealthPercentage = projectedHealth / maxHealth;
@@ -88,7 +93,7 @@ public abstract class StatUI
 
         DoMaxHealthChangePopup(operation, maxHealthChangedAmount);
         
-        UpdateHealthBar(IDamageable.GetRoundedCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
+        OnHealthChanged(IDamageable.GetRoundedCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
     }
 
     protected virtual void ShowThenHideFadeTweenUIComponentHealthBar(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
@@ -120,7 +125,7 @@ public abstract class StatUI
         currentHealthBarFadeSequence.Play();
     }
 
-    private void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
+    protected void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
     {
         DamageNumberMesh damageNumberMesh;
         

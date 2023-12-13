@@ -7,7 +7,71 @@ using DG.Tweening;
 [Serializable]
 public class PlayerStats : DamageableCharacterStats, IStamina
 {
-    string playerName = "Player";
+    [Space(10)]
+
+    [SerializeField] float staminaDepletionInterval = 0.05f;
+
+    PlayerController PlayerController => PlayerController.Instance;
+
+    PlayerCharacterStateMachine StateMachine => PlayerController.StateMachine;
+    PlayerCharacterController.MovementAttributes MovementAttributes => PlayerController.Character.Attributes;
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+
+        StartCoroutine(HealthRegenCoroutine());
+
+        StartCoroutine(GainStaminaOverTimeCoroutine());
+        StartCoroutine(StaminaRegenCoroutine());
+        SetStamina(MaxStaminaStat.Value, true);
+
+        StateMachine.OnGroundedMovementSprinting += DoStaminaReduction;
+        StateMachine.OnGroundedMovementCrouching += DoStaminaReductionCrouch;
+
+        statModifier = new StatModifier(10, StatModifierTypes.Flat);
+    }
+
+    StatModifier statModifier;
+
+    private void Update()
+    {
+        if(Input.GetKeyUp(KeyCode.N))
+        {
+            //DepleteStaminaInstant(10);
+            TakeDamageInstant(10);
+        }
+
+        if(Input.GetKeyUp(KeyCode.M))
+        {
+            GainStaminaOverTimeToPercent(80, 10);
+            //HealOverTimeToPercent(80, 10);
+        }
+
+        if(Input.GetKeyUp(KeyCode.B))
+        {
+            GainStaminaOverTime(10, 5);
+            //HealOverTime(10, 5);
+        }
+
+        if(Input.GetKeyUp(KeyCode.V))
+        {
+            GainStaminaInstant(20);
+            //HealInstant(20);
+        }
+
+        if(Input.GetKeyUp(KeyCode.C))
+        {
+            //ApplyStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
+            ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+        }
+
+        if(Input.GetKeyUp(KeyCode.X))
+        {
+            //RemoveStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
+            RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+        }
+    }
 
 #region Health Stuff 
     Stat HealthRegenStat => getStatFromName[CommonStatTypeNames.HealthRegen];
@@ -38,11 +102,6 @@ public class PlayerStats : DamageableCharacterStats, IStamina
 
             yield return new WaitForSeconds(1);
         }
-    }
-
-    protected override string GetDamageableNameInternal()
-    {
-        return playerName;
     }
 
 #endregion
@@ -266,7 +325,7 @@ public class PlayerStats : DamageableCharacterStats, IStamina
 
     public string GetStaminaName()
     {
-        return playerName;
+        return gameObject.name;
     }
 
     public IEnumerator StaminaRegenCoroutine()
@@ -297,5 +356,47 @@ public class PlayerStats : DamageableCharacterStats, IStamina
     }
 
 #endregion
+
+
+    float lastTimeStaminaReduced = 0;
+
+    private void DoStaminaReduction(bool shouldBeReducing)
+    {
+        if(shouldBeReducing)
+        {
+            if(Time.time - lastTimeStaminaReduced > staminaDepletionInterval)
+            {
+                DepleteStaminaInstant(MovementAttributes.SprintingStaminaCostPerSecond * staminaDepletionInterval);
+                lastTimeStaminaReduced = Time.time;
+            }
+        }
+    }
+
+    Coroutine crouchStaminaCoroutine;
+
+    private void DoStaminaReductionCrouch(bool shouldBeReducing)
+    {
+        if(shouldBeReducing && crouchStaminaCoroutine == null)
+        {
+            crouchStaminaCoroutine = StartCoroutine(HandleCrouchingStaminaCoroutine());
+        }  
+        else
+        {
+            if(crouchStaminaCoroutine != null)
+            {
+                StopCoroutine(crouchStaminaCoroutine);
+                crouchStaminaCoroutine = null;
+            }
+        }
+    }
+
+    IEnumerator HandleCrouchingStaminaCoroutine()
+    {
+        while(true)
+        {
+            DepleteStaminaInstant(MovementAttributes.CrouchingStaminaCostPerSecond * staminaDepletionInterval);
+            yield return new WaitForSeconds(staminaDepletionInterval);
+        }
+    }
 
 }

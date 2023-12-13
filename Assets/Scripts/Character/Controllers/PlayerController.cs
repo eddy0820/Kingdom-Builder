@@ -5,7 +5,7 @@ using UnityEngine;
 using KinematicCharacterController;
 using NaughtyAttributes;
 
-public class PlayerController : MonoBehaviour, IHoldStats
+public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
 
@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour, IHoldStats
     public PlayerCharacterController Character => character;
     [SerializeField] PlayerCharacterStateMachine stateMachine;
     public PlayerCharacterStateMachine StateMachine => stateMachine;
+    [SerializeField] PlayerStats playerStats;
+    public PlayerStats PlayerStats => playerStats;
+    
     [SerializeField] PlayerCamera characterCamera;
     public PlayerCamera CharacterCamera => characterCamera;
     [SerializeField] PlayerCanvas uiCanvas;
@@ -23,14 +26,6 @@ public class PlayerController : MonoBehaviour, IHoldStats
     public PlayerAnimationController AnimationController => animationController;
 
     [Space(10)]
-
-    [Expandable, SerializeField] BaseStatsSO baseStatsSO;
-    public BaseStatsSO BaseStatsSO => baseStatsSO;
-
-    PlayerStats playerStats;
-    public CharacterStats Stats => playerStats;
-    public IDamageable IDamageable => playerStats;
-    public IStamina IStamina => playerStats;
 
     [Expandable, SerializeField] PlayerAttributesSO attributesSO;
     public PlayerAttributesSO AttributesSO => attributesSO;
@@ -53,8 +48,6 @@ public class PlayerController : MonoBehaviour, IHoldStats
         {
             Instance = this;
         }
-
-        //playerStats = new PlayerStats(baseStatsSO);
     }
 
     private void Start()
@@ -67,60 +60,14 @@ public class PlayerController : MonoBehaviour, IHoldStats
         // Ignore the character's collider(s) for camera obstruction checks
         characterCamera.IgnoredColliders.Clear();
         characterCamera.IgnoredColliders.AddRange(character.GetComponentsInChildren<Collider>());
-
-        StartCoroutine(IDamageable.HealOverTimeCoroutine());
-        StartCoroutine(playerStats.HealthRegenCoroutine());
-        IDamageable.SetHealth(playerStats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value, true);
-
-        StartCoroutine(IStamina.GainStaminaOverTimeCoroutine());
-        StartCoroutine(playerStats.StaminaRegenCoroutine());
-        IStamina.SetStamina(playerStats.GetStatFromName[CommonStatTypeNames.MaxStamina].Value, true);
-
-        statModifier = new StatModifier(10, StatModifierTypes.Flat);
     }
     
-    StatModifier statModifier;
+   
     private void Update()
     {
         HandleCharacterInput();
 
         characterCamera.CheckIfFirstPerson();
-
-        if(Input.GetKeyUp(KeyCode.N))
-        {
-            //IStamina.DepleteStaminaInstant(10);
-            IDamageable.TakeDamageInstant(10);
-        }
-
-        if(Input.GetKeyUp(KeyCode.M))
-        {
-            IStamina.GainStaminaOverTimeToPercent(80, 10);
-            //IDamageable.HealOverTimeToPercent(80, 10);
-        }
-
-        if(Input.GetKeyUp(KeyCode.B))
-        {
-            IStamina.GainStaminaOverTime(10, 5);
-            //IDamageable.HealOverTime(10, 5);
-        }
-
-        if(Input.GetKeyUp(KeyCode.V))
-        {
-            IStamina.GainStaminaInstant(20);
-            //IDamageable.HealInstant(20);
-        }
-
-        if(Input.GetKeyUp(KeyCode.C))
-        {
-            //playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
-            playerStats.ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
-        }
-
-        if(Input.GetKeyUp(KeyCode.X))
-        {
-            //playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
-            playerStats.RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
-        }
     }
 
     private void LateUpdate()

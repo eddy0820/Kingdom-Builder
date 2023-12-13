@@ -22,8 +22,8 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
     [SerializeField] float noticeZone = 10f;
     [SerializeField] float maxNoticeAngle = 60;
 
-    ITargetable currentTargetable;
-    public ITargetable CurrentTargetable => currentTargetable;
+    Targetable currentTargetable;
+    public Targetable CurrentTargetable => currentTargetable;
 
     Vector3 currentLockOnPosition;
     Vector3 lookAtDirectionVector;
@@ -33,8 +33,8 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     DefaultCharacterControllerState defaultState;
 
-    public Action<ITargetable> OnAcquiredTarget;
-    public Action<ITargetable> OnLostTarget;
+    public Action<Targetable> OnAcquiredTarget;
+    public Action<Targetable> OnLostTarget;
 
     public override void OnAwake()
     {
@@ -93,14 +93,14 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
             return;
         }
 
-        ITargetable newTargetable;
+        Targetable newTargetable;
         if((newTargetable = ScanNearBy()) != null) 
             FoundTarget(newTargetable);
         else 
             ResetTarget();
     }
 
-    private void FoundTarget(ITargetable newTargetable)
+    private void FoundTarget(Targetable newTargetable)
     {
         currentTargetable = newTargetable;
 
@@ -119,12 +119,12 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
     }
         
 
-    private ITargetable ScanNearBy()
+    private Targetable ScanNearBy()
     {
         Collider[] nearbyTargets = Physics.OverlapSphere(Motor.Transform.position, noticeZone, targetLayers);
-        ITargetable[] nearbyTargetables = nearbyTargets.Select(x => x.GetComponent<MonoBehaviour>()).Select(x => (ITargetable)x).Where(x => x != null).ToArray();
+        Targetable[] nearbyTargetables = nearbyTargets.Select(x => x.GetComponent<Targetable>()).Where(x => x != null).ToArray();
         float closestAngle = maxNoticeAngle;
-        ITargetable closestTarget = null;
+        Targetable closestTarget = null;
 
         if(nearbyTargetables.Length <= 0) return null;
 

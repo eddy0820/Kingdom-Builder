@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using NaughtyAttributes;
 
 [System.Serializable]
 public abstract class CharacterStats : MonoBehaviour
 {
-    [SerializeField] protected BaseStatsSO baseStatsSO;
+    [Expandable, SerializeField] protected BaseStatsSO baseStatsSO;
 
     protected Dictionary<string, Stat> getStatFromName = new();
     public Dictionary<string, Stat> GetStatFromName => getStatFromName;
@@ -20,14 +21,29 @@ public abstract class CharacterStats : MonoBehaviour
 
     private void Awake()
     {
+        DoAwake();
+    }
+
+    private void Start()
+    {
+        OnStart();
+    }
+
+    protected virtual void DoAwake()
+    {
         InitializeCharacterStats();
+    }
+
+    protected virtual void OnStart()
+    {
+
     }
 
     protected virtual void InitializeCharacterStats()
     {
         foreach(BaseStatsSO.BaseStat baseStat in baseStatsSO.Stats)
         {
-            Stat stat = new Stat(baseStat.StatType, baseStat.Value);
+            Stat stat = new(baseStat.StatType, baseStat.Value);
             getStatFromName.Add(baseStat.StatType.Name, stat);
             getStatFromType.Add(baseStat.StatType, stat);
             getStatTypeFromName.Add(baseStat.StatType.Name, baseStat.StatType);

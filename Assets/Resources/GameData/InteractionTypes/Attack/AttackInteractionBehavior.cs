@@ -7,7 +7,7 @@ public class AttackInteractionBehavior : InteractionTypeBehavior
 {
     [SerializeField] StatTypeSO damageStatType;
 
-    PlayerStats PlayerStats => PlayerController.Stats as PlayerStats;
+    PlayerStats PlayerStats => PlayerController.PlayerStats;
 
     public override void Interact(IInteractable interactable)
     {

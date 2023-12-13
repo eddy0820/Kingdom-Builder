@@ -44,9 +44,7 @@ public class PlayerCanvas : MonoBehaviour
     BuildHotbarInterface buildHotbarInterface;
     public BuildHotbarInterface BuildHotbarInterface => buildHotbarInterface;
 
-    IDamageable PlayerStatsDamageable => PlayerController.Instance.IDamageable;
-    IStamina PlayerStatsStamina => PlayerController.Instance.IStamina;
-    PlayerStats PlayerStats => PlayerController.Instance.Stats as PlayerStats;
+    PlayerStats PlayerStats => PlayerController.Instance.PlayerStats;
 
     private void Awake()
     {
@@ -58,10 +56,10 @@ public class PlayerCanvas : MonoBehaviour
         crosshair.GameObj.SetActive(false);
         crosshair.RectTransform.localScale = Vector3.zero;
 
-        PlayerStatsDamageable.OnHealthChanged += playerStatUI.UpdateHealthBar;
+        PlayerStats.OnHealthChanged += playerStatUI.OnHealthChanged;
         PlayerStats.OnStatModifierChanged += playerStatUI.OnStatModifierChangedHealthChanged;
 
-        PlayerStatsStamina.OnStaminaChanged += playerStatUI.UpdateStaminaBar;
+        PlayerStats.OnStaminaChanged += playerStatUI.UpdateStaminaBar;
         PlayerStats.OnStatModifierChanged += playerStatUI.OnStatModifierChangedStaminaChanged;
 
         interactionCrosshair.GameObj.SetActive(false);
@@ -170,22 +168,22 @@ public class PlayerStatUI : StatUI
     PlayerController PlayerController => PlayerController.Instance;
     KinematicCharacterMotor Motor => PlayerController.Character.Motor;
     PlayerCanvas PlayerCanvas => PlayerController.UICanvas;
-    PlayerStats PlayerStats => PlayerController.Stats as PlayerStats;
-    protected override IDamageable IDamageable => PlayerController.IDamageable;
+    PlayerStats PlayerStats => PlayerController.PlayerStats;
+    protected override IDamageable IDamageable => PlayerController.PlayerStats;
     protected override Transform DamageNumberSpawnTransform => Motor.Transform;
     protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position + new Vector3(0f, Motor.Capsule.height, 0f);
     protected override Stat MaxHealthStat => PlayerStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
     protected Stat OutOfCombatHealthRegenCooldownStat => PlayerStats.GetStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown];
 
-    IStamina IStamina => PlayerController.IStamina;
+    IStamina IStamina => PlayerController.PlayerStats;
     Stat MaxStaminaStat => PlayerStats.GetStatFromName[CommonStatTypeNames.MaxStamina];
     Stat StaminaRegenStat => PlayerStats.GetStatFromName[CommonStatTypeNames.StaminaRegen];
 
 #region Health Stuff
 
-    public override void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
+    public override void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
-        base.UpdateHealthBar(currentHealth, projectedHealth, maxHealth, operation, healthChangeAmount);
+        base.OnHealthChanged(currentHealth, projectedHealth, maxHealth, operation, healthChangeAmount);
 
         if(PlayerCanvas.BuildMenuEnabled)
             PlayerCanvas.ToggleBuildMenu();

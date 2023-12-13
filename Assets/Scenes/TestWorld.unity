@@ -540,6 +540,8 @@ GameObject:
   - component: {fileID: 240654086}
   - component: {fileID: 240654085}
   - component: {fileID: 240654089}
+  - component: {fileID: 240654090}
+  - component: {fileID: 240654091}
   m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
@@ -618,7 +620,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 240654084}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7, z: 10.3}
+  m_LocalPosition: {x: 8.82, y: 1.7, z: 10.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -639,11 +641,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39a45d72845de214da71528e55dfa03b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockOnLocation: {fileID: 1042857215}
   interactionTypes:
   - {fileID: 11400000, guid: 570a56bf26dbadd4f8412ccf07018c58, type: 2}
-  baseStatsSO: {fileID: 11400000, guid: ba4b73b0079a2a247804236bf2ca0587, type: 2}
   damageNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
+--- !u!114 &240654090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240654084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be6da2be583e0d4d87f40887147e596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseStatsSO: {fileID: 11400000, guid: ba4b73b0079a2a247804236bf2ca0587, type: 2}
+--- !u!114 &240654091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240654084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a947a9dced01dc4094b7ece285ebe03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockOnLocation: {fileID: 1042857215}
 --- !u!1 &681836449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1177,9 +1203,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 661645128955123073, guid: 8a4f078153c96e14ca8e76ecd6a7f85f, type: 3}
+      propertyPath: targetable
+      value: 
+      objectReference: {fileID: 240654091}
+    - target: {fileID: 661645128955123073, guid: 8a4f078153c96e14ca8e76ecd6a7f85f, type: 3}
       propertyPath: IHoldStatsMono
       value: 
       objectReference: {fileID: 240654089}
+    - target: {fileID: 661645128955123073, guid: 8a4f078153c96e14ca8e76ecd6a7f85f, type: 3}
+      propertyPath: characterStats
+      value: 
+      objectReference: {fileID: 240654090}
     - target: {fileID: 661645128955123073, guid: 8a4f078153c96e14ca8e76ecd6a7f85f, type: 3}
       propertyPath: ITargetableMono
       value: 

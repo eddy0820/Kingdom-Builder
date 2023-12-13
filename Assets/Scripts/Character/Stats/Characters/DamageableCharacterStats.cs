@@ -51,6 +51,12 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     protected bool isDead = false;
 
+    protected override void OnStart()
+    {
+        StartCoroutine(HealOverTimeCoroutine());
+        SetHealth(MaxHealthStat.Value, true);
+    }
+
     public void SetHealth(float amount, bool setAsNoChange = false)
     {
         if(AssertIsDead("Can't set health when dead.")) return;
@@ -250,8 +256,6 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     public string GetDamageableName()
     {
-        return GetDamageableNameInternal();
+        return gameObject.name;
     }
-
-    protected abstract string GetDamageableNameInternal();
 }

@@ -126,11 +126,6 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     [Space(10)]
     [SerializeField] List<Collider> ignoredColliders = new();
-    
-    [Space(10)]
-
-    [SerializeField] float staminaDepletionInterval = 0.05f;
-    
 
     Collider[] _probedColliders = new Collider[8];
     RaycastHit[] _probedHits = new RaycastHit[8];
@@ -164,9 +159,6 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
         currentBonusOrientationMethod = startingBonusOrientationMethod;
 
         motor.CharacterController = this;
-
-        StateMachine.OnGroundedMovementSprinting += DoStaminaReduction;
-        StateMachine.OnGroundedMovementCrouching += DoStaminaReductionCrouch;
     }
 
     public void SetInputs(ref PlayerCharacterInputs inputs)
@@ -321,47 +313,6 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     public void OnDiscreteCollisionDetected(Collider hitCollider) { }
 
 #endregion
-
-    float lastTimeStaminaReduced = 0;
-
-    private void DoStaminaReduction(bool shouldBeReducing)
-    {
-        if(shouldBeReducing)
-        {
-            if(Time.time - lastTimeStaminaReduced > staminaDepletionInterval)
-            {
-                PlayerController.IStamina.DepleteStaminaInstant(attributes.SprintingStaminaCostPerSecond * staminaDepletionInterval);
-                lastTimeStaminaReduced = Time.time;
-            }
-        }
-    }
-
-    Coroutine crouchStaminaCoroutine;
-
-    private void DoStaminaReductionCrouch(bool shouldBeReducing)
-    {
-        if(shouldBeReducing && crouchStaminaCoroutine == null)
-        {
-            crouchStaminaCoroutine = StartCoroutine(HandleCrouchingStaminaCoroutine());
-        }  
-        else
-        {
-            if(crouchStaminaCoroutine != null)
-            {
-                StopCoroutine(crouchStaminaCoroutine);
-                crouchStaminaCoroutine = null;
-            }
-        }
-    }
-
-    IEnumerator HandleCrouchingStaminaCoroutine()
-    {
-        while(true)
-        {
-            PlayerController.IStamina.DepleteStaminaInstant(attributes.CrouchingStaminaCostPerSecond * staminaDepletionInterval);
-            yield return new WaitForSeconds(staminaDepletionInterval);
-        }
-    }
 }
 
 public enum OrientationMethod

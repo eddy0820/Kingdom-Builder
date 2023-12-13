@@ -1329,6 +1329,7 @@ GameObject:
   - component: {fileID: 449666331}
   - component: {fileID: 449666326}
   - component: {fileID: 449666325}
+  - component: {fileID: 449666332}
   - component: {fileID: 449666328}
   - component: {fileID: 449666329}
   - component: {fileID: 449666330}
@@ -1435,6 +1436,8 @@ MonoBehaviour:
     stableMovementSharpness: 0
     orientationSharpness: 0
     bonusOrientationSharpness: 0
+    sprintingStaminaCostPerSecond: 0
+    crouchingStaminaCostPerSecond: 0
     airSpeedSettings:
       speed: 0
       acceleration: 0
@@ -1454,6 +1457,7 @@ MonoBehaviour:
   isSprinting: 0
   _isCrouching: 0
   ignoredColliders: []
+  staminaDepletionInterval: 0.05
 --- !u!136 &449666327
 CapsuleCollider:
   m_ObjectHideFlags: 8
@@ -1559,6 +1563,19 @@ MonoBehaviour:
   states: []
   startingState: {fileID: 930732817}
   currentState: {fileID: 0}
+--- !u!114 &449666332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449666323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f280bc7b3adbe974f85071c688364656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseStatsSO: {fileID: 11400000, guid: ca936704d2e919c4d9eb3d93f4fffebf, type: 2}
 --- !u!1 &463977293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1953,7 +1970,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.03302147, w: -0.9932858}
+  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.03302351, w: -0.9932857}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2078,11 +2095,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character: {fileID: 449666326}
   stateMachine: {fileID: 449666331}
+  playerStats: {fileID: 449666332}
   characterCamera: {fileID: 973676238}
   uiCanvas: {fileID: 2124959000}
   soundController: {fileID: 449666329}
   animationController: {fileID: 449666330}
-  baseStatsSO: {fileID: 11400000, guid: ca936704d2e919c4d9eb3d93f4fffebf, type: 2}
   attributesSO: {fileID: 11400000, guid: fce4ed3df955bac49881fe90b3a7019d, type: 2}
 --- !u!114 &582366771
 MonoBehaviour:
@@ -5043,8 +5060,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.20168047, y: -0.61464244, z: 0.7344726, w: 0.20515773}
-  m_LocalPosition: {x: -2.721912, y: 27.42937, z: -26.696697}
+  m_LocalRotation: {x: 0.20220852, y: -0.61446196, z: 0.7342963, w: 0.20580855}
+  m_LocalPosition: {x: -2.7219563, y: 27.429346, z: -26.696756}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
