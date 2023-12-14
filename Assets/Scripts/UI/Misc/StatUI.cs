@@ -17,6 +17,7 @@ public abstract class StatUI
     [SerializeField] protected RectMask2D healthBarMask;
     [SerializeField] protected RectMask2D healthBarGhostMask;
     [SerializeField] protected TextMeshProUGUI healthText;
+    public TextMeshProUGUI HealthText => healthText;
     [Space(10)]
     [SerializeField] protected float healthBarRightPaddingMin = 15;
     [SerializeField] protected float healthBarRightPaddingMax = 390;
@@ -32,6 +33,7 @@ public abstract class StatUI
     [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh healNumberMesh;
     [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh increaseMaxHealthNumberMesh;
     [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh decreaseMaxHealthNumberMesh;
+    [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh healthRegenHealNumberMesh;
     protected float currentHealthWaitingToBeShown = 0;
 
     protected abstract Transform DamageNumberSpawnTransform { get; }
@@ -39,6 +41,7 @@ public abstract class StatUI
 
     protected abstract Stat MaxHealthStat { get; }
 
+    protected abstract CharacterStats CharacterStats { get; }
     protected abstract IDamageable IDamageable { get; }
 
     public virtual void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
@@ -58,15 +61,7 @@ public abstract class StatUI
             healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
             healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
             
-            string maxHealthString = maxHealth % 1 == 0
-            ? maxHealth.ToString("F0")
-            : maxHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-            string currentHealthString = currentHealth % 1 == 0
-            ? currentHealth.ToString("F0")
-            : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-            healthText.text = currentHealthString + " / " + maxHealthString;
+            UpdateText(currentHealth, maxHealth, healthText);
         });
     }
 
@@ -120,7 +115,16 @@ public abstract class StatUI
             currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallbackHealthChanged);
             currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
         }
-        currentHealthBarFadeSequence.AppendInterval(numSecondsToWaitBeforeHidingHealthBar);
+
+        float cooldown = numSecondsToWaitBeforeHidingHealthBar;
+
+        if(CharacterStats.CharacterHasStats(CommonStatTypeNames.OutOfCombatHealthRegenCooldown, CommonStatTypeNames.HealthRegen))
+        {
+            if(IDamageable.GetCurrentHealth() != MaxHealthStat.Value)
+                cooldown += CharacterStats.GetStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown].Value;
+        }
+
+        currentHealthBarFadeSequence.AppendInterval(cooldown);
         currentHealthBarFadeSequence.AppendCallback(() => tweenedUIComponent.TweenUIComponent(true, new(){ETweenType.Fade}, false));
         currentHealthBarFadeSequence.Play();
     }
@@ -199,7 +203,7 @@ public abstract class StatUI
 
     protected virtual DamageNumberMesh HealOverTimeOperation(ref float healthChangeAmount)
     {
-        return null;
+        return healthRegenHealNumberMesh;
     }
 
     protected virtual void DoMaxHealthChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float healthChangeAmount)
@@ -224,5 +228,18 @@ public abstract class StatUI
         damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
 
         damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
+    }
+
+    protected void UpdateText(float currentValue, float maxValue, TextMeshProUGUI text)
+    {
+        string maxValueString = maxValue % 1 == 0
+        ? maxValue.ToString("F0")
+        : maxValue.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+
+        string currentValueString = currentValue % 1 == 0
+        ? currentValue.ToString("F0")
+        : currentValue.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+
+        text.text = currentValueString + " / " + maxValueString;
     }
 }

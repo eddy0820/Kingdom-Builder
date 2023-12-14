@@ -45,3 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultGameplaySettings: {fileID: 11400000, guid: 3271f2ea08c95ca44beeaee8e57c0aa2, type: 2}
+  enableHealthDebugMessages: 0
+  enableStaminaDebugMessages: 0
+  showNonPlayerHealthAndStaminaText: 1

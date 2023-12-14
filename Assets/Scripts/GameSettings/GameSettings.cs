@@ -14,6 +14,9 @@ public class GameSettings : MonoBehaviour
     public bool EnableHealthDebugMessages => enableHealthDebugMessages;
     [SerializeField] bool enableStaminaDebugMessages = true;
     public bool EnableStaminaDebugMessages => enableStaminaDebugMessages;
+    [Space(15)]
+    [SerializeField] bool showNonPlayerHealthAndStaminaText = true;
+    public bool ShowNonPlayerHealthAndStaminaText => showNonPlayerHealthAndStaminaText;
 
     Vector3 gravity = Vector3.zero;
     public Vector3 Gravity =>  gravity;

@@ -40,6 +40,9 @@ public class PlayerSpawner : MonoBehaviour
     public bool EnableLockOn => enableLockOn;
     [SerializeField] bool enableInteraction = true;
     public bool EnableInteraction => enableInteraction;
+    [Space(15)]
+    [SerializeField] bool showPlayerHealthAndStaminaText;
+    public bool ShowPlayerHealthAndStaminaText => showPlayerHealthAndStaminaText;
 
     private void Awake()
     {

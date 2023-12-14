@@ -8,7 +8,6 @@ public interface IStamina
     public void SetStamina(float amount, bool setAsNoChange = false);
 
     public float GetCurrentStamina();
-    public float GetRoundedCurrentStamina();
     public float GetProjectedStamina();
 
     public void DepleteStaminaInstant(float amount);

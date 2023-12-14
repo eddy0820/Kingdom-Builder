@@ -79,4 +79,30 @@ public abstract class CharacterStats : MonoBehaviour
             }
         }
     }
+
+    public bool CharacterHasStats(params string[] statTypeNames)
+    {
+        foreach(string statTypeName in statTypeNames)
+        {
+            if(!getStatFromName.ContainsKey(statTypeName)) 
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool CharacterHasStats(params StatTypeSO[] statTypes)
+    {
+        foreach(StatTypeSO statType in statTypes)
+        {
+            if(!getStatFromType.ContainsKey(statType)) 
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

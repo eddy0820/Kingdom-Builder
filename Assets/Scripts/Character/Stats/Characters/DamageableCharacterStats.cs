@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Unity.Burst.Intrinsics;
 
 
-[System.Serializable]
+[Serializable]
 public abstract class DamageableCharacterStats : CharacterStats, IDamageable
-{
+{   
     float m_currentHealth;
     protected float currentHealth
     {
@@ -54,6 +55,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
     protected override void OnStart()
     {
         StartCoroutine(HealOverTimeCoroutine());
+        StartCoroutine(HealthRegenCoroutine());
         SetHealth(MaxHealthStat.Value, true);
     }
 
@@ -213,6 +215,42 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
             InvokeOnHealthChanged(operation, newCurrentHealth - lastCurrentHealth);
 
             yield return null;
+        }
+    }
+
+    public IEnumerator HealthRegenCoroutine()
+    {
+        while(!isDead)
+        {
+            if(!CharacterHasStats(CommonStatTypeNames.HealthRegen, CommonStatTypeNames.OutOfCombatHealthRegenCooldown))
+            {
+                yield return null;
+                continue;
+            }
+
+            Stat HealthRegenStat = getStatFromName[CommonStatTypeNames.HealthRegen];
+            Stat OutOfCombatHealthRegenCooldownStat = getStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown];
+
+            if(currentHealth == MaxHealthStat.Value || Time.time - lastTimeCurrentHealthActivelyChanged < OutOfCombatHealthRegenCooldownStat.Value)
+            {
+                yield return null;
+                continue;
+            }
+
+            float amount = HealthRegenStat.Value;
+
+            if(amount > MaxHealthStat.Value - projectedHealth)
+                amount = MaxHealthStat.Value - projectedHealth;
+
+            if(amount < 0) continue;
+
+            currentHealth += amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealthStat.Value);
+            projectedHealth = currentHealth;
+
+            InvokeOnHealthChanged(EHealthChangedOperation.HealthRegenHeal, amount);
+
+            yield return new WaitForSeconds(1);
         }
     }
 

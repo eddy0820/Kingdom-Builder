@@ -68,6 +68,26 @@ public class PlayerCanvas : MonoBehaviour
         playerStatUI.SingleTargetHealthHUD.gameObject.SetActive(false);
     }
 
+    private void LateUpdate()
+    {
+        if(PlayerSpawner.Instance.ShowPlayerHealthAndStaminaText)
+        {
+            if(!playerStatUI.HealthText.gameObject.activeSelf)
+                playerStatUI.HealthText.gameObject.SetActive(true);
+
+            if(!playerStatUI.StaminaText.gameObject.activeSelf)
+                playerStatUI.StaminaText.gameObject.SetActive(true);
+        }
+        else
+        {
+            if(playerStatUI.HealthText.gameObject.activeSelf)
+                playerStatUI.HealthText.gameObject.SetActive(false);
+
+            if(playerStatUI.StaminaText.gameObject.activeSelf)
+                playerStatUI.StaminaText.gameObject.SetActive(false);
+        }
+    }
+
 #region Interaction
 
     public Action GetInteractionEntryActionFromIndex(int index)
@@ -135,8 +155,6 @@ public class PlayerCanvas : MonoBehaviour
 [Serializable]
 public class PlayerStatUI : StatUI
 {
-    [BoxGroup("Damage Popups"), SerializeField] DamageNumberMesh healthRegenHealNumberMesh;
-
     [Header("Stamina UI")]
     [SerializeField] TweenedUIComponent staminaHUDFade;
     public TweenedUIComponent StaminaHUDFade => staminaHUDFade;
@@ -144,6 +162,7 @@ public class PlayerStatUI : StatUI
     [SerializeField] RectMask2D staminaBarMask;
     [SerializeField] RectMask2D staminaBarGhostMask;
     [SerializeField] TextMeshProUGUI staminaText;
+    public TextMeshProUGUI StaminaText => staminaText;
     [Space(10)]
     [SerializeField] float staminaBarRightPaddingMin = 15;
     [SerializeField] float staminaBarRightPaddingMax = 390;
@@ -169,6 +188,7 @@ public class PlayerStatUI : StatUI
     KinematicCharacterMotor Motor => PlayerController.Character.Motor;
     PlayerCanvas PlayerCanvas => PlayerController.UICanvas;
     PlayerStats PlayerStats => PlayerController.PlayerStats;
+    protected override CharacterStats CharacterStats => PlayerController.PlayerStats;
     protected override IDamageable IDamageable => PlayerController.PlayerStats;
     protected override Transform DamageNumberSpawnTransform => Motor.Transform;
     protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position + new Vector3(0f, Motor.Capsule.height, 0f);
@@ -189,45 +209,6 @@ public class PlayerStatUI : StatUI
             PlayerCanvas.ToggleBuildMenu();
     }
 
-    protected override void ShowThenHideFadeTweenUIComponentHealthBar(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
-    {
-        Tween fadeTween = tweenedUIComponent.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade);
-        if(fadeTween == null) return;
-
-        currentHealthBarFadeSequence?.Kill();
-        tweenedUIComponent.CurrentSequence?.Kill();
-        fadeTween.TweenValues.CanvasGroup.DOKill();
-
-        bool doActionBeforeFade = fadeTween.TweenValues.CanvasGroup.alpha == fadeTween.TweenValues.FadeValues.StartAlpha;
-
-        if(doActionBeforeFade)
-        {
-            actionToDoOnShow?.Invoke();
-        }
-
-        fadeTween.TweenValues.CanvasGroup.alpha = fadeTween.TweenValues.FadeValues.StartAlpha;
-
-        currentHealthBarFadeSequence = DOTween.Sequence();
-        if(!doActionBeforeFade) 
-        {   
-            currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallbackHealthChanged);
-            currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
-        }
-
-        float cooldown = numSecondsToWaitBeforeHidingHealthBar;
-        if(IDamageable.GetCurrentHealth() != MaxHealthStat.Value)
-            cooldown += OutOfCombatHealthRegenCooldownStat.Value;
-
-        currentHealthBarFadeSequence.AppendInterval(cooldown);
-        currentHealthBarFadeSequence.AppendCallback(() => tweenedUIComponent.TweenUIComponent(true, new(){ETweenType.Fade}, false));
-        currentHealthBarFadeSequence.Play();
-    }
-
-    protected override DamageNumberMesh HealOverTimeOperation(ref float healthChangeAmount)
-    {
-        return healthRegenHealNumberMesh;
-    }
-
 #endregion
 
 #region Single Target Health Bar Stuff
@@ -240,15 +221,7 @@ public class PlayerStatUI : StatUI
         singleTargetHealthBarGhostMask.padding = new Vector4(singleTargetHealthBarGhostMask.padding.x, singleTargetHealthBarGhostMask.padding.y, Mathf.Lerp(singleTargetHealthBarRightPaddingMax, singleTargetHealthBarRightPaddingMin, projectedHealthPercentage), singleTargetHealthBarGhostMask.padding.w);
         singleTargetHealthBarMask.padding = new Vector4(singleTargetHealthBarMask.padding.x, singleTargetHealthBarMask.padding.y, Mathf.Lerp(singleTargetHealthBarRightPaddingMax, singleTargetHealthBarRightPaddingMin, currentHealthPercentage), singleTargetHealthBarMask.padding.w);
 
-        string maxHealthString = maxHealth % 1 == 0
-        ? maxHealth.ToString("F0")
-        : maxHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-        string currentHealthString = currentHealth % 1 == 0
-        ? currentHealth.ToString("F0")
-        : currentHealth.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-        singleTargetHealthText.text = currentHealthString + " / " + maxHealthString;
+        UpdateText(currentHealth, maxHealth, singleTargetHealthText);
     }
 
     private void OnSingleTargetStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
@@ -291,15 +264,7 @@ public class PlayerStatUI : StatUI
             staminaBarGhostMask.padding = new Vector4(staminaBarGhostMask.padding.x, staminaBarGhostMask.padding.y, Mathf.Lerp(staminaBarRightPaddingMax, staminaBarRightPaddingMin, projectedStaminaPercentage), staminaBarGhostMask.padding.w);
             staminaBarMask.padding = new Vector4(staminaBarMask.padding.x, staminaBarMask.padding.y, Mathf.Lerp(staminaBarRightPaddingMax, staminaBarRightPaddingMin, currentStaminaPercentage), staminaBarMask.padding.w);
             
-            string maxStaminaString = maxStamina % 1 == 0
-            ? maxStamina.ToString("F0")
-            : maxStamina.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-            string currentStaminaString = currentStamina % 1 == 0
-            ? currentStamina.ToString("F0")
-            : currentStamina.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-            staminaText.text = currentStaminaString + " / " + maxStaminaString;
+            UpdateText(currentStamina, maxStamina, staminaText);
         });
     }
 
@@ -329,7 +294,7 @@ public class PlayerStatUI : StatUI
         }
 
         float cooldown = numSecondsToWaitBeforeHidingStaminaBar;
-        if(IStamina.GetRoundedCurrentStamina() != MaxStaminaStat.Value)
+        if(IStamina.GetCurrentStamina() != MaxStaminaStat.Value)
             cooldown += StaminaRegenStat.Value;
 
         currentStaminaBarFadeSequence.AppendInterval(cooldown);
@@ -341,7 +306,7 @@ public class PlayerStatUI : StatUI
     {
         if(stat.type != MaxStaminaStat.type) return;
 
-        UpdateStaminaBar(IStamina.GetRoundedCurrentStamina(), IStamina.GetProjectedStamina(), stat.Value);
+        UpdateStaminaBar(IStamina.GetCurrentStamina(), IStamina.GetProjectedStamina(), stat.Value);
     }
 
 #endregion

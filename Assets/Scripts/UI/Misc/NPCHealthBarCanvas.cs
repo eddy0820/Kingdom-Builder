@@ -63,6 +63,17 @@ public class NPCHealthBarCanvas : MonoBehaviour
     {
         transform.LookAt(Camera.main.transform.position);
         transform.Rotate(0, 180, 0);
+
+        if(GameSettings.Instance.ShowNonPlayerHealthAndStaminaText)
+        {
+            if(!statUI.HealthText.gameObject.activeSelf)
+                statUI.HealthText.gameObject.SetActive(true);
+        }
+        else
+        {
+            if(statUI.HealthText.gameObject.activeSelf)
+                statUI.HealthText.gameObject.SetActive(false);
+        }
     }
 
     private void OnAquiredTargetLockedOnState(Targetable aquiuredTarget)
@@ -90,10 +101,11 @@ public class NPCHealthBarCanvas : MonoBehaviour
     {
         NPCHealthBarCanvas nPCHealthBarCanvas;
 
+        protected override CharacterStats CharacterStats => nPCHealthBarCanvas.characterStats;
         protected override IDamageable IDamageable => nPCHealthBarCanvas.IDamageable;
         protected override Transform DamageNumberSpawnTransform => nPCHealthBarCanvas.transform;
         protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position;
-        protected override Stat MaxHealthStat => nPCHealthBarCanvas.characterStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
+        protected override Stat MaxHealthStat => CharacterStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
 
         public void SetupStatUI(NPCHealthBarCanvas _nPCHealthBarCanvas)
         {
