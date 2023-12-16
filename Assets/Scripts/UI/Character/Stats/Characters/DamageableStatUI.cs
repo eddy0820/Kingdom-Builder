@@ -13,7 +13,7 @@ public abstract class DamageableStatUI : MonoBehaviour
     [Header("Health UI")]
     [SerializeField] protected BarUI healthBarUI;
 
-    [Header("Damage Popups")]
+    [Header("Health Damage Popups")]
     [SerializeField] protected float damagePopupMinThreshold = 1f;
     [Space(10)]
     [SerializeField] protected DamageNumberMesh takeDamageNumberMesh;
@@ -187,19 +187,6 @@ public abstract class DamageableStatUI : MonoBehaviour
 
         damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
     }
-
-    protected void UpdateText(float currentValue, float maxValue, TextMeshProUGUI text)
-    {
-        string maxValueString = maxValue % 1 == 0
-        ? maxValue.ToString("F0")
-        : maxValue.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-        string currentValueString = currentValue % 1 == 0
-        ? currentValue.ToString("F0")
-        : currentValue.ToString(CharacterStatsRoundingHelper.GlobalValueString);
-
-        text.text = currentValueString + " / " + maxValueString;
-    }
 }
 
 
@@ -210,6 +197,7 @@ public class BarUI
 
     [AllowNesting]
     [SerializeField, HideIf("fadeBar")] Transform barTransform;
+    public Transform BarTransform => barTransform;
     [AllowNesting]
     [SerializeField, ShowIf("fadeBar")] TweenedUIComponent barFade;
     public TweenedUIComponent BarFade => barFade;
