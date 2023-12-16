@@ -56,6 +56,8 @@ public class PlayerCanvas : MonoBehaviour
         crosshair.GameObj.SetActive(false);
         crosshair.RectTransform.localScale = Vector3.zero;
 
+        playerStatUI.SetupStatUI(PlayerController.Instance);
+
         PlayerStats.OnHealthChanged += playerStatUI.OnHealthChanged;
         PlayerStats.OnStatModifierChanged += playerStatUI.OnStatModifierChangedHealthChanged;
 
@@ -72,16 +74,16 @@ public class PlayerCanvas : MonoBehaviour
     {
         if(PlayerSpawner.Instance.ShowPlayerHealthAndStaminaText)
         {
-            if(!playerStatUI.HealthText.gameObject.activeSelf)
-                playerStatUI.HealthText.gameObject.SetActive(true);
+            if(!playerStatUI.HealthBarUI.Text.gameObject.activeSelf)
+                playerStatUI.HealthBarUI.Text.gameObject.SetActive(true);
 
             if(!playerStatUI.StaminaText.gameObject.activeSelf)
                 playerStatUI.StaminaText.gameObject.SetActive(true);
         }
         else
         {
-            if(playerStatUI.HealthText.gameObject.activeSelf)
-                playerStatUI.HealthText.gameObject.SetActive(false);
+            if(playerStatUI.HealthBarUI.Text.gameObject.activeSelf)
+                playerStatUI.HealthBarUI.Text.gameObject.SetActive(false);
 
             if(playerStatUI.StaminaText.gameObject.activeSelf)
                 playerStatUI.StaminaText.gameObject.SetActive(false);
@@ -153,7 +155,7 @@ public class PlayerCanvas : MonoBehaviour
 }
 
 [Serializable]
-public class PlayerStatUI : StatUI
+public class PlayerStatUI : StatUI<PlayerController>
 {
     [Header("Stamina UI")]
     [SerializeField] TweenedUIComponent staminaHUDFade;
@@ -184,22 +186,30 @@ public class PlayerStatUI : StatUI
     [SerializeField] float singleTargetHealthBarRightPaddingMin = 15;
     [SerializeField] float singleTargetHealthBarRightPaddingMax = 390;
 
-    PlayerController PlayerController => PlayerController.Instance;
-    KinematicCharacterMotor Motor => PlayerController.Character.Motor;
-    PlayerCanvas PlayerCanvas => PlayerController.UICanvas;
-    PlayerStats PlayerStats => PlayerController.PlayerStats;
-    protected override CharacterStats CharacterStats => PlayerController.PlayerStats;
-    protected override IDamageable IDamageable => PlayerController.PlayerStats;
+    PlayerController playerController;
+    PlayerCanvas PlayerCanvas => playerController.UICanvas;
+    PlayerStats PlayerStats => playerController.PlayerStats;
+    KinematicCharacterMotor Motor => playerController.Character.Motor;
+
+    protected override CharacterStats CharacterStats => playerController.PlayerStats;
+    protected override IDamageable IDamageable => playerController.PlayerStats;
     protected override Transform DamageNumberSpawnTransform => Motor.Transform;
     protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position + new Vector3(0f, Motor.Capsule.height, 0f);
     protected override Stat MaxHealthStat => PlayerStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
+
     protected Stat OutOfCombatHealthRegenCooldownStat => PlayerStats.GetStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown];
 
-    IStamina IStamina => PlayerController.PlayerStats;
+    IStamina IStamina => playerController.PlayerStats;
     Stat MaxStaminaStat => PlayerStats.GetStatFromName[CommonStatTypeNames.MaxStamina];
     Stat StaminaRegenStat => PlayerStats.GetStatFromName[CommonStatTypeNames.StaminaRegen];
 
-#region Health Stuff
+    public override void SetupStatUI(PlayerController statsHolder)
+    {
+        base.SetupStatUI(statsHolder);
+        playerController = statsHolder;
+    }
+
+    #region Health Stuff
 
     public override void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {

@@ -8,32 +8,20 @@ using DG.Tweening;
 using System;
 using NaughtyAttributes;
 
-public abstract class StatUI
-{
+public abstract class StatUI<T>
+{   
     [Header("Health UI")]
-    [SerializeField] protected TweenedUIComponent healthHUDFade;
-    public TweenedUIComponent HealthHUDFade => healthHUDFade;
-    [Space(10)]
-    [SerializeField] protected RectMask2D healthBarMask;
-    [SerializeField] protected RectMask2D healthBarGhostMask;
-    [SerializeField] protected TextMeshProUGUI healthText;
-    public TextMeshProUGUI HealthText => healthText;
-    [Space(10)]
-    [SerializeField] protected float healthBarRightPaddingMin = 15;
-    [SerializeField] protected float healthBarRightPaddingMax = 390;
-    [Space(10)]
-    [SerializeField] protected float numSecondsAfterShowToDoCallbackHealthChanged = 0.1f;
-    [SerializeField] protected float numSecondsToWaitBeforeHidingHealthBar = 2f;
-    protected Sequence currentHealthBarFadeSequence;
+    [SerializeField] protected BarUI healthBarUI;
+    public BarUI HealthBarUI => healthBarUI;
 
     [Header("Damage Popups")]
-    [BoxGroup("Damage Popups"), SerializeField] protected float damagePopupMinThreshold = 1f;
+    [SerializeField] protected float damagePopupMinThreshold = 1f;
     [Space(10)]
-    [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh takeDamageNumberMesh;
-    [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh healNumberMesh;
-    [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh increaseMaxHealthNumberMesh;
-    [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh decreaseMaxHealthNumberMesh;
-    [BoxGroup("Damage Popups"), SerializeField] protected DamageNumberMesh healthRegenHealNumberMesh;
+    [SerializeField] protected DamageNumberMesh takeDamageNumberMesh;
+    [SerializeField] protected DamageNumberMesh healNumberMesh;
+    [SerializeField] protected DamageNumberMesh increaseMaxHealthNumberMesh;
+    [SerializeField] protected DamageNumberMesh decreaseMaxHealthNumberMesh;
+    [SerializeField] protected DamageNumberMesh healthRegenHealNumberMesh;
     protected float currentHealthWaitingToBeShown = 0;
 
     protected abstract Transform DamageNumberSpawnTransform { get; }
@@ -44,25 +32,27 @@ public abstract class StatUI
     protected abstract CharacterStats CharacterStats { get; }
     protected abstract IDamageable IDamageable { get; }
 
+    public virtual void SetupStatUI(T statsHolder)
+    {
+        healthBarUI.SetupBarUI(ReturnAdditionalHealthBarFadeCooldown);
+    }
+
+    private float ReturnAdditionalHealthBarFadeCooldown()
+    {
+        if(CharacterStats.CharacterHasStats(CommonStatTypeNames.OutOfCombatHealthRegenCooldown, CommonStatTypeNames.HealthRegen))
+        {
+            if(IDamageable.GetCurrentHealth() != MaxHealthStat.Value)
+                return CharacterStats.GetStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown].Value;
+        }
+
+        return 0;
+    }
+
     public virtual void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
         DoDamagePopup(operation, healthChangeAmount);
 
-        UpdateHealthBar(currentHealth, projectedHealth, maxHealth);
-    }
-
-    protected void UpdateHealthBar(float currentHealth, float projectedHealth, float maxHealth)
-    {
-        ShowThenHideFadeTweenUIComponentHealthBar(healthHUDFade, () =>
-        {
-            float projectedHealthPercentage = projectedHealth / maxHealth;
-            float currentHealthPercentage = currentHealth / maxHealth;
-
-            healthBarGhostMask.padding = new Vector4(healthBarGhostMask.padding.x, healthBarGhostMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, projectedHealthPercentage), healthBarGhostMask.padding.w);
-            healthBarMask.padding = new Vector4(healthBarMask.padding.x, healthBarMask.padding.y, Mathf.Lerp(healthBarRightPaddingMax, healthBarRightPaddingMin, currentHealthPercentage), healthBarMask.padding.w);
-            
-            UpdateText(currentHealth, maxHealth, healthText);
-        });
+        healthBarUI.UpdateBar(currentHealth, projectedHealth, maxHealth);
     }
 
     public void OnStatModifierChangedHealthChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
@@ -89,44 +79,6 @@ public abstract class StatUI
         DoMaxHealthChangePopup(operation, maxHealthChangedAmount);
         
         OnHealthChanged(IDamageable.GetCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
-    }
-
-    protected virtual void ShowThenHideFadeTweenUIComponentHealthBar(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
-    {
-        Tween fadeTween = tweenedUIComponent.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade);
-        if(fadeTween == null) return;
-
-        currentHealthBarFadeSequence?.Kill();
-        tweenedUIComponent.CurrentSequence?.Kill();
-        fadeTween.TweenValues.CanvasGroup.DOKill();
-
-        bool doActionBeforeFade = fadeTween.TweenValues.CanvasGroup.alpha == fadeTween.TweenValues.FadeValues.StartAlpha;
-
-        if(doActionBeforeFade)
-        {
-            actionToDoOnShow?.Invoke();
-        }
-
-        fadeTween.TweenValues.CanvasGroup.alpha = fadeTween.TweenValues.FadeValues.StartAlpha;
-
-        currentHealthBarFadeSequence = DOTween.Sequence();
-        if(!doActionBeforeFade) 
-        {   
-            currentHealthBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallbackHealthChanged);
-            currentHealthBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
-        }
-
-        float cooldown = numSecondsToWaitBeforeHidingHealthBar;
-
-        if(CharacterStats.CharacterHasStats(CommonStatTypeNames.OutOfCombatHealthRegenCooldown, CommonStatTypeNames.HealthRegen))
-        {
-            if(IDamageable.GetCurrentHealth() != MaxHealthStat.Value)
-                cooldown += CharacterStats.GetStatFromName[CommonStatTypeNames.OutOfCombatHealthRegenCooldown].Value;
-        }
-
-        currentHealthBarFadeSequence.AppendInterval(cooldown);
-        currentHealthBarFadeSequence.AppendCallback(() => tweenedUIComponent.TweenUIComponent(true, new(){ETweenType.Fade}, false));
-        currentHealthBarFadeSequence.Play();
     }
 
     protected void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
@@ -229,6 +181,115 @@ public abstract class StatUI
 
         damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
     }
+
+    protected void UpdateText(float currentValue, float maxValue, TextMeshProUGUI text)
+    {
+        string maxValueString = maxValue % 1 == 0
+        ? maxValue.ToString("F0")
+        : maxValue.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+
+        string currentValueString = currentValue % 1 == 0
+        ? currentValue.ToString("F0")
+        : currentValue.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+
+        text.text = currentValueString + " / " + maxValueString;
+    }
+}
+
+
+[Serializable]
+public class BarUI
+{
+    [SerializeField] protected bool fadeBar;
+
+    [AllowNesting]
+    [SerializeField, HideIf("fadeBar")] Transform barTransform;
+    [AllowNesting]
+    [SerializeField, ShowIf("fadeBar")] TweenedUIComponent barFade;
+    public TweenedUIComponent BarFade => barFade;
+    [Space(10)]
+    [SerializeField] RectMask2D barMask;
+    [SerializeField] RectMask2D barGhostMask;
+    [SerializeField] TextMeshProUGUI text;
+    public TextMeshProUGUI Text => text;
+    [Space(10)]
+    [SerializeField] float barRightPaddingMin = 15;
+    [SerializeField] float barRightPaddingMax = 390;
+    [Space(10)]
+    [AllowNesting]
+    [SerializeField, ShowIf("fadeBar")] float numSecondsAfterShowToDoCallbackValueChanged = 0.1f;
+    [AllowNesting]
+    [SerializeField, ShowIf("fadeBar")] float numSecondsToWaitBeforeHidingBar = 2f;
+
+    protected Sequence currentBarFadeSequence;
+
+    Func<float> ReturnAdditionalBarFadeCooldown;
+
+    public void SetupBarUI(Func<float> returnAdditionalBarFadeCooldown)
+    {
+        ReturnAdditionalBarFadeCooldown = returnAdditionalBarFadeCooldown;
+    }
+
+    public void UpdateBar(float currentValue, float projectedValue, float maxValue)
+    {
+        if(fadeBar)
+        {
+            ShowThenHideFadeTweenUIComponent(barFade, () =>
+            {
+                SetMaskAndText(currentValue, projectedValue, maxValue);
+            });
+        }
+        else
+        {
+            SetMaskAndText(currentValue, projectedValue, maxValue);
+        }
+    }
+
+    private void SetMaskAndText(float currentValue, float projectedValue, float maxValue)
+    {
+        float projectedValuePercentage = projectedValue / maxValue;
+        float currentValuePercentage = currentValue / maxValue;
+
+        barGhostMask.padding = new Vector4(barGhostMask.padding.x, barGhostMask.padding.y, Mathf.Lerp(barRightPaddingMax, barRightPaddingMin, projectedValuePercentage), barGhostMask.padding.w);
+        barMask.padding = new Vector4(barMask.padding.x, barMask.padding.y, Mathf.Lerp(barRightPaddingMax, barRightPaddingMin, currentValuePercentage), barMask.padding.w);
+
+        UpdateText(currentValue, maxValue, text);
+    }
+
+    protected void ShowThenHideFadeTweenUIComponent(TweenedUIComponent tweenedUIComponent, Action actionToDoOnShow)
+    {
+        Tween fadeTween = tweenedUIComponent.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade);
+        if(fadeTween == null) return;
+
+        currentBarFadeSequence?.Kill();
+        tweenedUIComponent.CurrentSequence?.Kill();
+        fadeTween.TweenValues.CanvasGroup.DOKill();
+
+        bool doActionBeforeFade = fadeTween.TweenValues.CanvasGroup.alpha == fadeTween.TweenValues.FadeValues.StartAlpha;
+
+        if(doActionBeforeFade)
+        {
+            actionToDoOnShow?.Invoke();
+        }
+
+        fadeTween.TweenValues.CanvasGroup.alpha = fadeTween.TweenValues.FadeValues.StartAlpha;
+
+        currentBarFadeSequence = DOTween.Sequence();
+        if(!doActionBeforeFade) 
+        {   
+            currentBarFadeSequence.AppendInterval(numSecondsAfterShowToDoCallbackValueChanged);
+            currentBarFadeSequence.AppendCallback(() => actionToDoOnShow?.Invoke());
+        }
+
+        float cooldown = numSecondsToWaitBeforeHidingBar;
+
+        cooldown += ReturnAdditionalBarFadeCooldown?.Invoke() ?? 0;
+
+        currentBarFadeSequence.AppendInterval(cooldown);
+        currentBarFadeSequence.AppendCallback(() => tweenedUIComponent.TweenUIComponent(true, new(){ETweenType.Fade}, false));
+        currentBarFadeSequence.Play();
+    }
+    
 
     protected void UpdateText(float currentValue, float maxValue, TextMeshProUGUI text)
     {

@@ -1457,7 +1457,6 @@ MonoBehaviour:
   isSprinting: 0
   _isCrouching: 0
   ignoredColliders: []
-  staminaDepletionInterval: 0.05
 --- !u!136 &449666327
 CapsuleCollider:
   m_ObjectHideFlags: 8
@@ -1576,6 +1575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseStatsSO: {fileID: 11400000, guid: ca936704d2e919c4d9eb3d93f4fffebf, type: 2}
+  staminaDepletionInterval: 0.05
 --- !u!1 &463977293
 GameObject:
   m_ObjectHideFlags: 0
@@ -1970,7 +1970,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.03302351, w: -0.9932857}
+  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.033024106, w: -0.9932857}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5060,8 +5060,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.20220852, y: -0.61446196, z: 0.7342963, w: 0.20580855}
-  m_LocalPosition: {x: -2.7219563, y: 27.429346, z: -26.696756}
+  m_LocalRotation: {x: 0.2023369, y: -0.614418, z: 0.73425347, w: 0.20596665}
+  m_LocalPosition: {x: -2.721973, y: 27.42934, z: -26.69677}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6257,6 +6257,37 @@ MonoBehaviour:
       ease: 15
       useInverseEaseForEndTween: 0
   playerStatUI:
+    healthBarUI:
+      fadeBar: 1
+      barTransform: {fileID: 0}
+      barFade:
+        gameObj: {fileID: 1816204514}
+        tweens:
+        - tweenValues:
+            tweenType: 2
+            moveYValues:
+              startPosY: 0
+              endPosY: 0
+            scaleValues:
+              startScale: 0
+              endScale: 0
+            canvasGroup: {fileID: 1816204518}
+            fadeValues:
+              startAlpha: 1
+              endAlpha: 0
+            rotate360Values:
+              startRotation: 0
+              endRotation: 0
+          tweenDuration: 1
+          ease: 1
+          useInverseEaseForEndTween: 0
+      barMask: {fileID: 1020202765}
+      barGhostMask: {fileID: 128557178}
+      text: {fileID: 426039014}
+      barRightPaddingMin: 13
+      barRightPaddingMax: 390
+      numSecondsAfterShowToDoCallbackValueChanged: 0.1
+      numSecondsToWaitBeforeHidingBar: 2
     healthHUDFade:
       gameObj: {fileID: 1816204514}
       tweens:

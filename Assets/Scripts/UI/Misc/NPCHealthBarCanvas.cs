@@ -26,13 +26,16 @@ public class NPCHealthBarCanvas : MonoBehaviour
 
     bool doRaycast = true;
 
+    GameObject HealthBarFadeGameObj => statUI.HealthBarUI.BarFade.GameObj;
+    GameObject HealthBarTextGameObj => statUI.HealthBarUI.Text.gameObject;
+
     private void Start()
     {
         statUI.SetupStatUI(this);
 
         IDamageable.OnHealthChanged += statUI.OnHealthChanged;
         characterStats.OnStatModifierChanged += statUI.OnStatModifierChangedHealthChanged;
-        statUI.HealthHUDFade.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade).TweenValues.CanvasGroup.alpha = 0;
+        statUI.HealthBarUI.BarFade.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade).TweenValues.CanvasGroup.alpha = 0;
 
         PlayerController.StateMachine.GetState(out lockedOnCharacterControllerState);
 
@@ -50,12 +53,12 @@ public class NPCHealthBarCanvas : MonoBehaviour
         {
             if(hit.collider.gameObject != null)
             {
-                if(statUI.HealthHUDFade.GameObj.activeSelf) statUI.HealthHUDFade.GameObj.SetActive(false);
+                if(HealthBarFadeGameObj.activeSelf) HealthBarFadeGameObj.SetActive(false);
             }
         }
         else
         {
-            if(!statUI.HealthHUDFade.GameObj.activeSelf) statUI.HealthHUDFade.GameObj.SetActive(true);
+            if(!HealthBarFadeGameObj.activeSelf) HealthBarFadeGameObj.SetActive(true);
         }
     }
 
@@ -66,13 +69,13 @@ public class NPCHealthBarCanvas : MonoBehaviour
 
         if(GameSettings.Instance.ShowNonPlayerHealthAndStaminaText)
         {
-            if(!statUI.HealthText.gameObject.activeSelf)
-                statUI.HealthText.gameObject.SetActive(true);
+            if(!HealthBarTextGameObj.activeSelf)
+                HealthBarTextGameObj.SetActive(true);
         }
         else
         {
-            if(statUI.HealthText.gameObject.activeSelf)
-                statUI.HealthText.gameObject.SetActive(false);
+            if(HealthBarTextGameObj.activeSelf)
+                HealthBarTextGameObj.SetActive(false);
         }
     }
 
@@ -81,7 +84,7 @@ public class NPCHealthBarCanvas : MonoBehaviour
         if(aquiuredTarget != targetable) return;
 
         doRaycast = false;
-        statUI.HealthHUDFade.GameObj.SetActive(false);
+        HealthBarFadeGameObj.SetActive(false);
 
         PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(true, characterStats, IDamageable);
     }
@@ -91,13 +94,13 @@ public class NPCHealthBarCanvas : MonoBehaviour
         if(lostTarget != targetable) return;
 
         doRaycast = true;
-        statUI.HealthHUDFade.GameObj.SetActive(true);
+        HealthBarFadeGameObj.SetActive(true);
 
         PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(false, characterStats, IDamageable);
     }
 
     [Serializable]
-    public class NPCStatUI : StatUI
+    public class NPCStatUI : StatUI<NPCHealthBarCanvas>
     {
         NPCHealthBarCanvas nPCHealthBarCanvas;
 
@@ -107,8 +110,9 @@ public class NPCHealthBarCanvas : MonoBehaviour
         protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position;
         protected override Stat MaxHealthStat => CharacterStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
 
-        public void SetupStatUI(NPCHealthBarCanvas _nPCHealthBarCanvas)
+        public override void SetupStatUI(NPCHealthBarCanvas _nPCHealthBarCanvas)
         {
+            base.SetupStatUI(nPCHealthBarCanvas);
             nPCHealthBarCanvas = _nPCHealthBarCanvas;
         }
 
@@ -118,7 +122,7 @@ public class NPCHealthBarCanvas : MonoBehaviour
 
             if(operation == EHealthChangedOperation.NoChange) return;
 
-            UpdateHealthBar(currentHealth, projectedHealth, maxHealth);
+            healthBarUI.UpdateBar(currentHealth, projectedHealth, maxHealth);
         }
     }
 }

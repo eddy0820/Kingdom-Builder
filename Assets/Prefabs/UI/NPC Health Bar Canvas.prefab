@@ -622,41 +622,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statUI:
-    healthHUDFade:
-      gameObj: {fileID: 661645128001266403}
-      tweens:
-      - tweenValues:
-          tweenType: 2
-          moveYValues:
-            startPosY: 0
-            endPosY: 0
-          scaleValues:
-            startScale: 0
-            endScale: 0
-          canvasGroup: {fileID: 661645128001266401}
-          fadeValues:
-            startAlpha: 1
-            endAlpha: 0
-          rotate360Values:
-            startRotation: 0
-            endRotation: 0
-        tweenDuration: 1
-        ease: 1
-        useInverseEaseForEndTween: 0
-    healthBarMask: {fileID: 661645128428531982}
-    healthBarGhostMask: {fileID: 661645128257130584}
-    healthText: {fileID: 661645128459199184}
-    healthBarRightPaddingMin: 0.05
-    healthBarRightPaddingMax: 1.36
-    numSecondsAfterShowToDoCallback: 0.1
-    numSecondsToWaitBeforeHidingHealthBar: 20
+    healthBarUI:
+      fadeBar: 1
+      barTransform: {fileID: 0}
+      barFade:
+        gameObj: {fileID: 661645128001266403}
+        tweens:
+        - tweenValues:
+            tweenType: 2
+            moveYValues:
+              startPosY: 0
+              endPosY: 0
+            scaleValues:
+              startScale: 0
+              endScale: 0
+            canvasGroup: {fileID: 661645128001266401}
+            fadeValues:
+              startAlpha: 1
+              endAlpha: 0
+            rotate360Values:
+              startRotation: 0
+              endRotation: 0
+          tweenDuration: 1
+          ease: 1
+          useInverseEaseForEndTween: 0
+      barMask: {fileID: 661645128428531982}
+      barGhostMask: {fileID: 661645128257130584}
+      text: {fileID: 661645128459199184}
+      barRightPaddingMin: 0.05
+      barRightPaddingMax: 1.36
+      numSecondsAfterShowToDoCallbackValueChanged: 0.1
+      numSecondsToWaitBeforeHidingBar: 20
     damagePopupMinThreshold: 1
     takeDamageNumberMesh: {fileID: 773487178781459159, guid: f54bd850a5b5bf74f8d583a02f3d598b, type: 3}
     healNumberMesh: {fileID: 7676034915615045201, guid: 94b440bb25433a24e96f22aad9f4b21e, type: 3}
     increaseMaxHealthNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
     decreaseMaxHealthNumberMesh: {fileID: 8459268305018523655, guid: a91f66bd951016544ac43de478bd3e67, type: 3}
-  ITargetableMono: {fileID: 0}
-  IHoldStatsMono: {fileID: 0}
+    healthRegenHealNumberMesh: {fileID: 0}
+  targetable: {fileID: 0}
+  characterStats: {fileID: 0}
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 257
