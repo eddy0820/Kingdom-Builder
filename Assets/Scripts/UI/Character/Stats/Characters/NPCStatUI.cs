@@ -6,15 +6,17 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
-public class NPCHealthBarCanvas : MonoBehaviour
+public class NPCStatUI : DamageableStatUI
 {
-    [SerializeField] NPCStatUI statUI;
-
     [Space(15)]
 
     [SerializeField] Targetable targetable;
     [SerializeField] DamageableCharacterStats characterStats;
-    IDamageable IDamageable => characterStats;
+    protected override CharacterStats CharacterStats => characterStats;
+    protected override IDamageable IDamageable => characterStats;
+    protected override Transform DamageNumberSpawnTransform => transform;
+    protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position;
+    protected override Stat MaxHealthStat => CharacterStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
 
     LockedOnCharacterControllerState lockedOnCharacterControllerState;
     PlayerController PlayerController => PlayerController.Instance;
@@ -26,17 +28,16 @@ public class NPCHealthBarCanvas : MonoBehaviour
 
     bool doRaycast = true;
 
-    GameObject HealthBarFadeGameObj => statUI.HealthBarUI.BarFade.GameObj;
-    GameObject HealthBarTextGameObj => statUI.HealthBarUI.Text.gameObject;
+    GameObject HealthBarFadeGameObj => healthBarUI.BarFade.GameObj;
+    GameObject HealthBarTextGameObj => healthBarUI.Text.gameObject;
+
+    protected override void OnAwake()
+    {
+        healthBarUI.BarFade.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade).TweenValues.CanvasGroup.alpha = 0;
+    }
 
     private void Start()
     {
-        statUI.SetupStatUI(this);
-
-        IDamageable.OnHealthChanged += statUI.OnHealthChanged;
-        characterStats.OnStatModifierChanged += statUI.OnStatModifierChangedHealthChanged;
-        statUI.HealthBarUI.BarFade.Tweens.Find(t => t.TweenValues.TweenType == ETweenType.Fade).TweenValues.CanvasGroup.alpha = 0;
-
         PlayerController.StateMachine.GetState(out lockedOnCharacterControllerState);
 
         lockedOnCharacterControllerState.OnAcquiredTarget += OnAquiredTargetLockedOnState;
@@ -99,30 +100,12 @@ public class NPCHealthBarCanvas : MonoBehaviour
         PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(false, characterStats, IDamageable);
     }
 
-    [Serializable]
-    public class NPCStatUI : StatUI<NPCHealthBarCanvas>
+    protected override void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
-        NPCHealthBarCanvas nPCHealthBarCanvas;
+        DoDamagePopup(operation, healthChangeAmount);
 
-        protected override CharacterStats CharacterStats => nPCHealthBarCanvas.characterStats;
-        protected override IDamageable IDamageable => nPCHealthBarCanvas.IDamageable;
-        protected override Transform DamageNumberSpawnTransform => nPCHealthBarCanvas.transform;
-        protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position;
-        protected override Stat MaxHealthStat => CharacterStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
+        if(operation is EHealthChangedOperation.NoChange) return;
 
-        public override void SetupStatUI(NPCHealthBarCanvas _nPCHealthBarCanvas)
-        {
-            base.SetupStatUI(nPCHealthBarCanvas);
-            nPCHealthBarCanvas = _nPCHealthBarCanvas;
-        }
-
-        public override void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
-        {
-            DoDamagePopup(operation, healthChangeAmount);
-
-            if(operation == EHealthChangedOperation.NoChange) return;
-
-            healthBarUI.UpdateBar(currentHealth, projectedHealth, maxHealth);
-        }
+        healthBarUI.UpdateBar(currentHealth, projectedHealth, maxHealth);
     }
 }

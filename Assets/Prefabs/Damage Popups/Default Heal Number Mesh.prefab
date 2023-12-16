@@ -55,7 +55,7 @@ MonoBehaviour:
   faceCameraView: 1
   lookAtCamera: 0
   renderThroughWalls: 0
-  consistentScreenSize: 1
+  consistentScreenSize: 0
   distanceScalingSettings:
     baseDistance: 15
     closeDistance: 5

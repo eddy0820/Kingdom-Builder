@@ -1970,7 +1970,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.033024106, w: -0.9932857}
+  m_LocalRotation: {x: -0.086998306, y: -0.0687338, z: 0.03302573, w: -0.99328566}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3577,7 +3577,7 @@ GameObject:
   - component: {fileID: 1147015952}
   - component: {fileID: 1147015951}
   m_Layer: 5
-  m_Name: Name
+  m_Name: Name Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5060,8 +5060,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.2023369, y: -0.614418, z: 0.73425347, w: 0.20596665}
-  m_LocalPosition: {x: -2.721973, y: 27.42934, z: -26.69677}
+  m_LocalRotation: {x: 0.20266345, y: -0.614306, z: 0.7341443, w: 0.20636865}
+  m_LocalPosition: {x: -2.7220213, y: 27.429317, z: -26.696808}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6131,6 +6131,7 @@ GameObject:
   - component: {fileID: 2124958997}
   - component: {fileID: 2124958996}
   - component: {fileID: 2124959000}
+  - component: {fileID: 2124959001}
   m_Layer: 5
   m_Name: PlayerCanvas
   m_TagString: Untagged
@@ -6256,107 +6257,6 @@ MonoBehaviour:
       tweenDuration: 1
       ease: 15
       useInverseEaseForEndTween: 0
-  playerStatUI:
-    healthBarUI:
-      fadeBar: 1
-      barTransform: {fileID: 0}
-      barFade:
-        gameObj: {fileID: 1816204514}
-        tweens:
-        - tweenValues:
-            tweenType: 2
-            moveYValues:
-              startPosY: 0
-              endPosY: 0
-            scaleValues:
-              startScale: 0
-              endScale: 0
-            canvasGroup: {fileID: 1816204518}
-            fadeValues:
-              startAlpha: 1
-              endAlpha: 0
-            rotate360Values:
-              startRotation: 0
-              endRotation: 0
-          tweenDuration: 1
-          ease: 1
-          useInverseEaseForEndTween: 0
-      barMask: {fileID: 1020202765}
-      barGhostMask: {fileID: 128557178}
-      text: {fileID: 426039014}
-      barRightPaddingMin: 13
-      barRightPaddingMax: 390
-      numSecondsAfterShowToDoCallbackValueChanged: 0.1
-      numSecondsToWaitBeforeHidingBar: 2
-    healthHUDFade:
-      gameObj: {fileID: 1816204514}
-      tweens:
-      - tweenValues:
-          tweenType: 2
-          moveYValues:
-            startPosY: 0
-            endPosY: 0
-          scaleValues:
-            startScale: 0
-            endScale: 0
-          canvasGroup: {fileID: 1816204518}
-          fadeValues:
-            startAlpha: 1
-            endAlpha: 0
-          rotate360Values:
-            startRotation: 0
-            endRotation: 0
-        tweenDuration: 1
-        ease: 1
-        useInverseEaseForEndTween: 0
-    healthBarMask: {fileID: 1020202765}
-    healthBarGhostMask: {fileID: 128557178}
-    healthText: {fileID: 426039014}
-    healthBarRightPaddingMin: 13
-    healthBarRightPaddingMax: 390
-    numSecondsAfterShowToDoCallbackHealthChanged: 0.1
-    numSecondsToWaitBeforeHidingHealthBar: 2
-    damagePopupMinThreshold: 1
-    takeDamageNumberMesh: {fileID: 773487178781459159, guid: f54bd850a5b5bf74f8d583a02f3d598b, type: 3}
-    healNumberMesh: {fileID: 7676034915615045201, guid: 94b440bb25433a24e96f22aad9f4b21e, type: 3}
-    increaseMaxHealthNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
-    decreaseMaxHealthNumberMesh: {fileID: 8459268305018523655, guid: a91f66bd951016544ac43de478bd3e67, type: 3}
-    healthRegenHealNumberMesh: {fileID: 6449027957963938247, guid: 2228212c132e2284ba1f08f290723aa5, type: 3}
-    staminaHUDFade:
-      gameObj: {fileID: 884625734}
-      tweens:
-      - tweenValues:
-          tweenType: 2
-          moveYValues:
-            startPosY: 0
-            endPosY: 0
-          scaleValues:
-            startScale: 0
-            endScale: 0
-          canvasGroup: {fileID: 884625736}
-          fadeValues:
-            startAlpha: 1
-            endAlpha: 0
-          rotate360Values:
-            startRotation: 0
-            endRotation: 0
-        tweenDuration: 1
-        ease: 1
-        useInverseEaseForEndTween: 0
-    staminaBarMask: {fileID: 778767372}
-    staminaBarGhostMask: {fileID: 214870449}
-    staminaText: {fileID: 226425463}
-    staminaBarRightPaddingMin: 13
-    staminaBarRightPaddingMax: 390
-    numSecondsAfterShowToDoCallbackStaminaChanged: 0.1
-    numSecondsToWaitBeforeHidingStaminaBar: 2
-    singleTargetHealthHUD: {fileID: 2104993109}
-    singleTargetHealthBarMask: {fileID: 1616330022}
-    singleTargetHealthBarGhostMask: {fileID: 264687680}
-    singleTargetHealthText: {fileID: 1890739815}
-    singleTargetNameText: {fileID: 1147015951}
-    singleTargetHealthBarRightPaddingMin: 6
-    singleTargetHealthBarRightPaddingMax: 1219
   interactionCrosshair:
     gameObj: {fileID: 652586753}
     tweens:
@@ -6464,6 +6364,90 @@ MonoBehaviour:
       ease: 15
       useInverseEaseForEndTween: 0
   buildMenuEnabled: 0
+--- !u!114 &2124959001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124958995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c84f834e01c031c45a9ce37f25c2d838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBarUI:
+    fadeBar: 1
+    barTransform: {fileID: 0}
+    barFade:
+      gameObj: {fileID: 1816204514}
+      tweens:
+      - tweenValues:
+          tweenType: 2
+          moveYValues:
+            startPosY: 0
+            endPosY: 0
+          scaleValues:
+            startScale: 0
+            endScale: 0
+          canvasGroup: {fileID: 1816204518}
+          fadeValues:
+            startAlpha: 1
+            endAlpha: 0
+          rotate360Values:
+            startRotation: 0
+            endRotation: 0
+        tweenDuration: 1
+        ease: 1
+        useInverseEaseForEndTween: 0
+    barMask: {fileID: 1020202765}
+    barGhostMask: {fileID: 128557178}
+    text: {fileID: 426039014}
+    barRightPaddingMin: 13
+    barRightPaddingMax: 390
+    numSecondsAfterShowToDoCallbackValueChanged: 0.1
+    numSecondsToWaitBeforeHidingBar: 2
+  damagePopupMinThreshold: 1
+  takeDamageNumberMesh: {fileID: 773487178781459159, guid: f54bd850a5b5bf74f8d583a02f3d598b, type: 3}
+  healNumberMesh: {fileID: 7676034915615045201, guid: 94b440bb25433a24e96f22aad9f4b21e, type: 3}
+  increaseMaxHealthNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
+  decreaseMaxHealthNumberMesh: {fileID: 8459268305018523655, guid: a91f66bd951016544ac43de478bd3e67, type: 3}
+  healthRegenHealNumberMesh: {fileID: 6449027957963938247, guid: 2228212c132e2284ba1f08f290723aa5, type: 3}
+  staminaHUDFade:
+    gameObj: {fileID: 884625734}
+    tweens:
+    - tweenValues:
+        tweenType: 2
+        moveYValues:
+          startPosY: 0
+          endPosY: 0
+        scaleValues:
+          startScale: 0
+          endScale: 0
+        canvasGroup: {fileID: 884625736}
+        fadeValues:
+          startAlpha: 1
+          endAlpha: 0
+        rotate360Values:
+          startRotation: 0
+          endRotation: 0
+      tweenDuration: 1
+      ease: 1
+      useInverseEaseForEndTween: 0
+  staminaBarMask: {fileID: 778767372}
+  staminaBarGhostMask: {fileID: 214870449}
+  staminaText: {fileID: 226425463}
+  staminaBarRightPaddingMin: 13
+  staminaBarRightPaddingMax: 390
+  numSecondsAfterShowToDoCallbackStaminaChanged: 0.1
+  numSecondsToWaitBeforeHidingStaminaBar: 2
+  singleTargetHealthHUD: {fileID: 2104993109}
+  singleTargetHealthBarMask: {fileID: 1616330022}
+  singleTargetHealthBarGhostMask: {fileID: 264687680}
+  singleTargetHealthText: {fileID: 1890739815}
+  singleTargetNameText: {fileID: 1147015951}
+  singleTargetHealthBarRightPaddingMin: 6
+  singleTargetHealthBarRightPaddingMax: 1219
 --- !u!1001 &2134725590
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1235,7 +1235,7 @@ PrefabInstance:
       objectReference: {fileID: 240654089}
     - target: {fileID: 661645128955123196, guid: 8a4f078153c96e14ca8e76ecd6a7f85f, type: 3}
       propertyPath: m_Name
-      value: NPC Health Bar Canvas
+      value: NPC Stat UI
       objectReference: {fileID: 0}
     - target: {fileID: 661645128955123197, guid: 8a4f078153c96e14ca8e76ecd6a7f85f, type: 3}
       propertyPath: m_Pivot.x

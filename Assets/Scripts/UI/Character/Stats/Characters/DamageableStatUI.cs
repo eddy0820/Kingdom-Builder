@@ -8,11 +8,10 @@ using DG.Tweening;
 using System;
 using NaughtyAttributes;
 
-public abstract class StatUI<T>
+public abstract class DamageableStatUI : MonoBehaviour
 {   
     [Header("Health UI")]
     [SerializeField] protected BarUI healthBarUI;
-    public BarUI HealthBarUI => healthBarUI;
 
     [Header("Damage Popups")]
     [SerializeField] protected float damagePopupMinThreshold = 1f;
@@ -32,10 +31,17 @@ public abstract class StatUI<T>
     protected abstract CharacterStats CharacterStats { get; }
     protected abstract IDamageable IDamageable { get; }
 
-    public virtual void SetupStatUI(T statsHolder)
+    private void Awake()
     {
         healthBarUI.SetupBarUI(ReturnAdditionalHealthBarFadeCooldown);
+
+        IDamageable.OnHealthChanged += OnHealthChanged;
+        CharacterStats.OnStatModifierChanged += OnStatModifierChangedHealthChanged;
+    
+        OnAwake();
     }
+    
+    protected abstract void OnAwake();
 
     private float ReturnAdditionalHealthBarFadeCooldown()
     {
@@ -48,14 +54,14 @@ public abstract class StatUI<T>
         return 0;
     }
 
-    public virtual void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
+    protected virtual void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
         DoDamagePopup(operation, healthChangeAmount);
 
         healthBarUI.UpdateBar(currentHealth, projectedHealth, maxHealth);
     }
 
-    public void OnStatModifierChangedHealthChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    protected void OnStatModifierChangedHealthChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
     {
         if(stat.type != MaxHealthStat.type) return;
 
