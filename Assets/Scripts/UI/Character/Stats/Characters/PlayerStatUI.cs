@@ -9,9 +9,12 @@ using System;
 
 public class PlayerStatUI : StaminaDamageableStatUI
 {
-    [Header("Single Target Health Bar")]
+    [Header("Single Target HUD")]
+    [SerializeField] RectTransform singleTargetHUDTransform;
     [SerializeField] BarUI singleTargetHealthBarUI;
+    [SerializeField] BarUI singleTargetStaminaBarUI;
     [SerializeField] TextMeshProUGUI singleTargetNameText;
+    [SerializeField] RectTransform staminaBarUITransform;
 
     PlayerController PlayerController => PlayerController.Instance;
     PlayerCanvas PlayerCanvas => PlayerController.UICanvas;
@@ -31,7 +34,7 @@ public class PlayerStatUI : StaminaDamageableStatUI
     {
         base.OnAwake();
 
-        singleTargetHealthBarUI.BarTransform.gameObject.SetActive(false);
+        singleTargetHUDTransform.gameObject.SetActive(false);
     }
 
     private void LateUpdate()
@@ -66,23 +69,46 @@ public class PlayerStatUI : StaminaDamageableStatUI
 
 #endregion
 
-#region Single Target Health Bar Stuff
+#region Single Target HUD Stuff
 
     private void OnSingleTargetHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
         singleTargetHealthBarUI.UpdateBar(currentHealth, projectedHealth, maxHealth);
     }
 
-    private void OnSingleTargetStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    private void OnSingleTargetHealthStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
     {
         if(stat.type != MaxHealthStat.type) return;
         
         OnSingleTargetHealthChanged(IDamageable.GetCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
     }
 
-    public void ToggleSingleTargetHealthBar(bool b, CharacterStats stats, IDamageable damageable)
+    private void OnSingleTargetStaminaChanged(float currentStamina, float projectedStamina, float maxStamina, EStaminaChangedOperation operation = EStaminaChangedOperation.NoChange, float staminaChangeAmount = 0)
     {
-        singleTargetHealthBarUI.BarTransform.gameObject.SetActive(b);
+        singleTargetStaminaBarUI.UpdateBar(currentStamina, projectedStamina, maxStamina);
+    }
+
+    private void OnSingleTargetStaminaStatModifierChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    {
+        if(stat.type != MaxStaminaStat.type) return;
+
+        OnSingleTargetStaminaChanged(IStamina.GetCurrentStamina(), IStamina.GetProjectedStamina(), stat.Value);
+    }
+
+    public void ToggleSingleTargetHealthBar(bool b, CharacterStats stats)
+    {
+        if(stats is not IDamageable damageable) return;
+
+        singleTargetHUDTransform.gameObject.SetActive(b);
+
+        bool updateStaminaBar = false;
+        IStamina stamina = null;
+
+        if(stats is IStamina istamina)
+        {
+            stamina = istamina;
+            updateStaminaBar = true;
+        }
 
         if(b)
         {
@@ -90,12 +116,32 @@ public class PlayerStatUI : StaminaDamageableStatUI
             OnSingleTargetHealthChanged(damageable.GetCurrentHealth(), damageable.GetProjectedHealth(), stats.GetStatFromName[CommonStatTypeNames.MaxHealth].Value);
 
             damageable.OnHealthChanged += OnSingleTargetHealthChanged;
-            stats.OnStatModifierChanged += OnSingleTargetStatModifierChanged;
+            stats.OnStatModifierChanged += OnSingleTargetHealthStatModifierChanged;
+
+            if(updateStaminaBar)
+            {
+                staminaBarUITransform.gameObject.SetActive(true);
+
+                OnSingleTargetStaminaChanged(stamina.GetCurrentStamina(), stamina.GetProjectedStamina(), stats.GetStatFromName[CommonStatTypeNames.MaxStamina].Value);
+
+                stamina.OnStaminaChanged += OnSingleTargetStaminaChanged;
+                stats.OnStatModifierChanged += OnSingleTargetStaminaStatModifierChanged;
+            }
+            else
+            {
+                staminaBarUITransform.gameObject.SetActive(false);
+            }
         }
         else
         {
             damageable.OnHealthChanged -= OnSingleTargetHealthChanged;
-            stats.OnStatModifierChanged -= OnSingleTargetStatModifierChanged;
+            stats.OnStatModifierChanged -= OnSingleTargetHealthStatModifierChanged;
+
+            if(updateStaminaBar)
+            {
+                stamina.OnStaminaChanged -= OnSingleTargetStaminaChanged;
+                stats.OnStatModifierChanged -= OnSingleTargetStaminaStatModifierChanged;
+            }
         }
     }
 

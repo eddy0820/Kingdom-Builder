@@ -87,7 +87,7 @@ public class NPCStatUI : DamageableStatUI
         doRaycast = false;
         HealthBarFadeGameObj.SetActive(false);
 
-        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(true, characterStats, IDamageable);
+        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(true, characterStats);
     }
 
     private void OnLostTargetLockedOnState(Targetable lostTarget)
@@ -97,7 +97,7 @@ public class NPCStatUI : DamageableStatUI
         doRaycast = true;
         HealthBarFadeGameObj.SetActive(true);
 
-        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(false, characterStats, IDamageable);
+        PlayerCanvas.PlayerStatUI.ToggleSingleTargetHealthBar(false, characterStats);
     }
 
     protected override void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)

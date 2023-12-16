@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f4373769a7210a4c94b529165223b39, type: 3}
+  m_Name: InteractionType.DepleteStamina
+  m_EditorClassIdentifier: 
+  name: Deplete Stamina
+  id: depletestamina
+  scriptPath: Assets/Resources/GameData/InteractionTypes/DepleteStamina/
+  prefabPath: Assets/Resources/GameData/InteractionTypes/DepleteStamina/
+  pathName: DepleteStamina
+  actualScriptPath: Assets/Resources/GameData/InteractionTypes/DepleteStamina/DepleteStaminaInteractionBehavior.cs
+  actualPrefabPath: Assets/Resources/GameData/InteractionTypes/DepleteStamina/DepleteStaminaInteractionBehavior.prefab
+  interactionTypeBehavior: {fileID: 7088369726574870909, guid: 816a3af52435ad240b343a27d42c3292, type: 3}

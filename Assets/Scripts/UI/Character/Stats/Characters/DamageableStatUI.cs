@@ -196,9 +196,6 @@ public class BarUI
     [SerializeField] protected bool fadeBar;
 
     [AllowNesting]
-    [SerializeField, HideIf("fadeBar")] Transform barTransform;
-    public Transform BarTransform => barTransform;
-    [AllowNesting]
     [SerializeField, ShowIf("fadeBar")] TweenedUIComponent barFade;
     public TweenedUIComponent BarFade => barFade;
     [Space(10)]

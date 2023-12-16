@@ -683,8 +683,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canTakeDamage: 1
   damageableCharacterStats: {fileID: 240654090}
+  hasStamina: 1
+  staminaDamageableCharacterStats: {fileID: 240654090}
   interactionTypes:
   - {fileID: 11400000, guid: 570a56bf26dbadd4f8412ccf07018c58, type: 2}
+  - {fileID: 11400000, guid: 16e39ef6c7d4e8c419adbec6dd9f6096, type: 2}
 --- !u!1 &681836449
 GameObject:
   m_ObjectHideFlags: 0
