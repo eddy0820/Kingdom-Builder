@@ -53,6 +53,7 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
         StartCoroutine(StaminaRegenCoroutine());
         SetStamina(MaxStaminaStat.Value, true);
 
+        OnStatModifierChanged += OnStatModifierChangedStaminaChanged;
     }
     
     public void SetStamina(float amount, bool setAsNoChange = false)
@@ -250,7 +251,12 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
         }
     }
 
+    private void OnStatModifierChangedStaminaChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    {
+        if(stat.type != MaxStaminaStat.type) return;
 
+        lastTimeCurrentStaminaActivelyChanged = Time.time;
+    }
 
     protected void InvokeOnStaminaChanged(EStaminaChangedOperation operation, float staminaChangeAmount)
     {

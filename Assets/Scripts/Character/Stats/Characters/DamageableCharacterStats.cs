@@ -57,6 +57,8 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         StartCoroutine(HealOverTimeCoroutine());
         StartCoroutine(HealthRegenCoroutine());
         SetHealth(MaxHealthStat.Value, true);
+
+        OnStatModifierChanged += OnStatModifierChangedHealthChanged;
     }
 
     public void SetHealth(float amount, bool setAsNoChange = false)
@@ -251,6 +253,13 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
             yield return null; 
         }
+    }
+
+    private void OnStatModifierChangedHealthChanged(Stat stat, StatModifier statModifier, EStatModifierChangedOperation operation)
+    {
+        if(stat.type != MaxHealthStat.type) return;
+
+        lastTimeCurrentHealthActivelyChanged = Time.time;
     }
 
     protected void InvokeOnHealthChanged(EHealthChangedOperation operation, float healthChangeAmount)

@@ -62,8 +62,8 @@ public abstract class CharacterStats : MonoBehaviour
     public void RemoveStatModifier(StatModifier statModifier, StatTypeSO statType) => RemoveStatModifier(getStatFromType[statType], statModifier);
     private void RemoveStatModifier(Stat stat, StatModifier statModifier)
     {
-        stat.RemoveModifier(statModifier);
-        OnStatModifierChanged?.Invoke(stat, statModifier, EStatModifierChangedOperation.Removed);
+        if(stat.RemoveModifier(statModifier))
+             OnStatModifierChanged?.Invoke(stat, statModifier, EStatModifierChangedOperation.Removed);
     }
 
     public void RemoveAllStatModifiersFromSource(object source) => getStatFromName.ToList().ForEach(stat => RemoveAllStatModifiersFromSource(stat.Value, source));

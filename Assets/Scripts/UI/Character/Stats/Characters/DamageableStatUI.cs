@@ -134,9 +134,19 @@ public abstract class DamageableStatUI : MonoBehaviour
 
         float threshold = MaxHealthStat.Value / 100;
         threshold = Mathf.Clamp(threshold, damagePopupMinThreshold, Mathf.Infinity);
+        
+        if(IDamageable.GetCurrentHealth() != IDamageable.GetProjectedHealth())
+        {
+            if(currentHealthWaitingToBeShownHealOperation < threshold)
+                return null;
+        }
+        else
+        {
+            currentHealthWaitingToBeShownHealOperation = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(currentHealthWaitingToBeShownHealOperation);
 
-        if(currentHealthWaitingToBeShownHealOperation < threshold && IDamageable.GetCurrentHealth() != IDamageable.GetProjectedHealth())
-            return null;
+            if(currentHealthWaitingToBeShownHealOperation == 0)
+                return null;
+        }
 
         float leftOverHealth = currentHealthWaitingToBeShownHealOperation % threshold;
         
