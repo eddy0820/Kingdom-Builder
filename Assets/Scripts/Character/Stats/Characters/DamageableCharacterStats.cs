@@ -195,8 +195,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
                 continue;
             }
 
-            float lastCurrentHealth = currentHealth;
-            lastCurrentHealth = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(lastCurrentHealth);
+            float lastCurrentHealth = GetCurrentHealth();
 
             currentHealth = Mathf.MoveTowards(currentHealth, projectedHealth, MaxHealthStat.Value * (currentPercentPerSecondHealthOverTime / 100) * Time.deltaTime);
 
@@ -220,7 +219,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     public IEnumerator HealthRegenCoroutine()
     {
-        while(!isDead)
+        while (!isDead)
         {
             if(!CharacterHasStats(CommonStatTypeNames.HealthRegen, CommonStatTypeNames.OutOfCombatHealthRegenCooldown))
             {
@@ -237,7 +236,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
                 continue;
             }
 
-            float amount = HealthRegenStat.Value;
+            float amount = HealthRegenStat.Value * Time.deltaTime;
 
             if(amount > MaxHealthStat.Value - projectedHealth)
                 amount = MaxHealthStat.Value - projectedHealth;
@@ -250,7 +249,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
             InvokeOnHealthChanged(EHealthChangedOperation.HealthRegenHeal, amount);
 
-            yield return new WaitForSeconds(1);
+            yield return null; 
         }
     }
 
@@ -259,7 +258,6 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
         if(GameSettings.Instance.EnableHealthDebugMessages)
             Debug.Log($"Name: {GetDamageableName()} | Current health: {GetCurrentHealth()}, Projected health: {GetProjectedHealth()}, Max health: {MaxHealthStat.Value}");
         
-        healthChangeAmount = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(healthChangeAmount);
         OnHealthChanged?.Invoke(currentHealth, projectedHealth, MaxHealthStat.Value, operation, healthChangeAmount);
     }
 

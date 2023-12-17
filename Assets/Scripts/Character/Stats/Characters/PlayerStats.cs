@@ -41,7 +41,7 @@ public class PlayerStats : StaminaDamageableCharacterStats
         if(Input.GetKeyUp(KeyCode.M))
         {
             //GainStaminaOverTimeToPercent(80, 10);
-            HealOverTimeToPercent(80, 10);
+            HealOverTimeToPercent(100, 10);
         }
 
         if(Input.GetKeyUp(KeyCode.B))

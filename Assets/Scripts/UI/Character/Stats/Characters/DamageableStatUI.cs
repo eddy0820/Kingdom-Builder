@@ -21,7 +21,8 @@ public abstract class DamageableStatUI : MonoBehaviour
     [SerializeField] protected DamageNumberMesh increaseMaxHealthNumberMesh;
     [SerializeField] protected DamageNumberMesh decreaseMaxHealthNumberMesh;
     [SerializeField] protected DamageNumberMesh healthRegenHealNumberMesh;
-    protected float currentHealthWaitingToBeShown = 0;
+    protected float currentHealthWaitingToBeShownHealOperation = 0;
+    protected float currentHealthWaitingToBeShownHealthRegenOperation = 0;
 
     protected abstract Transform DamageNumberSpawnTransform { get; }
     protected abstract Vector3 DamageNumberSpawnPosition { get; }
@@ -56,6 +57,8 @@ public abstract class DamageableStatUI : MonoBehaviour
 
     protected virtual void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
+        if(operation is not EHealthChangedOperation.HealthRegenHeal) currentHealthWaitingToBeShownHealthRegenOperation = 0;
+        
         DoDamagePopup(operation, healthChangeAmount);
 
         healthBarUI.UpdateBar(currentHealth, projectedHealth, maxHealth);
@@ -102,7 +105,7 @@ public abstract class DamageableStatUI : MonoBehaviour
             break;
 
             case EHealthChangedOperation.HealthRegenHeal:
-                damageNumberMesh = HealOverTimeOperation(ref healthChangeAmount);
+                damageNumberMesh = HeathRegenOperation(ref healthChangeAmount);
             break;
 
             case EHealthChangedOperation.NoChange:
@@ -127,22 +130,21 @@ public abstract class DamageableStatUI : MonoBehaviour
 
     protected virtual DamageNumberMesh HealOperation(ref float healthChangeAmount)
     {
-        currentHealthWaitingToBeShown += healthChangeAmount;
-        currentHealthWaitingToBeShown = Mathf.Round(currentHealthWaitingToBeShown * 10f) / 10f;
+        currentHealthWaitingToBeShownHealOperation += healthChangeAmount;
 
-        int threshold = (int)(MaxHealthStat.Value / 100);
-        threshold = (int)Mathf.Clamp(threshold, damagePopupMinThreshold, 10);
+        float threshold = MaxHealthStat.Value / 100;
+        threshold = Mathf.Clamp(threshold, damagePopupMinThreshold, Mathf.Infinity);
 
-        if(currentHealthWaitingToBeShown < threshold && IDamageable.GetCurrentHealth() != IDamageable.GetProjectedHealth())
+        if(currentHealthWaitingToBeShownHealOperation < threshold && IDamageable.GetCurrentHealth() != IDamageable.GetProjectedHealth())
             return null;
 
-        float leftOverHealth = Mathf.Round(currentHealthWaitingToBeShown % damagePopupMinThreshold * 10f) / 10f;
+        float leftOverHealth = currentHealthWaitingToBeShownHealOperation % threshold;
         
-        if(leftOverHealth > 0) currentHealthWaitingToBeShown -= leftOverHealth;
+        if(leftOverHealth > 0) currentHealthWaitingToBeShownHealOperation -= leftOverHealth;
 
-        healthChangeAmount = currentHealthWaitingToBeShown;
+        healthChangeAmount = currentHealthWaitingToBeShownHealOperation;
 
-        currentHealthWaitingToBeShown = 0;
+        currentHealthWaitingToBeShownHealOperation = 0;
 
         if(leftOverHealth > 0) 
         {
@@ -152,15 +154,54 @@ public abstract class DamageableStatUI : MonoBehaviour
             }
             else
             {
-                currentHealthWaitingToBeShown += leftOverHealth;
+                currentHealthWaitingToBeShownHealOperation += leftOverHealth;
             }
         }
 
         return healNumberMesh;
     } 
 
-    protected virtual DamageNumberMesh HealOverTimeOperation(ref float healthChangeAmount)
+    protected virtual DamageNumberMesh HeathRegenOperation(ref float healthChangeAmount)
     {
+        currentHealthWaitingToBeShownHealthRegenOperation += healthChangeAmount;
+        
+        Stat healthRegenStat = CharacterStats.GetStatFromName[CommonStatTypeNames.HealthRegen];
+        float threshold = healthRegenStat.Value;
+        threshold = Mathf.Clamp(threshold, damagePopupMinThreshold, Mathf.Infinity);
+        
+        if(IDamageable.GetCurrentHealth() == MaxHealthStat.Value)
+        { 
+            currentHealthWaitingToBeShownHealthRegenOperation = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(currentHealthWaitingToBeShownHealthRegenOperation);
+
+            if(currentHealthWaitingToBeShownHealthRegenOperation == 0)
+                return null;
+        }
+        else
+        {
+            if(currentHealthWaitingToBeShownHealthRegenOperation < threshold)
+                return null;
+        }
+
+        float leftOverHealth = currentHealthWaitingToBeShownHealthRegenOperation % threshold;
+        
+        if(leftOverHealth > 0) currentHealthWaitingToBeShownHealthRegenOperation -= leftOverHealth;
+
+        healthChangeAmount = currentHealthWaitingToBeShownHealthRegenOperation;
+
+        currentHealthWaitingToBeShownHealthRegenOperation = 0;
+
+        if(leftOverHealth > 0) 
+        {
+            if(IDamageable.GetCurrentHealth() == MaxHealthStat.Value)
+            {
+                healthChangeAmount += leftOverHealth;
+            }
+            else
+            {
+                currentHealthWaitingToBeShownHealthRegenOperation += leftOverHealth;
+            }
+        }
+
         return healthRegenHealNumberMesh;
     }
 

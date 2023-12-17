@@ -102,6 +102,8 @@ public class NPCStatUI : DamageableStatUI
 
     protected override void OnHealthChanged(float currentHealth, float projectedHealth, float maxHealth, EHealthChangedOperation operation = EHealthChangedOperation.NoChange, float healthChangeAmount = 0)
     {
+        if(operation is not EHealthChangedOperation.HealthRegenHeal) currentHealthWaitingToBeShownHealthRegenOperation = 0;
+
         DoDamagePopup(operation, healthChangeAmount);
 
         if(operation is EHealthChangedOperation.NoChange) return;

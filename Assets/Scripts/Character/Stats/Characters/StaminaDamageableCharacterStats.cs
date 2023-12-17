@@ -233,7 +233,7 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
                 continue;
             }
 
-            float amount = StaminaRegenStat.Value;
+            float amount = StaminaRegenStat.Value * Time.deltaTime;
 
             if(amount > MaxStaminaStat.Value - projectedStamina)
                 amount = MaxStaminaStat.Value - projectedStamina;
@@ -246,9 +246,11 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
 
             InvokeOnStaminaChanged(EStaminaChangedOperation.StaminaRegenGain, amount);
 
-            yield return new WaitForSeconds(1);
+            yield return null;
         }
     }
+
+
 
     protected void InvokeOnStaminaChanged(EStaminaChangedOperation operation, float staminaChangeAmount)
     {
