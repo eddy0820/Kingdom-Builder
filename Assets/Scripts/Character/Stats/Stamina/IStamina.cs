@@ -20,4 +20,6 @@ public interface IStamina
     public Action<float, float, float, EStaminaChangedOperation, float> OnStaminaChanged { get; set; }
 
     public string GetStaminaName();
+
+    public bool HasEnoughStamina(float amount);
 }

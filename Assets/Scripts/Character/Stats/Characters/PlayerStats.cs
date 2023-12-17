@@ -7,22 +7,16 @@ using DG.Tweening;
 [Serializable]
 public class PlayerStats : StaminaDamageableCharacterStats
 {
-    [Space(10)]
-
-    [SerializeField] float staminaDepletionInterval = 0.05f;
-
-    float lastTimeStaminaReduced = 0;
-    Coroutine crouchStaminaCoroutine;
-
     PlayerController PlayerController => PlayerController.Instance;
+    PlayerCharacterController PlayerCharacterController => PlayerController.Character;
     PlayerCharacterStateMachine StateMachine => PlayerController.StateMachine;
-    PlayerCharacterController.MovementAttributes MovementAttributes => PlayerController.Character.Attributes;
+    PlayerCharacterController.MovementAttributes MovementAttributes => PlayerCharacterController.Attributes;
 
     protected override void OnStart()
     {
         base.OnStart();
 
-        StateMachine.OnGroundedMovementSprinting += DoStaminaReduction;
+        StateMachine.OnGroundedMovementSprinting += DoStaminaReductionSprinting;
         StateMachine.OnGroundedMovementCrouching += DoStaminaReductionCrouch;
 
         statModifier = new StatModifier(1, StatModifierTypes.Flat);
@@ -69,40 +63,29 @@ public class PlayerStats : StaminaDamageableCharacterStats
         }
     }
 
-    private void DoStaminaReduction(bool shouldBeReducing)
+    private void DoStaminaReductionSprinting()
     {
-        if(shouldBeReducing)
+        float amountToReduce = MovementAttributes.SprintingStaminaCostPerSecond * Time.deltaTime;
+
+        if(!HasEnoughStamina(amountToReduce))
         {
-            if(Time.time - lastTimeStaminaReduced > staminaDepletionInterval)
-            {
-                DepleteStaminaInstant(MovementAttributes.SprintingStaminaCostPerSecond * staminaDepletionInterval);
-                lastTimeStaminaReduced = Time.time;
-            }
+            PlayerCharacterController.SetIsSprinting(false);
+            return;
         }
+
+        DepleteStaminaInstant(amountToReduce);
     }
 
-    private void DoStaminaReductionCrouch(bool shouldBeReducing)
+    private void DoStaminaReductionCrouch()
     {
-        if(shouldBeReducing && crouchStaminaCoroutine == null)
-        {
-            crouchStaminaCoroutine = StartCoroutine(HandleCrouchingStaminaCoroutine());
-        }  
-        else
-        {
-            if(crouchStaminaCoroutine != null)
-            {
-                StopCoroutine(crouchStaminaCoroutine);
-                crouchStaminaCoroutine = null;
-            }
-        }
-    }
+        float amountToReduce = MovementAttributes.CrouchingStaminaCostPerSecond * Time.deltaTime;
 
-    IEnumerator HandleCrouchingStaminaCoroutine()
-    {
-        while(true)
+        if(!HasEnoughStamina(amountToReduce))
         {
-            DepleteStaminaInstant(MovementAttributes.CrouchingStaminaCostPerSecond * staminaDepletionInterval);
-            yield return new WaitForSeconds(staminaDepletionInterval);
+            PlayerCharacterController.DoCrouchUp();
+            return;
         }
+
+        DepleteStaminaInstant(amountToReduce);
     }
 }

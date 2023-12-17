@@ -11,8 +11,11 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void Awake()
     {
-        PlayerCharacterStateMachine.OnGroundedMovementSprinting += ToggleSpint;
-        PlayerCharacterStateMachine.OnGroundedMovementCrouching += ToggleCrouch;
+        PlayerCharacterStateMachine.OnGroundedMovementSprinting += () => ToggleSpint(true);
+        PlayerCharacterStateMachine.OnGroundedMovementNotSprinting += () => ToggleSpint(false);
+
+        PlayerCharacterStateMachine.OnGroundedMovementCrouching += () => ToggleCrouch(true);
+        PlayerCharacterStateMachine.OnGroundedMovementNotCrouching += () => ToggleCrouch(false);
     }
 
     public void ToggleCrouch(bool isCrouch)

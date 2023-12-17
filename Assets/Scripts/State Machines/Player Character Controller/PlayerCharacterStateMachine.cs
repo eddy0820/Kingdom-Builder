@@ -6,8 +6,10 @@ using System;
 [RequireComponent(typeof(PlayerCharacterController))]
 public class PlayerCharacterStateMachine : DecentralizedStateMachine<PlayerCharacterControllerState>
 {
-    public Action<bool> OnGroundedMovementSprinting;
-    public Action<bool> OnGroundedMovementCrouching;
+    public Action OnGroundedMovementSprinting;
+    public Action OnGroundedMovementNotSprinting;
+    public Action OnGroundedMovementCrouching;
+    public Action OnGroundedMovementNotCrouching;
 
     protected override void OnAwake() {}
 

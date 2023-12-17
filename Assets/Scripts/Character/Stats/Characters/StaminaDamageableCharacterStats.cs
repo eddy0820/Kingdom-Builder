@@ -265,4 +265,9 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
     {
         return gameObject.name;
     }
+
+    public bool HasEnoughStamina(float amount)
+    {
+        return GetCurrentStamina() >= amount;
+    }
 }

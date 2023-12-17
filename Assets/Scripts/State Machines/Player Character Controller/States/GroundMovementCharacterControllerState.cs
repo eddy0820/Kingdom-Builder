@@ -68,7 +68,6 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
         if(!isCrouching)
         {
             isCrouching = true;
-            stateMachine.OnGroundedMovementCrouching?.Invoke(true);
             isWalking = false;
             isSprinting = false;
 
@@ -104,9 +103,9 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
             SetMovementAnim(currentVelocity, nonRelativeMoveInputVector);
 
             if(IsSprinting && moveInputVector.magnitude > 0f)
-                stateMachine.OnGroundedMovementSprinting?.Invoke(true);
+                stateMachine.OnGroundedMovementSprinting?.Invoke();
             else
-                stateMachine.OnGroundedMovementSprinting?.Invoke(false);
+                stateMachine.OnGroundedMovementNotSprinting?.Invoke();
         }
         // Air movement
         else
@@ -301,7 +300,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
     
     public override void BeforeCharacterUpdate(float deltaTime)
     {
-
+        
     }
     
     public override void AfterCharacterUpdate(ref bool _jumpRequested, ref bool _jumpConsumed, ref float _timeSinceLastAbleToJump, ref bool _isCrouching, float _timeSinceJumpRequested, bool _jumpedThisFrame, bool _shouldBeCrouching, Collider[] _probedColliders, float deltaTime)
@@ -352,10 +351,16 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
             {
                 // If no obstructions, uncrouch
                 MeshRoot.localScale = new Vector3(1f, 1f, 1f);
-                stateMachine.OnGroundedMovementCrouching?.Invoke(false);
                 _isCrouching = false;
             }
         };
+
+        if(_isCrouching)
+            stateMachine.OnGroundedMovementCrouching?.Invoke();
+        else
+            stateMachine.OnGroundedMovementNotCrouching?.Invoke();
+
+
     }
 
     public override void AddVelocity(ref Vector3 _internalVelocityAdd, Vector3 velocity)

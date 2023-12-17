@@ -148,6 +148,7 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
     Vector3 lastOuterNormal = Vector3.zero;
     
     PlayerController PlayerController => PlayerController.Instance;
+    PlayerStats PlayerStats => PlayerController.PlayerStats;
     PlayerAnimationController AnimationController => PlayerController.AnimationController;
     PlayerCharacterStateMachine StateMachine => PlayerController.StateMachine;
 
@@ -204,6 +205,10 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void DoCrouchDown()
     {
+        if(PlayerStats is IStamina stamina)
+            if(!stamina.HasEnoughStamina(attributes.CrouchingStaminaCostPerSecond * Time.deltaTime))
+                return;
+
         StateMachine.CurrentState.DoCrouchDown(ref _shouldBeCrouching, ref _isCrouching, ref isWalking, ref isSprinting);
     }
 
@@ -230,6 +235,15 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController
 
     public void SetIsSprinting(bool _bool)
     {
+        if(PlayerStats is IStamina stamina)
+        {
+            if(!stamina.HasEnoughStamina(attributes.SprintingStaminaCostPerSecond * Time.deltaTime))
+            {
+                isSprinting = false;
+                return;
+            }
+        }
+
         if(!_isCrouching)
         {
             if(_bool)
