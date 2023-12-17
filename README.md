@@ -65,3 +65,6 @@ https://assetstore.unity.com/packages/2d/fonts/font-nation-217414
 
 Damage Numbers Pro
 https://assetstore.unity.com/packages/2d/gui/damage-numbers-pro-186447
+
+Quibli
+https://assetstore.unity.com/packages/vfx/quibli-anime-shaders-and-tools-203178
