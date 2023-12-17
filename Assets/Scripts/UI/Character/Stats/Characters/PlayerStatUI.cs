@@ -145,5 +145,31 @@ public class PlayerStatUI : StaminaDamageableStatUI
         }
     }
 
+    #endregion
+
+#region Damage Popup Stuff
+
+    protected override void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
+    {
+        if(!PlayerSpawner.Instance.ShowPlayerDamagePopups) return;
+
+        base.DoDamagePopup(eHealthChangedOperation, healthChangeAmount);
+    }
+
+    protected override void DoMaxHealthChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float healthChangeAmount)
+    {
+        if(!PlayerSpawner.Instance.ShowPlayerDamagePopups) return;
+
+        base.DoMaxHealthChangePopup(eStatModifierChangedOperation, healthChangeAmount);
+    }
+
+    protected override void DoMaxStaminaChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float staminaChangeAmount)
+    {
+        if(!PlayerSpawner.Instance.ShowPlayerDamagePopups) return;
+
+        base.DoMaxStaminaChangePopup(eStatModifierChangedOperation, staminaChangeAmount);
+    }
+
 #endregion
+
 }

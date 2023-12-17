@@ -26,7 +26,7 @@ public class PlayerStats : StaminaDamageableCharacterStats
 
     private void Update()
     {
-        if(Input.GetKeyUp(KeyCode.N))
+        /*if(Input.GetKeyUp(KeyCode.N))
         {
             //DepleteStaminaInstant(10);
             TakeDamageInstant(10);
@@ -52,15 +52,15 @@ public class PlayerStats : StaminaDamageableCharacterStats
 
         if(Input.GetKeyUp(KeyCode.C))
         {
-            //ApplyStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
-            ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+            ApplyStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
+            //ApplyStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
         }
 
         if(Input.GetKeyUp(KeyCode.X))
         {
-            //RemoveStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
-            RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
-        }
+            RemoveStatModifier(statModifier, CommonStatTypeNames.MaxStamina);
+            //RemoveStatModifier(statModifier, CommonStatTypeNames.MaxHealth);
+        }*/
     }
 
     private void DoStaminaReductionSprinting()

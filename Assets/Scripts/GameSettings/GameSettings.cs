@@ -17,6 +17,8 @@ public class GameSettings : MonoBehaviour
     [Space(15)]
     [SerializeField] bool showNonPlayerHealthAndStaminaText = true;
     public bool ShowNonPlayerHealthAndStaminaText => showNonPlayerHealthAndStaminaText;
+    [SerializeField] bool showNonPlayerDamagePopups = true;
+    public bool ShowNonPlayerDamagePopups => showNonPlayerDamagePopups;
 
     Vector3 gravity = Vector3.zero;
     public Vector3 Gravity =>  gravity;

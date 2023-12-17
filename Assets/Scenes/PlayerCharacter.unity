@@ -1627,7 +1627,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseStatsSO: {fileID: 11400000, guid: ca936704d2e919c4d9eb3d93f4fffebf, type: 2}
-  staminaDepletionInterval: 0.05
 --- !u!1 &463977293
 GameObject:
   m_ObjectHideFlags: 0
@@ -2122,7 +2121,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540111597}
-  m_LocalRotation: {x: -0.08699831, y: -0.06873379, z: 0.03305489, w: -0.99328464}
+  m_LocalRotation: {x: -0.08699831, y: -0.06873379, z: 0.033055037, w: -0.99328464}
   m_LocalPosition: {x: 4.089463, y: -26.405933, z: 21.07618}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5475,8 +5474,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882958743}
-  m_LocalRotation: {x: 0.20956269, y: -0.6118937, z: 0.7317784, w: 0.21487239}
-  m_LocalPosition: {x: -2.722753, y: 27.428982, z: -26.697582}
+  m_LocalRotation: {x: 0.20959616, y: -0.6118818, z: 0.7317665, w: 0.21491376}
+  m_LocalPosition: {x: -2.7227561, y: 27.42898, z: -26.697584}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6934,6 +6933,8 @@ MonoBehaviour:
     barRightPaddingMax: 390
     numSecondsAfterShowToDoCallbackValueChanged: 0.1
     numSecondsToWaitBeforeHidingBar: 2
+  increaseMaxStaminaNumberMesh: {fileID: 7910814989860013857, guid: c37fe12acd9dcff4f918c04dce6f60be, type: 3}
+  decreaseMaxStaminaNumberMesh: {fileID: 3450543921202972069, guid: 2000423924a4c2a42902e1a61387cad8, type: 3}
   singleTargetHUDTransform: {fileID: 2104993109}
   singleTargetHealthBarUI:
     fadeBar: 0

@@ -623,7 +623,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBarUI:
     fadeBar: 1
-    barTransform: {fileID: 0}
     barFade:
       gameObj: {fileID: 661645128001266403}
       tweens:
@@ -658,6 +657,20 @@ MonoBehaviour:
   increaseMaxHealthNumberMesh: {fileID: 6290090470060870612, guid: 19f3f473a8ae65e45a77e25d86267307, type: 3}
   decreaseMaxHealthNumberMesh: {fileID: 8459268305018523655, guid: a91f66bd951016544ac43de478bd3e67, type: 3}
   healthRegenHealNumberMesh: {fileID: 6449027957963938247, guid: 2228212c132e2284ba1f08f290723aa5, type: 3}
+  staminaBarUI:
+    fadeBar: 0
+    barFade:
+      gameObj: {fileID: 0}
+      tweens: []
+    barMask: {fileID: 0}
+    barGhostMask: {fileID: 0}
+    text: {fileID: 0}
+    barRightPaddingMin: 15
+    barRightPaddingMax: 390
+    numSecondsAfterShowToDoCallbackValueChanged: 0.1
+    numSecondsToWaitBeforeHidingBar: 2
+  increaseMaxStaminaNumberMesh: {fileID: 7910814989860013857, guid: c37fe12acd9dcff4f918c04dce6f60be, type: 3}
+  decreaseMaxStaminaNumberMesh: {fileID: 3450543921202972069, guid: 2000423924a4c2a42902e1a61387cad8, type: 3}
   targetable: {fileID: 0}
   characterStats: {fileID: 0}
   raycastLayerMask:

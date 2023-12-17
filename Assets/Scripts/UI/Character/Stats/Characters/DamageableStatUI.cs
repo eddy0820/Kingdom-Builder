@@ -90,7 +90,7 @@ public abstract class DamageableStatUI : MonoBehaviour
         OnHealthChanged(IDamageable.GetCurrentHealth(), IDamageable.GetProjectedHealth(), stat.Value);
     }
 
-    protected void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
+    protected virtual void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
     {
         DamageNumberMesh damageNumberMesh;
         

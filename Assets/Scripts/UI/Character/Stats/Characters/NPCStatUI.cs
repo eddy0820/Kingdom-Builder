@@ -6,17 +6,20 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
-public class NPCStatUI : DamageableStatUI
+public class NPCStatUI : StaminaDamageableStatUI
 {
     [Space(15)]
 
     [SerializeField] Targetable targetable;
-    [SerializeField] DamageableCharacterStats characterStats;
+    [SerializeField] StaminaDamageableCharacterStats characterStats;
     protected override CharacterStats CharacterStats => characterStats;
     protected override IDamageable IDamageable => characterStats;
     protected override Transform DamageNumberSpawnTransform => transform;
     protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position;
     protected override Stat MaxHealthStat => CharacterStats.GetStatFromName[CommonStatTypeNames.MaxHealth];
+
+    protected override Stat MaxStaminaStat => CharacterStats.GetStatFromName[CommonStatTypeNames.MaxStamina];
+    protected override IStamina IStamina => characterStats;
 
     LockedOnCharacterControllerState lockedOnCharacterControllerState;
     PlayerController PlayerController => PlayerController.Instance;
@@ -110,4 +113,30 @@ public class NPCStatUI : DamageableStatUI
 
         healthBarUI.UpdateBar(currentHealth, projectedHealth, maxHealth);
     }
+
+#region Damage Popup Stuff
+
+    protected override void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
+    {
+        if(!GameSettings.Instance.ShowNonPlayerDamagePopups) return;
+
+        base.DoDamagePopup(eHealthChangedOperation, healthChangeAmount);
+    }
+
+    protected override void DoMaxHealthChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float healthChangeAmount)
+    {
+        if(!GameSettings.Instance.ShowNonPlayerDamagePopups) return;
+
+        base.DoMaxHealthChangePopup(eStatModifierChangedOperation, healthChangeAmount);
+    }
+
+    protected override void DoMaxStaminaChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float staminaChangeAmount)
+    {
+        if(!GameSettings.Instance.ShowNonPlayerDamagePopups) return;
+
+        base.DoMaxStaminaChangePopup(eStatModifierChangedOperation, staminaChangeAmount);
+    }
+
+#endregion
+
 }

@@ -56,6 +56,7 @@ MonoBehaviour:
   enableLockOn: 1
   enableInteraction: 1
   showPlayerHealthAndStaminaText: 1
+  showPlayerDamagePopups: 1
 --- !u!114 &859870556
 MonoBehaviour:
   m_ObjectHideFlags: 0

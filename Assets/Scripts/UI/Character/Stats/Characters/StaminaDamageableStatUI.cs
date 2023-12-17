@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using DamageNumbersPro;
 using UnityEngine;
 
 public abstract class StaminaDamageableStatUI : DamageableStatUI
 {
     [Header("Stamina UI")]
     [SerializeField] protected BarUI staminaBarUI;
+
+    [Header("Stamina Damage Popups")]
+    [SerializeField] protected DamageNumberMesh increaseMaxStaminaNumberMesh;
+    [SerializeField] protected DamageNumberMesh decreaseMaxStaminaNumberMesh;
 
     protected abstract Stat MaxStaminaStat { get; }
     protected abstract IStamina IStamina { get; }
@@ -38,6 +43,48 @@ public abstract class StaminaDamageableStatUI : DamageableStatUI
     {
         if(stat.type != MaxStaminaStat.type) return;
 
+        float maxStaminaChangeAmount;
+
+        switch(operation)
+        {
+            case EStatModifierChangedOperation.Added:
+                maxStaminaChangeAmount = statModifier.value;
+                break;
+            case EStatModifierChangedOperation.Removed:
+            case EStatModifierChangedOperation.RemovedAllFromSource:
+                maxStaminaChangeAmount = -statModifier.value;
+                break;
+            default:
+                return;
+        }
+
+        DoMaxStaminaChangePopup(operation, maxStaminaChangeAmount);
+
         OnStaminaChanged(IStamina.GetCurrentStamina(), IStamina.GetProjectedStamina(), stat.Value);
     }
+
+    protected virtual void DoMaxStaminaChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float staminaChangeAmount)
+    {
+        DamageNumberMesh damageNumberMesh;
+
+        switch(eStatModifierChangedOperation)
+        {
+            case EStatModifierChangedOperation.Added:
+                damageNumberMesh = increaseMaxStaminaNumberMesh;
+            break;
+
+            case EStatModifierChangedOperation.Removed:
+            case EStatModifierChangedOperation.RemovedAllFromSource:
+                damageNumberMesh = decreaseMaxStaminaNumberMesh;
+            break;
+
+            default:
+                return;
+        }
+
+        damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
+
+        damageNumberMesh.Spawn(DamageNumberSpawnPosition, staminaChangeAmount);
+    }
+    
 }
