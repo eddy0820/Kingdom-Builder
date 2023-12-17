@@ -68,9 +68,5 @@ MonoBehaviour:
   m_Active: 1
   settings:
     renderersAfterOpaqueAndSky: []
-    renderersBeforePostProcess:
-    - CompoundRendererFeature.PostProcess.ColorGradingRenderer, Assembly-CSharp,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    - CompoundRendererFeature.PostProcess.StylizedDetailRenderer, Assembly-CSharp,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    renderersBeforePostProcess: []
     renderersAfterPostProcess: []
