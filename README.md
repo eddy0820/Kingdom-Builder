@@ -8,6 +8,7 @@ To-Do
 -Add UI sounds to Character Creation
 -Add heel transforms to the character prefab from Character Creation
 -Target switching for lock on
+-avatar upperbody mask for animatins on character creation model
 
 Used Assets
 ------------

@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.av.smart-inspector": {
-      "version": "https://github.com/neon-age/Smart-Inspector.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "aa4248c2cdd925eff9caf1f25e6c1de0dd1b3994"
-    },
     "com.marijnzwemmer.unity-toolbar-extender": {
       "version": "https://github.com/marijnz/unity-toolbar-extender.git",
       "depth": 0,

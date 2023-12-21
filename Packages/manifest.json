@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.av.smart-inspector": "https://github.com/neon-age/Smart-Inspector.git",
     "com.marijnzwemmer.unity-toolbar-extender": "https://github.com/marijnz/unity-toolbar-extender.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.cinemachine": "2.8.9",
