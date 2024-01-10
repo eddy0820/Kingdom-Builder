@@ -457,6 +457,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sheath"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b34baa4-0567-440c-a9a2-e7d2a3fd71a5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -661,11 +670,22 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""e743fb47-ab73-4835-bf84-98622872d951"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse + Keyboard"",
                     ""action"": ""TertiaryInteraction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""788972a8-ee00-4c67-9626-3b49aadb5be9"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse + Keyboard"",
+                    ""action"": ""Sheath"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -814,6 +834,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_PlayerMechanics_PrimaryInteraction = m_PlayerMechanics.FindAction("PrimaryInteraction", throwIfNotFound: true);
         m_PlayerMechanics_SecondaryInteraction = m_PlayerMechanics.FindAction("SecondaryInteraction", throwIfNotFound: true);
         m_PlayerMechanics_TertiaryInteraction = m_PlayerMechanics.FindAction("TertiaryInteraction", throwIfNotFound: true);
+        m_PlayerMechanics_Sheath = m_PlayerMechanics.FindAction("Sheath", throwIfNotFound: true);
         // GridBuilding
         m_GridBuilding = asset.FindActionMap("GridBuilding", throwIfNotFound: true);
         m_GridBuilding_Demolish = m_GridBuilding.FindAction("Demolish", throwIfNotFound: true);
@@ -1028,6 +1049,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMechanics_PrimaryInteraction;
     private readonly InputAction m_PlayerMechanics_SecondaryInteraction;
     private readonly InputAction m_PlayerMechanics_TertiaryInteraction;
+    private readonly InputAction m_PlayerMechanics_Sheath;
     public struct PlayerMechanicsActions
     {
         private @PlayerControls m_Wrapper;
@@ -1051,6 +1073,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @PrimaryInteraction => m_Wrapper.m_PlayerMechanics_PrimaryInteraction;
         public InputAction @SecondaryInteraction => m_Wrapper.m_PlayerMechanics_SecondaryInteraction;
         public InputAction @TertiaryInteraction => m_Wrapper.m_PlayerMechanics_TertiaryInteraction;
+        public InputAction @Sheath => m_Wrapper.m_PlayerMechanics_Sheath;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMechanics; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1117,6 +1140,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @TertiaryInteraction.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnTertiaryInteraction;
                 @TertiaryInteraction.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnTertiaryInteraction;
                 @TertiaryInteraction.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnTertiaryInteraction;
+                @Sheath.started -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnSheath;
+                @Sheath.performed -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnSheath;
+                @Sheath.canceled -= m_Wrapper.m_PlayerMechanicsActionsCallbackInterface.OnSheath;
             }
             m_Wrapper.m_PlayerMechanicsActionsCallbackInterface = instance;
             if (instance != null)
@@ -1178,6 +1204,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @TertiaryInteraction.started += instance.OnTertiaryInteraction;
                 @TertiaryInteraction.performed += instance.OnTertiaryInteraction;
                 @TertiaryInteraction.canceled += instance.OnTertiaryInteraction;
+                @Sheath.started += instance.OnSheath;
+                @Sheath.performed += instance.OnSheath;
+                @Sheath.canceled += instance.OnSheath;
             }
         }
     }
@@ -1285,6 +1314,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnPrimaryInteraction(InputAction.CallbackContext context);
         void OnSecondaryInteraction(InputAction.CallbackContext context);
         void OnTertiaryInteraction(InputAction.CallbackContext context);
+        void OnSheath(InputAction.CallbackContext context);
     }
     public interface IGridBuildingActions
     {

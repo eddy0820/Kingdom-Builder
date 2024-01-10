@@ -4,6 +4,11 @@ using UnityEngine;
 
 public abstract class DecentralizedStateMachine<T> : StateMachine<T> where T : DecentralizedStateMachine<T>.DecentralizedState
 {
+    protected override void OnStart()
+    {
+        SwitchState(startingState);
+    }
+
     public virtual void SwitchState(T nextState)
     {
         T previousState = currentState;

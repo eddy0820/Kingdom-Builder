@@ -65,6 +65,8 @@ public class PlayerStats : StaminaDamageableCharacterStats
 
     private void DoStaminaReductionSprinting()
     {
+        if(!PlayerSpawner.Instance.PlayerConsumesStamina) return;
+
         float amountToReduce = MovementAttributes.SprintingStaminaCostPerSecond * Time.deltaTime;
 
         if(!HasEnoughStamina(amountToReduce))
@@ -78,6 +80,8 @@ public class PlayerStats : StaminaDamageableCharacterStats
 
     private void DoStaminaReductionCrouch()
     {
+        if(!PlayerSpawner.Instance.PlayerConsumesStamina) return;
+        
         float amountToReduce = MovementAttributes.CrouchingStaminaCostPerSecond * Time.deltaTime;
 
         if(!HasEnoughStamina(amountToReduce))

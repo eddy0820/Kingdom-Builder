@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
 using NaughtyAttributes;
-using UnityEngine.UI;
 
-[RequireComponent(typeof(PlayerCharacterStateMachine))]
 public class PlayerCharacterController : MonoBehaviour, ICharacterController
 {
     [SerializeField] KinematicCharacterMotor motor;

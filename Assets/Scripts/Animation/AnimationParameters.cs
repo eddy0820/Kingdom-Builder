@@ -12,6 +12,6 @@ public class AnimationParameters
     public static readonly int Trigger = Animator.StringToHash("Trigger");
     public static readonly int TriggerNumber = Animator.StringToHash("TriggerNumber");
     public static readonly int JumpNumber = Animator.StringToHash("JumpNumber");
-    public static readonly int WeaponType = Animator.StringToHash("WeaponType");
+    public static readonly int CurrentWeaponType = Animator.StringToHash("WeaponType");
     public static readonly int FromWeaponTypeSwitch = Animator.StringToHash("FromWeaponTypeSwitch");
 }

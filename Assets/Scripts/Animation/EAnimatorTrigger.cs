@@ -8,4 +8,5 @@ public enum EAnimatorTrigger
     JumpTrigger = 1,
     WeaponSheathTrigger = 2,
     WeaponUnsheathTrigger = 3,
+    InstantSwitchTrigger = 4,
 }

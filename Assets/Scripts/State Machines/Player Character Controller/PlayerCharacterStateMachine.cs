@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[RequireComponent(typeof(PlayerCharacterController))]
 public class PlayerCharacterStateMachine : DecentralizedStateMachine<PlayerCharacterControllerState>
 {
     public Action OnGroundedMovementSprinting;
@@ -15,7 +14,7 @@ public class PlayerCharacterStateMachine : DecentralizedStateMachine<PlayerChara
 
     protected override void OnStart() 
     {
-        SwitchState(GetState(out DefaultCharacterControllerState defaultState) ? defaultState : null);
+        base.OnStart();
     }
 
     protected override void OnUpdate() {}

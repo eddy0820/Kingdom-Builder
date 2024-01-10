@@ -1,0 +1,35 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EquippedWeaponStateMachine : DecentralizedStateMachine<EquippedWeaponState>
+{
+    PlayerAnimationController AnimationController => PlayerController.Instance.AnimationController;
+
+    protected override void OnAwake() {}
+
+    protected override void OnStart() 
+    {
+        AnimationController.OnWeaponSwitchedInAnimation += SwitchWeapon;
+        AnimationController.SetCurrentWeapon(startingState.WeaponType.ToAnimatorWeaponType(), false);
+
+        base.OnStart();
+    }
+
+    protected override void OnUpdate() {}
+
+    protected override void OnFixedUpdate() {}
+
+    public void DecideSheath()
+    {
+        if(currentState is RelaxEquippedWeaponState)
+            SwitchState(GetState(out UnarmedEquippedWeaponState unarmedEquippedWeaponState) ? unarmedEquippedWeaponState : null);
+        else
+            SwitchState(GetState(out RelaxEquippedWeaponState relaxEquippedWeaponState) ? relaxEquippedWeaponState : null);
+    }
+
+    public void SwitchWeapon()
+    {
+        currentState.SwitchWeapon();
+    }
+}

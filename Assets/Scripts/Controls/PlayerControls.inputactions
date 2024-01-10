@@ -435,6 +435,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Sheath",
+                    "type": "Button",
+                    "id": "2b34baa4-0567-440c-a9a2-e7d2a3fd71a5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -639,11 +648,22 @@
                 {
                     "name": "",
                     "id": "e743fb47-ab73-4835-bf84-98622872d951",
-                    "path": "<Keyboard>/r",
+                    "path": "<Keyboard>/g",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse + Keyboard",
                     "action": "TertiaryInteraction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "788972a8-ee00-4c67-9626-3b49aadb5be9",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse + Keyboard",
+                    "action": "Sheath",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -10,7 +10,7 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
     [Header("State Machine")]
     [SerializeField] bool statesAreChildGameObjects = true;
     [SerializeField, HideIf("statesAreChildGameObjects")] List<T> states;
-    [SerializeField] T startingState;
+    [SerializeField] protected T startingState;
 
     [Space(5)]
 

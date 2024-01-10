@@ -59,6 +59,7 @@ public class PlayerCanvas : MonoBehaviour
     {
         return interactionEntries[index].OnInteract;
     }
+    
     public void ToggleInteractionCrosshair(bool b)
     {
         interactionCrosshair.TweenUIComponent(b);

@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] PlayerStats playerStats;
     public PlayerStats PlayerStats => playerStats;
     
+    [SerializeField] EquippedWeaponStateMachine equippedWeaponStateMachine;
+    public EquippedWeaponStateMachine EquippedWeaponStateMachine => equippedWeaponStateMachine;
+    
     [SerializeField] PlayerCamera characterCamera;
     public PlayerCamera CharacterCamera => characterCamera;
     [SerializeField] PlayerCanvas uiCanvas;

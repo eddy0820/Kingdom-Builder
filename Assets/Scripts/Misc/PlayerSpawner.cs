@@ -45,6 +45,9 @@ public class PlayerSpawner : MonoBehaviour
     public bool ShowPlayerHealthAndStaminaText => showPlayerHealthAndStaminaText;
     [SerializeField] bool showPlayerDamagePopups;
     public bool ShowPlayerDamagePopups => showPlayerDamagePopups;
+    [Space(15)]
+    [SerializeField] bool playerConsumesStamina;
+    public bool PlayerConsumesStamina => playerConsumesStamina;
 
     private void Awake()
     {

@@ -25,8 +25,11 @@ public class InputManager : MonoBehaviour
     public PlayerControls.GridBuildingActions GridBuilding => gridBuilding;
 
     PlayerController playerController;
-    PlayerCamera playerCamera;
-    PlayerCanvas playerCanvas;
+    PlayerCamera PlayerCamera => playerController.CharacterCamera;
+    PlayerCanvas PlayerCanvas => playerController.UICanvas;
+    PlayerCharacterController PlayerCharacterController => playerController.Character;
+    EquippedWeaponStateMachine EquippedWeaponStateMachine => playerController.EquippedWeaponStateMachine;
+
     BuildModeCharacterControllerState buildModeState;
     LockedOnCharacterControllerState lockedOnState;
 
@@ -47,8 +50,7 @@ public class InputManager : MonoBehaviour
         OnNumberKeyPressed = new InputManagerEvent();
 
         playerController = GetComponent<PlayerController>();
-        playerCamera = playerController.CharacterCamera;
-        playerCanvas = playerController.UICanvas;
+    
         playerController.StateMachine.OnStateMachineInitialized += () =>
         {
             playerController.StateMachine.GetState(out buildModeState);
@@ -60,22 +62,22 @@ public class InputManager : MonoBehaviour
             horizontalInput = ctx.ReadValue<Vector2>(); 
 
         groundMovement.Jump.performed += _ =>
-            playerController.Character.DoJump();
+            PlayerCharacterController.DoJump();
         
         groundMovement.Crouch.performed += _ =>
-            playerController.Character.DoCrouchDown();
+            PlayerCharacterController.DoCrouchDown();
         groundMovement.Crouch.canceled += _ =>
-            playerController.Character.DoCrouchUp();
+            PlayerCharacterController.DoCrouchUp();
 
         groundMovement.Walk.performed += _ =>
-            playerController.Character.SetIsWalking(true);
+            PlayerCharacterController.SetIsWalking(true);
         groundMovement.Walk.canceled += _ =>
-            playerController.Character.SetIsWalking(false);
+            PlayerCharacterController.SetIsWalking(false);
 
         groundMovement.Sprint.performed += _ =>
-            playerController.Character.SetIsSprinting(true);
+            PlayerCharacterController.SetIsSprinting(true);
         groundMovement.Sprint.canceled += _ =>
-            playerController.Character.SetIsSprinting(false);
+            PlayerCharacterController.SetIsSprinting(false);
 
         //////////////// Player Mechanics ////////////////
         playerMechanics.MouseX.performed += ctx =>
@@ -84,19 +86,24 @@ public class InputManager : MonoBehaviour
             mouseY = ctx.ReadValue<float>();
 
         playerMechanics.CameraSwitch.performed += _ =>
-            playerCamera.FlipCameraPerspective();
+            PlayerCamera.FlipCameraPerspective();
 
         playerMechanics.FlipCameraAlignment.performed += _ =>
-            playerCamera.FlipCameraAlignment();
+            PlayerCamera.FlipCameraAlignment();
         
         playerMechanics.PrimaryInteraction.performed += _ =>
-            playerCanvas.GetInteractionEntryActionFromIndex(0)?.Invoke();
+            PlayerCanvas.GetInteractionEntryActionFromIndex(0)?.Invoke();
 
         playerMechanics.SecondaryInteraction.performed += _ =>
-            playerCanvas.GetInteractionEntryActionFromIndex(1)?.Invoke();
+            PlayerCanvas.GetInteractionEntryActionFromIndex(1)?.Invoke();
 
         playerMechanics.TertiaryInteraction.performed += _ =>
-            playerCanvas.GetInteractionEntryActionFromIndex(2)?.Invoke();
+            PlayerCanvas.GetInteractionEntryActionFromIndex(2)?.Invoke();
+
+        playerMechanics.Sheath.performed += _ =>
+            EquippedWeaponStateMachine.DecideSheath();
+
+
 
         if(PlayerSpawner.Instance.GridBuildingInfo.EnableBuilding)
         {
@@ -158,7 +165,7 @@ public class InputManager : MonoBehaviour
                 GridBuildingManager.Instance.Rotate(ctx.ReadValue<float>());
             
             gridBuilding.ToggleBuildMenu.performed += ctx =>
-                playerCanvas.ToggleBuildMenu();
+                PlayerCanvas.ToggleBuildMenu();
         }
     }
 
