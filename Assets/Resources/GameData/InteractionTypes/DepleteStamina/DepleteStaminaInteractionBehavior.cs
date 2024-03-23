@@ -9,13 +9,10 @@ public class DepleteStaminaInteractionBehavior : InteractionTypeBehavior
 
     PlayerStats PlayerStats => PlayerController.PlayerStats;
 
-    public override void Interact(Interactable interactable)
+    public override void Interact(Interactable.InteractionTypeEntry interactionTypeEntry)
     {
-        IStamina stamina = interactable.IStamina;
-
-        if(stamina == null) return;
 
         if(PlayerStats.GetStatFromType.TryGetValue(damageStatType, out Stat playerDamageStat))
-            stamina.DepleteStaminaInstant(playerDamageStat.Value);
+            interactionTypeEntry.IStamina.DepleteStaminaInstant(playerDamageStat.Value);
     }
 }

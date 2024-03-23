@@ -39,7 +39,7 @@ public class DefaultCharacterControllerState : GroundMovementCharacterController
         {
             if(hit.collider.TryGetComponent(out Interactable interactable))
             {
-                if(!canInteractWithSomething) ToggleInteractions(true, interactable, interactable.InteractionTypes);
+                if(!canInteractWithSomething) ToggleInteractions(true, interactable.InteractionTypes);
             }
             else
             {
@@ -52,13 +52,13 @@ public class DefaultCharacterControllerState : GroundMovementCharacterController
         }
     }
 
-    private void ToggleInteractions(bool toggle, Interactable interactable = null, List<InteractionTypeSO> interactionTypes = null)
+    private void ToggleInteractions(bool toggle, List<Interactable.InteractionTypeEntry> interactionTypes = null)
     {
         canInteractWithSomething = toggle;
         PlayerCanvas.ToggleInteractionCrosshair(toggle);
 
         if(toggle)
-            PlayerCanvas.ShowInteractions(interactable, interactionTypes);
+            PlayerCanvas.ShowInteractions(interactionTypes);
         else
             PlayerCanvas.HideInteractions(); 
     }

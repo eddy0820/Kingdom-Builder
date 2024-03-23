@@ -6,5 +6,5 @@ public abstract class InteractionTypeBehavior : MonoBehaviour
 {
     protected PlayerController PlayerController => PlayerController.Instance;
 
-    public abstract void Interact(Interactable interactable);
+    public abstract void Interact(Interactable.InteractionTypeEntry interactionTypeEntry);
 }

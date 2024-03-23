@@ -65,14 +65,14 @@ public class PlayerCanvas : MonoBehaviour
         interactionCrosshair.TweenUIComponent(b);
     }
 
-    public void ShowInteractions(Interactable interactable, List<InteractionTypeSO> interactionTypes)
+    public void ShowInteractions(List<Interactable.InteractionTypeEntry> interactionTypes)
     {
         for(int i = 0; i < interactionTypes.Count; i++)
         {
-            InteractionTypeSO interactionType = interactionTypes[i];
+            InteractionTypeSO interactionType = interactionTypes[i].InteractionType;
             InteractionEntry interactionEntry = interactionEntries[i];
 
-            interactionEntry.SetInteraction(InputManager.Instance.GetEffectiveBindingPathForInteractionIndex(i), interactionType.Name, () => interactionType.Interact(interactable));
+            interactionEntry.SetInteraction(InputManager.Instance.GetEffectiveBindingPathForInteractionIndex(i), interactionType.Name, () => interactionType.Interact(interactionTypes[i]));
         }
     }
 

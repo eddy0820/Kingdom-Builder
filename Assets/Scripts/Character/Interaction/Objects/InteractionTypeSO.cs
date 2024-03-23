@@ -30,7 +30,8 @@ public class InteractionTypeSO : ScriptableObject
     [ReadOnly, SerializeField] string actualPrefabPath = "";
     [Space(5)]
     [Required, ReadOnly, SerializeField] InteractionTypeBehavior interactionTypeBehavior;
-    public Action<Interactable> Interact => interactionTypeBehavior.Interact;
+    public Type InteractionTypeBehaviorType => interactionTypeBehavior.GetType();
+    public Action<Interactable.InteractionTypeEntry> Interact => interactionTypeBehavior.Interact;
 
 
     [Button]

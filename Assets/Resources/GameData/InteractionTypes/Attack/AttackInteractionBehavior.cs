@@ -9,13 +9,9 @@ public class AttackInteractionBehavior : InteractionTypeBehavior
 
     PlayerStats PlayerStats => PlayerController.PlayerStats;
 
-    public override void Interact(Interactable interactable)
+    public override void Interact(Interactable.InteractionTypeEntry interactionTypeEntry)
     {
-        IDamageable damageable = interactable.IDamageable;
-
-        if(damageable == null) return;
-
         if(PlayerStats.GetStatFromType.TryGetValue(damageStatType, out Stat playerDamageStat))
-            damageable.TakeDamageInstant(playerDamageStat.Value);
+            interactionTypeEntry.IDamageable.TakeDamageInstant(playerDamageStat.Value);
     }
 }

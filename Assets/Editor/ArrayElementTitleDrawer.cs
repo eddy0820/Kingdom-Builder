@@ -44,6 +44,12 @@ public class ArrayElementTitleDrawer : PropertyDrawer
             case SerializedPropertyType.Color:
                 return TitleNameProp.colorValue.ToString();
             case SerializedPropertyType.ObjectReference:
+
+                if(TitleNameProp.objectReferenceValue == null)
+                {
+                    return "Empty";
+                }
+                
                 return TitleNameProp.objectReferenceValue.ToString();
             case SerializedPropertyType.LayerMask:
                 break;

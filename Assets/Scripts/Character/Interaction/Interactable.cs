@@ -6,17 +6,25 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Interactable : MonoBehaviour
 {
-    [SerializeField] bool canTakeDamage = false;
-    [ShowIf("canTakeDamage"), SerializeField] DamageableCharacterStats damageableCharacterStats;
-
     [Space(10)]
-    [SerializeField] bool hasStamina = false;
-    [ShowIf("hasStamina"), SerializeField] StaminaDamageableCharacterStats staminaDamageableCharacterStats;
+    [ArrayElementTitle("interactionType")]
+    [SerializeField] List<InteractionTypeEntry> interactionTypes;
+    public List<InteractionTypeEntry> InteractionTypes => interactionTypes;
 
-    [Space(10)]
-    [SerializeField] List<InteractionTypeSO> interactionTypes;
-    public List<InteractionTypeSO> InteractionTypes => interactionTypes;
 
-    public IDamageable IDamageable => damageableCharacterStats;
-    public IStamina IStamina => staminaDamageableCharacterStats;
+    [System.Serializable]
+    public class InteractionTypeEntry
+    {
+        [SerializeField] InteractionTypeSO interactionType;
+        public InteractionTypeSO InteractionType => interactionType;
+
+        bool AttackInteraction => interactionType != null && interactionType.InteractionTypeBehaviorType == typeof(AttackInteractionBehavior);
+        bool DepleteStaminaInteraction => interactionType != null && interactionType.InteractionTypeBehaviorType == typeof(DepleteStaminaInteractionBehavior);
+
+        [AllowNesting, ShowIf("AttackInteraction"), SerializeField] DamageableCharacterStats damageableCharacterStats;
+        public IDamageable IDamageable => damageableCharacterStats;
+
+        [AllowNesting, ShowIf("DepleteStaminaInteraction"), SerializeField] StaminaDamageableCharacterStats staminaDamageableCharacterStats;
+        public IStamina IStamina => staminaDamageableCharacterStats;
+    }
 }
