@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e17f565543fe0dc43a89142951a0e8d3, type: 3}
   m_Name: GameplaySettings.Default
   m_EditorClassIdentifier: 
-  globalGravity: {x: 0, y: -30, z: 0}
+  categoryName: Gameplay
+  settings:
+    gravity: {x: 0, y: -30, z: 0}

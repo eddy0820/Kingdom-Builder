@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using DG.Tweening;
 using KinematicCharacterController;
-using System;
+using EddyLib.Stats;
 
 public class PlayerStatUI : StaminaDamageableStatUI
 {
@@ -21,7 +17,7 @@ public class PlayerStatUI : StaminaDamageableStatUI
     PlayerStats PlayerStats => PlayerController.PlayerStats;
     KinematicCharacterMotor Motor => PlayerController.Character.Motor;
 
-    protected override CharacterStats CharacterStats => PlayerStats;
+    protected override Stats CharacterStats => PlayerStats;
     protected override IDamageable IDamageable => PlayerStats;
     protected override Transform DamageNumberSpawnTransform => Motor.Transform;
     protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position + new Vector3(0f, Motor.Capsule.height, 0f);
@@ -95,7 +91,7 @@ public class PlayerStatUI : StaminaDamageableStatUI
         OnSingleTargetStaminaChanged(IStamina.GetCurrentStamina(), IStamina.GetProjectedStamina(), stat.Value);
     }
 
-    public void ToggleSingleTargetHealthBar(bool b, CharacterStats stats)
+    public void ToggleSingleTargetHealthBar(bool b, Stats stats)
     {
         if(stats is not IDamageable damageable) return;
 

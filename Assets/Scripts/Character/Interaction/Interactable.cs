@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using EddyLib.Util.DrawerAttributes;
 
 [RequireComponent(typeof(Collider))]
 public class Interactable : MonoBehaviour
 {
     [Space(10)]
-    [ArrayElementTitle("interactionType")]
+    [ElementTitle("interactionType")]
     [SerializeField] List<InteractionTypeEntry> interactionTypes;
     public List<InteractionTypeEntry> InteractionTypes => interactionTypes;
 

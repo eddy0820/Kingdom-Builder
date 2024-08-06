@@ -38,6 +38,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     public override void OnAwake()
     {
+        base.OnAwake();
         lockOnReticleCanvas.gameObject.SetActive(false);
         stateMachine.GetState(out defaultState);
     }
@@ -62,6 +63,7 @@ public class LockedOnCharacterControllerState : GroundMovementCharacterControlle
 
     public override void OnUpdateState()
     {
+        base.OnUpdateState();
         if(!TargetOnRange() || Blocked(currentTargetable.LockOnLocation.position)) 
         {
             ResetTarget();

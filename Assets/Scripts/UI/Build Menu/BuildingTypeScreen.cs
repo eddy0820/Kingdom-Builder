@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using NaughtyAttributes;
+using EddyLib.Util.Collections;
 
 public class BuildingTypeScreen : MonoBehaviour
 {
@@ -25,9 +25,9 @@ public class BuildingTypeScreen : MonoBehaviour
         buildingType = _buildingType;
 
         typePlaceableObjects = GetTypePlaceableObjects(placeableObjects);
-        possibleSubBuildingTypes.set = GetPossibleSubBuildingTypes();
+        possibleSubBuildingTypes.Value = GetPossibleSubBuildingTypes();
 
-        List<SubBuildingTypes> possibleSubBuildingTypesList = possibleSubBuildingTypes.set.ToList();
+        List<SubBuildingTypes> possibleSubBuildingTypesList = possibleSubBuildingTypes.Value.ToList();
         possibleSubBuildingTypesList.Sort();
 
         foreach(SubBuildingTypes subBuildingType in possibleSubBuildingTypesList)

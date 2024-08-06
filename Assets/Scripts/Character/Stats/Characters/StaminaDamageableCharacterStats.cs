@@ -1,7 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
+using EddyLib.GameSettingsSystem;
+using EddyLib.Stats;
 
 public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats, IStamina
 {
@@ -45,9 +46,11 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
     public Action<float, float, float, EStaminaChangedOperation, float> OnStaminaChanged { get => OnStaminaChangedInternal; set => OnStaminaChangedInternal = value; }
     Action<float, float, float, EStaminaChangedOperation, float> OnStaminaChangedInternal;
 
-    protected override void OnStart()
+    bool EnableStaminaDebugMessages => GameSettings.GetSettings<StatsSettings>().EnableStaminaDebugMessages;
+
+    protected new void Start()
     {
-        base.OnStart();
+        base.Start();
 
         StartCoroutine(GainStaminaOverTimeCoroutine());
         StartCoroutine(StaminaRegenCoroutine());
@@ -85,12 +88,12 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
 
     public float GetCurrentStamina()
     {
-        return CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(currentStamina);
+        return StatsRoundingHelper.RoundValue(currentStamina);
     }
 
     public float GetProjectedStamina()
     {
-        return CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(projectedStamina);
+        return StatsRoundingHelper.RoundValue(projectedStamina);
     }
 
     public void DepleteStaminaInstant(float amount)
@@ -193,7 +196,7 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
             }
 
             float lastCurrentStamina = currentHealth;
-            lastCurrentStamina = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(lastCurrentStamina);
+            lastCurrentStamina = StatsRoundingHelper.RoundValue(lastCurrentStamina);
 
             currentStamina = Mathf.MoveTowards(currentStamina, projectedStamina, MaxStaminaStat.Value * (currentPercentPerSecondStaminaOverTime / 100) * Time.deltaTime);
 
@@ -207,7 +210,7 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
                 operation = EStaminaChangedOperation.NoChange;
 
             float newCurrentStamina = currentStamina;
-            newCurrentStamina = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(newCurrentStamina);
+            newCurrentStamina = StatsRoundingHelper.RoundValue(newCurrentStamina);
 
             InvokeOnStaminaChanged(operation, newCurrentStamina - lastCurrentStamina);
 
@@ -260,10 +263,10 @@ public abstract class StaminaDamageableCharacterStats : DamageableCharacterStats
 
     protected void InvokeOnStaminaChanged(EStaminaChangedOperation operation, float staminaChangeAmount)
     {
-        if(GameSettings.Instance.EnableStaminaDebugMessages)
+        if(EnableStaminaDebugMessages)
             Debug.Log($"Name: {GetStaminaName()} | Current stamina: {GetCurrentStamina()}, Projected stamina: {GetProjectedStamina()}, Max stamina: {MaxStaminaStat.Value}");
     
-        staminaChangeAmount = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(staminaChangeAmount);
+        staminaChangeAmount = StatsRoundingHelper.RoundValue(staminaChangeAmount);
         OnStaminaChanged?.Invoke(currentStamina, projectedStamina, MaxStaminaStat.Value, operation, staminaChangeAmount);
     }
 

@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using EddyLib.Util.DrawerAttributes;
 
 [CreateAssetMenu(fileName = "New Input Key Entries", menuName = "Misc/Input Key Entries")]
 public class InputKeyEntriesSO : SingletonScriptableObject<InputKeyEntriesSO>
@@ -13,7 +13,7 @@ public class InputKeyEntriesSO : SingletonScriptableObject<InputKeyEntriesSO>
 
     [Space(10)]
 
-    [ArrayElementTitle("keyCode")]
+    [ElementTitle("keyCode")]
     [SerializeField] List<InputKeyEntry> inputKeyEntries;
     public List<InputKeyEntry> InputKeyEntries => inputKeyEntries;
 

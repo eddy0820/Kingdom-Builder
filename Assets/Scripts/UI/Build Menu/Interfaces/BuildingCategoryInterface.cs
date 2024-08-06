@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using EddyLib.Util;
 
 public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterface.SelectionButtonEntry>
 {
@@ -48,7 +49,7 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
         {
             GameObject button = Instantiate(buildingCategoryButtonPrefab, buildingCategoryButtonPrefab.transform.position, buildingCategoryButtonPrefab.transform.rotation, transform);
             GameObject screen = Instantiate(buildingCategoryScreenPrefab, buildingCategoryScreenParent.position, buildingCategoryScreenPrefab.transform.rotation, buildingCategoryScreenParent);
-            string newName = RandomUtilStatic.AddSpacesToString(Enum.GetName(typeof(BuildingCategoryTypes), i), true);
+            string newName = StringUtil.AddSpaces(Enum.GetName(typeof(BuildingCategoryTypes), i), true);
             button.GetComponentInChildren<TextMeshProUGUI>().text = newName;
 
             buttons.Add(new SelectionButtonEntry(button, screen));

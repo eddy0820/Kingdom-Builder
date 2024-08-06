@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using DG.Tweening;
+using EddyLib.GameSettingsSystem;
+using EddyLib.Stats;
 
 public class NPCStatUI : StaminaDamageableStatUI
 {
@@ -12,7 +8,7 @@ public class NPCStatUI : StaminaDamageableStatUI
 
     [SerializeField] Targetable targetable;
     [SerializeField] StaminaDamageableCharacterStats characterStats;
-    protected override CharacterStats CharacterStats => characterStats;
+    protected override Stats CharacterStats => characterStats;
     protected override IDamageable IDamageable => characterStats;
     protected override Transform DamageNumberSpawnTransform => transform;
     protected override Vector3 DamageNumberSpawnPosition => DamageNumberSpawnTransform.position;
@@ -33,6 +29,9 @@ public class NPCStatUI : StaminaDamageableStatUI
 
     GameObject HealthBarFadeGameObj => healthBarUI.BarFade.GameObj;
     GameObject HealthBarTextGameObj => healthBarUI.Text.gameObject;
+
+    bool ShowNonPlayerDamagePopups => GameSettings.GetSettings<StatsSettings>().ShowNonPlayerDamagePopups;
+    bool ShowNonPlayerHealthAndStaminaTexts => GameSettings.GetSettings<StatsSettings>().ShowNonPlayerHealthAndStaminaTexts;
 
     protected override void OnAwake()
     {
@@ -71,7 +70,7 @@ public class NPCStatUI : StaminaDamageableStatUI
         transform.LookAt(Camera.main.transform.position);
         transform.Rotate(0, 180, 0);
 
-        if(GameSettings.Instance.ShowNonPlayerHealthAndStaminaText)
+        if(ShowNonPlayerHealthAndStaminaTexts)
         {
             if(!HealthBarTextGameObj.activeSelf)
                 HealthBarTextGameObj.SetActive(true);
@@ -118,21 +117,21 @@ public class NPCStatUI : StaminaDamageableStatUI
 
     protected override void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
     {
-        if(!GameSettings.Instance.ShowNonPlayerDamagePopups) return;
+        if(!ShowNonPlayerDamagePopups) return;
 
         base.DoDamagePopup(eHealthChangedOperation, healthChangeAmount);
     }
 
     protected override void DoMaxHealthChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float healthChangeAmount)
     {
-        if(!GameSettings.Instance.ShowNonPlayerDamagePopups) return;
+        if(!ShowNonPlayerDamagePopups) return;
 
         base.DoMaxHealthChangePopup(eStatModifierChangedOperation, healthChangeAmount);
     }
 
     protected override void DoMaxStaminaChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float staminaChangeAmount)
     {
-        if(!GameSettings.Instance.ShowNonPlayerDamagePopups) return;
+        if(!ShowNonPlayerDamagePopups) return;
 
         base.DoMaxStaminaChangePopup(eStatModifierChangedOperation, staminaChangeAmount);
     }

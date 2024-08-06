@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DamageNumbersPro;
 using UnityEngine.UI;
@@ -7,6 +5,7 @@ using TMPro;
 using DG.Tweening;
 using System;
 using NaughtyAttributes;
+using EddyLib.Stats;
 
 public abstract class DamageableStatUI : MonoBehaviour
 {   
@@ -29,7 +28,7 @@ public abstract class DamageableStatUI : MonoBehaviour
 
     protected abstract Stat MaxHealthStat { get; }
 
-    protected abstract CharacterStats CharacterStats { get; }
+    protected abstract Stats CharacterStats { get; }
     protected abstract IDamageable IDamageable { get; }
 
     private void Awake()
@@ -115,7 +114,7 @@ public abstract class DamageableStatUI : MonoBehaviour
 
         if(damageNumberMesh == null) return;
 
-        damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
+        damageNumberMesh.digitSettings.decimals = StatsRoundingHelper.NumDecimalPlaces;
 
         damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
     }
@@ -142,7 +141,7 @@ public abstract class DamageableStatUI : MonoBehaviour
         }
         else
         {
-            currentHealthWaitingToBeShownHealOperation = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(currentHealthWaitingToBeShownHealOperation);
+            currentHealthWaitingToBeShownHealOperation = StatsRoundingHelper.RoundValue(currentHealthWaitingToBeShownHealOperation);
 
             if(currentHealthWaitingToBeShownHealOperation == 0)
                 return null;
@@ -181,7 +180,7 @@ public abstract class DamageableStatUI : MonoBehaviour
         
         if(IDamageable.GetCurrentHealth() == MaxHealthStat.Value)
         { 
-            currentHealthWaitingToBeShownHealthRegenOperation = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(currentHealthWaitingToBeShownHealthRegenOperation);
+            currentHealthWaitingToBeShownHealthRegenOperation = StatsRoundingHelper.RoundValue(currentHealthWaitingToBeShownHealthRegenOperation);
 
             if(currentHealthWaitingToBeShownHealthRegenOperation == 0)
                 return null;
@@ -234,7 +233,7 @@ public abstract class DamageableStatUI : MonoBehaviour
                 return;
         }
 
-        damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
+        damageNumberMesh.digitSettings.decimals = StatsRoundingHelper.NumDecimalPlaces;
 
         damageNumberMesh.Spawn(DamageNumberSpawnPosition, healthChangeAmount);
     }
@@ -337,11 +336,11 @@ public class BarUI
     {
         string maxValueString = maxValue % 1 == 0
         ? maxValue.ToString("F0")
-        : maxValue.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+        : maxValue.ToString(StatsRoundingHelper.ValueString);
 
         string currentValueString = currentValue % 1 == 0
         ? currentValue.ToString("F0")
-        : currentValue.ToString(CharacterStatsRoundingHelper.GlobalValueString);
+        : currentValue.ToString(StatsRoundingHelper.ValueString);
 
         text.text = currentValueString + " / " + maxValueString;
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DamageNumbersPro;
 using UnityEngine;
+using EddyLib.Stats;
 
 public abstract class StaminaDamageableStatUI : DamageableStatUI
 {
@@ -82,7 +83,7 @@ public abstract class StaminaDamageableStatUI : DamageableStatUI
                 return;
         }
 
-        damageNumberMesh.digitSettings.decimals = CharacterStatsRoundingHelper.GlobalNumDecimals;
+        damageNumberMesh.digitSettings.decimals = StatsRoundingHelper.NumDecimalPlaces;
 
         damageNumberMesh.Spawn(DamageNumberSpawnPosition, staminaChangeAmount);
     }

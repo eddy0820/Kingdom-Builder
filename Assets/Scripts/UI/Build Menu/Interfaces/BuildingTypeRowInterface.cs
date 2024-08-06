@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using NaughtyAttributes;
 using TMPro;
 using UnityEngine.Events;
+using EddyLib.Util;
 
 public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface.BuildingTypeRowButtonEntry>
 {
@@ -32,7 +33,7 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
         }
         else
         {
-            titleText.text = RandomUtilStatic.AddSpacesToString(subBuildingType.ToString(), false);
+            titleText.text = StringUtil.AddSpaces(subBuildingType.ToString(), false);
         }
 
         foreach(PlaceableGridObjectSO gridPlaceableObject in placeableObjects)

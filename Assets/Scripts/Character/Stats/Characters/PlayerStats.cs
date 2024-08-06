@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+using EddyLib.Stats;
 
 [Serializable]
 public class PlayerStats : StaminaDamageableCharacterStats
@@ -12,9 +10,9 @@ public class PlayerStats : StaminaDamageableCharacterStats
     PlayerCharacterStateMachine StateMachine => PlayerController.StateMachine;
     PlayerCharacterController.MovementAttributes MovementAttributes => PlayerCharacterController.Attributes;
 
-    protected override void OnStart()
+    protected new void Start()
     {
-        base.OnStart();
+        base.Start();
 
         StateMachine.OnGroundedMovementSprinting += DoStaminaReductionSprinting;
         StateMachine.OnGroundedMovementCrouching += DoStaminaReductionCrouch;

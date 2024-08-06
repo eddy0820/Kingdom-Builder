@@ -14,6 +14,7 @@ public class BuildModeCharacterControllerState : GroundMovementCharacterControll
 
     public override void OnAwake()
     {
+        base.OnAwake();
         stateMachine.GetState(out defaultState);
     }
 

@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EddyLib.Stats;
 
 public class DefaultCharacterControllerState : GroundMovementCharacterControllerState
 {
@@ -29,6 +29,7 @@ public class DefaultCharacterControllerState : GroundMovementCharacterController
 
     public override void OnFixedUpdateState()
     {
+        base.OnFixedUpdateState();
         if(!PlayerSpawner.Instance.EnableInteraction) return;
         if(PlayerController.PlayerStats.IsDead()) return;
 

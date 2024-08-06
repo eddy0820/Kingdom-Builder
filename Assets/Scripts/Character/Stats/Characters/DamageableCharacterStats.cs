@@ -1,12 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Unity.Burst.Intrinsics;
+using EddyLib.GameSettingsSystem;
+using EddyLib.Stats;
 
 
 [Serializable]
-public abstract class DamageableCharacterStats : CharacterStats, IDamageable
+public abstract class DamageableCharacterStats : Stats, IDamageable
 {   
     float m_currentHealth;
     protected float currentHealth
@@ -50,9 +50,11 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
     public Action<float, float, float, EHealthChangedOperation, float> OnHealthChanged { get => OnHealthChangedInternal; set => OnHealthChangedInternal = value; }
     private Action<float, float, float, EHealthChangedOperation, float> OnHealthChangedInternal;
 
+    bool EnableHealthDebugMessages => GameSettings.GetSettings<StatsSettings>().EnableHealthDebugMessages;
+
     protected bool isDead = false;
 
-    protected override void OnStart()
+    protected void Start()
     {
         StartCoroutine(HealOverTimeCoroutine());
         StartCoroutine(HealthRegenCoroutine());
@@ -90,12 +92,12 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     public float GetCurrentHealth()
     {
-        return CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(currentHealth);
+        return StatsRoundingHelper.RoundValue(currentHealth);
     }
 
     public float GetProjectedHealth()
     {
-        return CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(projectedHealth);
+        return StatsRoundingHelper.RoundValue(projectedHealth);
     }
 
     public void TakeDamageInstant(float damage)
@@ -211,7 +213,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
                 operation = EHealthChangedOperation.NoChange;
 
             float newCurrentHealth = currentHealth;
-            newCurrentHealth = CharacterStatsRoundingHelper.RoundValueUsingGlobalSettings(newCurrentHealth);
+            newCurrentHealth = StatsRoundingHelper.RoundValue(newCurrentHealth);
 
             InvokeOnHealthChanged(operation, newCurrentHealth - lastCurrentHealth);
 
@@ -264,7 +266,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
 
     protected void InvokeOnHealthChanged(EHealthChangedOperation operation, float healthChangeAmount)
     {
-        if(GameSettings.Instance.EnableHealthDebugMessages)
+        if(EnableHealthDebugMessages)
             Debug.Log($"Name: {GetDamageableName()} | Current health: {GetCurrentHealth()}, Projected health: {GetProjectedHealth()}, Max health: {MaxHealthStat.Value}");
         
         OnHealthChanged?.Invoke(currentHealth, projectedHealth, MaxHealthStat.Value, operation, healthChangeAmount);
@@ -274,7 +276,7 @@ public abstract class DamageableCharacterStats : CharacterStats, IDamageable
     {
         isDead = true;
 
-        if(GameSettings.Instance.EnableHealthDebugMessages)
+        if(EnableHealthDebugMessages)
             Debug.Log($"{GetDamageableName()} died");
     } 
 

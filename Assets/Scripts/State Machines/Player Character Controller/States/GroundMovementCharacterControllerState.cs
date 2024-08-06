@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController;
-using System;
+using EddyLib.GameSettingsSystem;
 
 public abstract class GroundMovementCharacterControllerState : PlayerCharacterControllerState
 {   
@@ -35,7 +35,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
     protected PlayerCamera PlayerCamera => PlayerController.Instance.CharacterCamera;
     protected KinematicCharacterMotor Motor => PlayerCharacterController.Motor;
     protected Transform MeshRoot => PlayerCharacterController.MeshRoot;
-    protected Vector3 Gravity => GameSettings.Instance.Gravity;  
+    protected Vector3 Gravity => GameSettings.GetSettings<GameplaySettings>().Gravity;  
 
     public override Vector3 SetMoveInputVectorFromInputs(Quaternion cameraPlanarRotation, Vector3 clampedMoveInputVector)
     {
@@ -270,7 +270,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
         if(CurrentBonusOrientationMethod == BonusOrientationMethod.TowardsGravity)
         {
             // Rotate from current up to invert gravity
-            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -GameSettings.Instance.Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
+            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
             currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
         }
         else if(CurrentBonusOrientationMethod == BonusOrientationMethod.TowardsGroundSlopeAndGravity)
@@ -287,7 +287,7 @@ public abstract class GroundMovementCharacterControllerState : PlayerCharacterCo
             }
             else
             {
-                Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -GameSettings.Instance.Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
+                Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                 currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
             }
         }

@@ -1,8 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using EddyLib.Util.DrawerAttributes;
 
 [System.Serializable]
 public class CountHordeWaveSettings
@@ -40,7 +39,7 @@ public class CountHordeWaveSettings
     [System.Serializable]
     public class EnemyWeightEntryList
     {
-        [ArrayElementTitle("enemy")]
+        [ElementTitle("enemy")]
         [SerializeField] List<EnemyWeightEntry> list;
         public List<EnemyWeightEntry> List => list;
     }

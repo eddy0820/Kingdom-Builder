@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using EddyLib.Util.DrawerAttributes;
 
 [System.Serializable]
 public class TimeHordeWaveSettings
@@ -31,7 +31,7 @@ public class TimeHordeWaveSettings
     [SerializeField] AnimationCurve severityCurve;
     public AnimationCurve SeverityCurve => severityCurve;
 
-    [ArrayElementTitle("severity")]
+    [ElementTitle("severity")]
     [SerializeField] List<EnemySeverityEntry> enemySeverities;
     public List<EnemySeverityEntry> EnemySeverities => enemySeverities;
 
@@ -41,7 +41,7 @@ public class TimeHordeWaveSettings
         [SerializeField] int severity;
         public int Severity => severity;
 
-        [ArrayElementTitle("enemy")]
+        [ElementTitle("enemy")]
         [SerializeField] List<EnemyWeightEntry> enemyPool;
         public List<EnemyWeightEntry> EnemyPool => enemyPool;
     }
