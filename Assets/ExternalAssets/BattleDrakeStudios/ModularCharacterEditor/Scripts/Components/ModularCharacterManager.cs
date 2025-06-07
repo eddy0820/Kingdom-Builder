@@ -77,12 +77,9 @@ namespace BattleDrakeStudios.ModularCharacters {
         public bool IsInitialized => isInitialized;
         public Gender CharacterGender => characterGender;
         public Material CharacterMaterial => characterMaterial;
-
         private Dictionary<ModularBodyPart, GameObject[]> characterBody = new Dictionary<ModularBodyPart, GameObject[]>();
         private Dictionary<ModularBodyPart, int> activeParts = new Dictionary<ModularBodyPart, int>();
         public Dictionary<ModularBodyPart, int> ActiveParts => activeParts;
-
-        [HideInInspector] public Material instancedMaterial;
 
         private void OnEnable() {
             if (isInitialized) {

@@ -7,17 +7,13 @@ public class UnarmedEquippedWeaponState : EquippedWeaponState
 
     public override void OnEnterState(EquippedWeaponState fromState)
     {
+        base.OnEnterState(fromState);
         if(fromState == null) return;
         
         AnimationController.SetUnsheath();
 
         if(AnimationController.IsMovingAnimator)
             StartCoroutine(WaitThenSwitchWeapon());
-    }
-
-    public override void OnExitState(EquippedWeaponState toState)
-    {
-        
     }
 
     public override void SwitchWeapon()

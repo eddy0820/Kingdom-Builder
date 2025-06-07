@@ -3,6 +3,7 @@
     "com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
     "com.eddylib.gamesettingssystem": "https://github.com/eddy0820/EddyLib---Game-Settings-System.git",
     "com.eddylib.statssystem": "https://github.com/eddy0820/EddyLib---Stats-System.git",
+    "com.eddylib.toolbarextenderextender": "https://github.com/eddy0820/EddyLib---Toolbar-Extender-Extender.git",
     "com.eddylib.util": "https://github.com/eddy0820/EddyLib---Util.git",
     "com.marijnzwemmer.unity-toolbar-extender": "https://github.com/marijnz/unity-toolbar-extender.git",
     "com.unity.2d.sprite": "1.0.0",

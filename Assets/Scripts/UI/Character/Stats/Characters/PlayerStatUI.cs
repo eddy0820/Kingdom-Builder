@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using KinematicCharacterController;
 using EddyLib.Stats;
+using EddyLib.GameSettingsSystem;
 
 public class PlayerStatUI : StaminaDamageableStatUI
 {
@@ -16,6 +17,9 @@ public class PlayerStatUI : StaminaDamageableStatUI
     PlayerCanvas PlayerCanvas => PlayerController.UICanvas;
     PlayerStats PlayerStats => PlayerController.PlayerStats;
     KinematicCharacterMotor Motor => PlayerController.Character.Motor;
+
+    bool ShowPlayerHealthAndStaminaText => GameSettings.GetSettings<StatsSettings>().ShowPlayerHealthAndStaminaTexts;
+    bool ShowPlayerDamagePopups => GameSettings.GetSettings<StatsSettings>().ShowPlayerDamagePopups;
 
     protected override Stats CharacterStats => PlayerStats;
     protected override IDamageable IDamageable => PlayerStats;
@@ -35,7 +39,7 @@ public class PlayerStatUI : StaminaDamageableStatUI
 
     private void LateUpdate()
     {
-        if(PlayerSpawner.Instance.ShowPlayerHealthAndStaminaText)
+        if(ShowPlayerHealthAndStaminaText)
         {
             if(!healthBarUI.Text.gameObject.activeSelf)
                 healthBarUI.Text.gameObject.SetActive(true);
@@ -147,21 +151,21 @@ public class PlayerStatUI : StaminaDamageableStatUI
 
     protected override void DoDamagePopup(EHealthChangedOperation eHealthChangedOperation, float healthChangeAmount)
     {
-        if(!PlayerSpawner.Instance.ShowPlayerDamagePopups) return;
+        if(!ShowPlayerDamagePopups) return;
 
         base.DoDamagePopup(eHealthChangedOperation, healthChangeAmount);
     }
 
     protected override void DoMaxHealthChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float healthChangeAmount)
     {
-        if(!PlayerSpawner.Instance.ShowPlayerDamagePopups) return;
+        if(!ShowPlayerDamagePopups) return;
 
         base.DoMaxHealthChangePopup(eStatModifierChangedOperation, healthChangeAmount);
     }
 
     protected override void DoMaxStaminaChangePopup(EStatModifierChangedOperation eStatModifierChangedOperation, float staminaChangeAmount)
     {
-        if(!PlayerSpawner.Instance.ShowPlayerDamagePopups) return;
+        if(!ShowPlayerDamagePopups) return;
 
         base.DoMaxStaminaChangePopup(eStatModifierChangedOperation, staminaChangeAmount);
     }

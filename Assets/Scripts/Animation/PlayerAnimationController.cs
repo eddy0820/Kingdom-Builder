@@ -6,23 +6,63 @@ using System;
 
 public class PlayerAnimationController : MonoBehaviour
 {
-    [SerializeField] Animator animator;
+    Animator animator;
 
     public Action OnWeaponSwitchedInAnimation;
-
-    PlayerCharacterStateMachine PlayerCharacterStateMachine => PlayerController.Instance.StateMachine;
 
     public bool IsMovingAnimator => animator.GetBool(AnimationParameters.Moving);
 
     private void Awake()
     {
-        PlayerCharacterStateMachine.OnGroundedMovementSprinting += () => ToggleSpint(true);
-        PlayerCharacterStateMachine.OnGroundedMovementNotSprinting += () => ToggleSpint(false);
-
-        PlayerCharacterStateMachine.OnGroundedMovementCrouching += () => ToggleCrouch(true);
-        PlayerCharacterStateMachine.OnGroundedMovementNotCrouching += () => ToggleCrouch(false);
+        GroundedPlayerMovementControllerConfiguration.OnSetMovementAnim += OnSetMovementAnim;
+        GroundedPlayerMovementControllerConfiguration.OnSprinting += ToggleSpint;
+        GroundedPlayerMovementControllerConfiguration.OnFalling += OnFalling;
+        GroundedPlayerMovementControllerConfiguration.OnJump += OnJump;
+        GroundedPlayerMovementControllerConfiguration.OnCrouching += ToggleCrouch;
 
         animator.SetInteger(AnimationParameters.FromWeaponTypeSwitch, -1);
+    }
+
+    private void OnSetMovementAnim(Vector3 velocity, float maxSpeed)
+    {
+        if(velocity.magnitude > 0)
+        {
+            ToggleMoving(true);
+            SetVelocityZ(velocity.magnitude / maxSpeed);
+        }
+        else
+        {
+            ToggleMoving(false);
+            SetVelocityZ(0);
+        }
+
+        /* Lock On
+
+        if(velocity.magnitude > 0)
+        {
+            ToggleMoving(true);
+            SetVelocityZ(velocity.z / maxSpeed);
+            SetVelocityX(velocity.x / maxSpeed);
+        }
+        else
+        {
+            ToggleMoving(false);
+            SetVelocityZ(0);
+            SetVelocityX(0);
+        }
+        */
+    }
+
+    private void OnFalling() => SetJumpStatus(EJumpStatus.Fall);
+    private void OnJump() => SetJumpStatus(EJumpStatus.Jump);
+
+    private void OnDestroy()
+    {
+        GroundedPlayerMovementControllerConfiguration.OnSetMovementAnim -= OnSetMovementAnim;
+        GroundedPlayerMovementControllerConfiguration.OnSprinting -= ToggleSpint;
+        GroundedPlayerMovementControllerConfiguration.OnFalling -= OnFalling;
+        GroundedPlayerMovementControllerConfiguration.OnJump -= OnJump;
+        GroundedPlayerMovementControllerConfiguration.OnCrouching -= ToggleCrouch;
     }
 
     public void ToggleCrouch(bool isCrouch)

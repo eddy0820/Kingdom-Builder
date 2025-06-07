@@ -16,8 +16,8 @@ public class HairColorSubsectionInterface : MonoBehaviour
 
     public void SwitchColor()
     {
-        CharacterCreationManager.Instance.MaleModel.instancedMaterial.SetColor("_Color_Hair", colorPicker.color);
-        CharacterCreationManager.Instance.FemaleModel.instancedMaterial.SetColor("_Color_Hair", colorPicker.color);
+        CharacterCreationManager.Instance.MaleInstancedCharacterMaterial.SetColor("_Color_Hair", colorPicker.color);
+        CharacterCreationManager.Instance.FemaleInstancedCharacterMaterial.SetColor("_Color_Hair", colorPicker.color);
         CharacterCreationManager.Instance.PlayerInfoHolder.SetHairColor(colorPicker.color);
     }
 }

@@ -31,14 +31,6 @@ public abstract class CentralizedStateMachine<T> : StateMachine<T> where T : Cen
 
     public abstract class CentralizedState : State
     {
-        protected new CentralizedStateMachine<T> stateMachine;
-
-        public override void Initialize(StateMachine<T> stateMachine)
-        {
-            base.Initialize(stateMachine);
-            this.stateMachine = stateMachine as CentralizedStateMachine<T>;
-        }
-
         public abstract T ReturnNextState();
     }
 }

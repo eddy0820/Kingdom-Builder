@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b583b98a9c3949545b1be0be735b874e, type: 3}
+  m_Name: EddyLib.ToolbarExtenderExtender
+  m_EditorClassIdentifier: 
+  toolbarSceneEntries:
+  - scene: TestWorld
+    buttonText: W
+    position: 0
+  - scene: PlayerCharacter
+    buttonText: P
+    position: 0
+  - scene: GridBuilding
+    buttonText: G
+    position: 0

@@ -6,8 +6,6 @@ public class EquippedWeaponStateMachine : DecentralizedStateMachine<EquippedWeap
 {
     PlayerAnimationController AnimationController => PlayerController.Instance.AnimationController;
 
-    protected override void OnAwake() {}
-
     protected override void OnStart() 
     {
         AnimationController.OnWeaponSwitchedInAnimation += SwitchWeapon;
@@ -15,10 +13,6 @@ public class EquippedWeaponStateMachine : DecentralizedStateMachine<EquippedWeap
 
         base.OnStart();
     }
-
-    protected override void OnUpdate() {}
-
-    protected override void OnFixedUpdate() {}
 
     public void DecideSheath()
     {

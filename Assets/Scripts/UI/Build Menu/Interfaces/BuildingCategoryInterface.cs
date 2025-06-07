@@ -78,19 +78,19 @@ public class BuildingCategoryInterface : ButtonInterface<BuildingCategoryInterfa
         houseBuildingPlaceableObjects = new List<PlaceableGridObjectSO>();
         looseObjects = new List<PlaceableLooseObjectSO>();
 
-        foreach(PlaceableObjectSO placeableObjectSO in PlayerSpawner.Instance.GridBuildingInfo.PlaceableObjectsDatabase.PlaceableObjects)
-        {;
-            switch(placeableObjectSO.BuildingCategoryType)
-            {
-                case BuildingCategoryTypes.HouseBuilding:
-                    houseBuildingPlaceableObjects.Add((PlaceableGridObjectSO) placeableObjectSO);
-                break;
+        // foreach(PlaceableObjectSO placeableObjectSO in PlayerSpawnerOLD.Instance.GridBuildingInfo.PlaceableObjectsDatabase.PlaceableObjects)
+        // {;
+        //     switch(placeableObjectSO.BuildingCategoryType)
+        //     {
+        //         case BuildingCategoryTypes.HouseBuilding:
+        //             houseBuildingPlaceableObjects.Add((PlaceableGridObjectSO) placeableObjectSO);
+        //         break;
 
-                case BuildingCategoryTypes.Props:
-                    looseObjects.Add((PlaceableLooseObjectSO) placeableObjectSO);
-                break;
-            }
-        }
+        //         case BuildingCategoryTypes.Props:
+        //             looseObjects.Add((PlaceableLooseObjectSO) placeableObjectSO);
+        //         break;
+        //     }
+        // }
     }
 
     public override void OnSelectButton(ButtonEntry buttonEntry)

@@ -6,27 +6,30 @@ using NaughtyAttributes;
 using Cinemachine;
 using DG.Tweening;
 
+//LINE 169, 241, 287, 295 LOCK ON
+//LINE 279, 298, End of Class BULID MODE
+
 public class PlayerCamera : MonoBehaviour
 {
-    public CinemachineVirtualCamera FollowCamera;
-    public CinemachineVirtualCamera LockOnCamera;
+    [SerializeField] Transform cameraFollowTransform;
+    Vector3 currentFollowPosition;
 
-    [Header("Follow Camera Framing")]
-    public Vector2 DefaultFollowPointFraming = new Vector2(0f, 0f);
-    public Vector2 BuildModeFollowPointFraming = new Vector2(0f, 0f);
+    [SerializeField] CinemachineVirtualCamera defaultCamera;
+    public Transform DefaultCameraTransform => defaultCamera.transform;
+
+    [Header("Framing")]
+    [SerializeField] Vector2 defaultFollowPointFraming;
     [SerializeField] float flipAlignmentTweenDuration = 1f;
-    [SerializeField] float buildModeCameraTweenDuration = 1f;
-    public float FollowingSharpness = 10000f;
-    [ReadOnly, SerializeField] Vector2 FollowPointFraming = new Vector2(0f, 0f);
+    [SerializeField] float switchPerspectiveTweenDuration = 1f;
+    [SerializeField] float followSharpness = 10000f;
+    [ReadOnly, SerializeField] Vector2 currentFollowPointFraming;
 
     [Header("Distance")]
-    public float DefaultDistance = 6f;
-    public float MinDistance = 0f;
-    public float MaxDistance = 10f;
-
-    [Header("Follow Camera Distance")]
-    public float DistanceMovementSpeed = 5f;
-    public float DistanceMovementSharpness = 10f;
+    [SerializeField] float defaultCameraDistance = 6f;
+    [SerializeField] float minCameraDistance = 0f;
+    [SerializeField] float maxCameraDistance = 10f;
+    [SerializeField] float distanceMovementSpeed = 5f;
+    [SerializeField] float distanceMovementSharpness = 10f;
 
     [Header("Sensitivity")]
     [Range(0, 100)]
@@ -39,283 +42,260 @@ public class PlayerCamera : MonoBehaviour
     public float ScrollSensitivity => scrollSensitivity;
 
     [Header("Rotation")]
-    public bool InvertX = false;
-    public bool InvertY = false;
+    [SerializeField] bool defaultInvertX = false;
+    bool invertX;
+    [SerializeField] bool defaultInvertY = false;
+    bool invertY;
+
+    [Space(5)]
+
     [Range(-90f, 90f)]
-    public float DefaultVerticalAngle = 20f;
+    [SerializeField] float defaultVerticalAngle = 20f;
     [Range(-90f, 90f)]
-    public float MinVerticalAngle = -90f;
+    [SerializeField] float minVerticalAngle = -90f;
     [Range(-90f, 90f)]
-    public float MaxVerticalAngle = 90f;
-    public float RotationSpeed = 1f;
-    public float RotationSharpness = 10000f;
-    public bool RotateWithPhysicsMover = false;
+    [SerializeField] float maxVerticalAngle = 90f;
+    [SerializeField] float rotationSpeed = 1f;
+    [SerializeField] float rotationSharpness = 10000f;
+    [SerializeField] bool rotateWithPhysicsMover = false;
 
     [Header("Obstruction")]
-    public float ObstructionCheckRadius = 0.2f;
-    public LayerMask ObstructionLayers = -1;
-    public float ObstructionSharpness = 10000f;
-    public List<Collider> IgnoredColliders = new List<Collider>();
+    [SerializeField] List<Transform> ignoreColliderParents;
+    readonly List<Collider> ignoredColliders = new();
+    [SerializeField] float obstructionCheckRadius = 0.2f;
+    [SerializeField] LayerMask obstructionLayers = -1;
+    [SerializeField] float obstructionSharpness = 10000f;
 
-    [Header("Camera Switch")]
+    public bool InFirstPerson { get; private set; }
+    public bool RightAligned { get; private set; }
 
-    [ReadOnly] public bool inFirstPerson;
-    [ReadOnly] public bool rightAligned;
+    Vector3 planarDirection;
+    float targetDistance;
+    float currentDistance;
+    float targetVerticalAngle;
+    bool distanceIsObstructed;
+    
+    private const int MAX_OBSTRUCTIONS = 32;
 
-    public Transform FollowCameraTransform { get; private set; }
-    public Transform LockOnCameraTransform { get; private set; }
-    public Transform FollowTransform { get; private set; }
+    public Action<bool> OnToggleFirstPerson;
 
-    public Vector3 PlanarDirection { get; set; }
-    public float TargetDistance { get; set; }
-
-    private bool _distanceIsObstructed;
-    private float _currentDistance;
-    private float _targetVerticalAngle;
-    private RaycastHit _obstructionHit;
-    private int _obstructionCount;
-    private RaycastHit[] _obstructions = new RaycastHit[MaxObstructions];
-    private float _obstructionTime;
-    private Vector3 _currentFollowPosition;
-
-    CinemachineFramingTransposer lockOnFramingTransposer;
-
-    private const int MaxObstructions = 32;
-
-    public Action OnEnterFirstPerson;
-    public Action OnExitFirstPerson;
-
-    void OnValidate()
+    private void OnValidate()
     {
-        DefaultDistance = Mathf.Clamp(DefaultDistance, MinDistance, MaxDistance);
-        DefaultVerticalAngle = Mathf.Clamp(DefaultVerticalAngle, MinVerticalAngle, MaxVerticalAngle);
+        defaultCameraDistance = Mathf.Clamp(defaultCameraDistance, minCameraDistance, maxCameraDistance);
+        defaultVerticalAngle = Mathf.Clamp(defaultVerticalAngle, minVerticalAngle, maxVerticalAngle);
     }
 
-    void Awake()
+    private void Awake()
     {
-        lockOnFramingTransposer = LockOnCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-        
-        FollowCameraTransform = FollowCamera.transform;
-        LockOnCameraTransform = LockOnCamera.transform;
+        // lockOnFramingTransposer = lockOnCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        //lockOnFramingTransposer.m_CameraDistance = defaultCameraDistance;
 
-        _currentDistance = DefaultDistance;
-        lockOnFramingTransposer.m_CameraDistance = DefaultDistance;
-        TargetDistance = _currentDistance;
+        currentDistance = defaultCameraDistance;
+        targetDistance = currentDistance;
+        currentFollowPointFraming = defaultFollowPointFraming;
+        targetVerticalAngle = 0f;
 
-        rightAligned = true;
+        invertX = defaultInvertX;
+        invertY = defaultInvertY;
 
-        _targetVerticalAngle = 0f;
-
-        PlanarDirection = Vector3.forward;
-
-        FollowPointFraming = DefaultFollowPointFraming;
-
-        OnEnterFirstPerson += EnterFirstPerson;
-        OnExitFirstPerson += ExitFirstPerson;
+        RightAligned = true;
     }
 
-    // Set the transform that the camera will orbit around
-    public void SetFollowTransform(Transform t)
+    private void Start()
     {
-        FollowTransform = t;
-        PlanarDirection = FollowTransform.forward;
-        _currentFollowPosition = FollowTransform.position;
+        planarDirection = cameraFollowTransform.forward;
+        currentFollowPosition = cameraFollowTransform.position;
+
+        ignoredColliders.Clear();
+        ignoreColliderParents.ForEach(parent => ignoredColliders.AddRange(parent.GetComponentsInChildren<Collider>()));
     }
 
-    public void UpdateWithInput(float deltaTime, float zoomInput, Vector3 rotationInput)
+    private void Update()
     {
-        if(FollowTransform)
+        CheckIfFirstPerson();
+    }
+
+    public void UpdateWithInput(Quaternion? rotationDeltaFromInterpolation, Vector3? characterUp, float deltaTime, float zoomInput, Vector3 rotationInput)
+    {
+        // Handle rotating the camera along with physics movers
+        if(rotateWithPhysicsMover && rotationDeltaFromInterpolation != null && characterUp != null)
         {
-            if(InvertX)
+            planarDirection = rotationDeltaFromInterpolation.Value * planarDirection;
+            planarDirection = Vector3.ProjectOnPlane(planarDirection, characterUp.Value).normalized;
+        }
+
+        if(!cameraFollowTransform) return;
+ 
+        if(invertX)
+            rotationInput.x *= -1f;
+    
+        if(invertY)
+            rotationInput.y *= -1f;
+
+        // Process rotation input
+        Quaternion rotationFromInput = Quaternion.Euler(cameraFollowTransform.up * (rotationInput.x * rotationSpeed));
+
+        if(rotationInput != Vector3.zero)
+            planarDirection = rotationFromInput * planarDirection;
+        
+        
+        planarDirection = Vector3.Cross(cameraFollowTransform.up, Vector3.Cross(planarDirection, cameraFollowTransform.up));
+        Quaternion planarRot = Quaternion.LookRotation(planarDirection, cameraFollowTransform.up);
+
+        targetVerticalAngle -= rotationInput.y * rotationSpeed;
+        targetVerticalAngle = Mathf.Clamp(targetVerticalAngle, minVerticalAngle, maxVerticalAngle);
+        Quaternion verticalRot = Quaternion.Euler(targetVerticalAngle, 0, 0);
+        Quaternion targetRotation = Quaternion.Slerp(DefaultCameraTransform.rotation, planarRot * verticalRot, 1f - Mathf.Exp(-rotationSharpness * deltaTime));
+
+        // Apply rotation
+        DefaultCameraTransform.rotation = targetRotation;
+
+        // Process distance input
+        if(distanceIsObstructed && Mathf.Abs(zoomInput) > 0f)// && !PlayerController.Instance.LockedOn)
+        {
+            targetDistance = currentDistance;
+        }
+
+        targetDistance += zoomInput * distanceMovementSpeed;
+        targetDistance = Mathf.RoundToInt(targetDistance);
+        targetDistance = Mathf.Clamp(targetDistance, minCameraDistance, maxCameraDistance);
+
+        // Find the smoothed follow position
+        currentFollowPosition = Vector3.Lerp(currentFollowPosition, cameraFollowTransform.position, 1f - Mathf.Exp(-followSharpness * deltaTime));
+
+        // Handle obstructions
+        RaycastHit closestHit = new() { distance = Mathf.Infinity };
+        RaycastHit[] obstructions = new RaycastHit[MAX_OBSTRUCTIONS];
+        int obstructionCount = Physics.SphereCastNonAlloc(currentFollowPosition, obstructionCheckRadius, -DefaultCameraTransform.forward, obstructions, targetDistance, obstructionLayers, QueryTriggerInteraction.Ignore);
+        
+        for(int i = 0; i < obstructionCount; i++)
+        {
+            bool isIgnored = false;
+
+            for(int j = 0; j < ignoredColliders.Count; j++)
             {
-                rotationInput.x *= -1f;
-            }
-            if(InvertY)
-            {
-                rotationInput.y *= -1f;
-            }
-
-            // Process rotation input
-            Quaternion rotationFromInput = Quaternion.Euler(FollowTransform.up * (rotationInput.x * RotationSpeed));
-
-            if(rotationInput != Vector3.zero)
-                PlanarDirection = rotationFromInput * PlanarDirection;
-            
-            
-            PlanarDirection = Vector3.Cross(FollowTransform.up, Vector3.Cross(PlanarDirection, FollowTransform.up));
-            Quaternion planarRot = Quaternion.LookRotation(PlanarDirection, FollowTransform.up);
-
-            _targetVerticalAngle -= (rotationInput.y * RotationSpeed);
-            _targetVerticalAngle = Mathf.Clamp(_targetVerticalAngle, MinVerticalAngle, MaxVerticalAngle);
-            Quaternion verticalRot = Quaternion.Euler(_targetVerticalAngle, 0, 0);
-            Quaternion targetRotation = Quaternion.Slerp(FollowCameraTransform.rotation, planarRot * verticalRot, 1f - Mathf.Exp(-RotationSharpness * deltaTime));
-
-            // Apply rotation
-
-            FollowCameraTransform.rotation = targetRotation;
-
-            // Process distance input
-            if(_distanceIsObstructed && Mathf.Abs(zoomInput) > 0f && !PlayerController.Instance.LockedOn)
-            {
-                TargetDistance = _currentDistance;
-            }
-
-            TargetDistance += zoomInput * DistanceMovementSpeed;
-            TargetDistance = Mathf.RoundToInt(TargetDistance);
-            TargetDistance = Mathf.Clamp(TargetDistance, MinDistance, MaxDistance);
-
-            // Find the smoothed follow position
-            _currentFollowPosition = Vector3.Lerp(_currentFollowPosition, FollowTransform.position, 1f - Mathf.Exp(-FollowingSharpness * deltaTime));
-
-            // Handle obstructions
-            
-            RaycastHit closestHit = new RaycastHit();
-            closestHit.distance = Mathf.Infinity;
-            _obstructionCount = Physics.SphereCastNonAlloc(_currentFollowPosition, ObstructionCheckRadius, -FollowCameraTransform.forward, _obstructions, TargetDistance, ObstructionLayers, QueryTriggerInteraction.Ignore);
-            
-            for(int i = 0; i < _obstructionCount; i++)
-            {
-                bool isIgnored = false;
-
-                for(int j = 0; j < IgnoredColliders.Count; j++)
+                if(ignoredColliders[j] == obstructions[i].collider)
                 {
-                    if(IgnoredColliders[j] == _obstructions[i].collider)
-                    {
-                        isIgnored = true;
-                        break;
-                    }
-                }
-
-                for(int j = 0; j < IgnoredColliders.Count; j++)
-                {
-                    if(IgnoredColliders[j] == _obstructions[i].collider)
-                    {
-                        isIgnored = true;
-                        break;
-                    }
-                }
-
-                if(!isIgnored && _obstructions[i].distance < closestHit.distance && _obstructions[i].distance > 0)
-                {
-                    closestHit = _obstructions[i];
+                    isIgnored = true;
+                    break;
                 }
             }
 
-            // If obstructions detecter
-            if(closestHit.distance < Mathf.Infinity)
+            for(int j = 0; j < ignoredColliders.Count; j++)
             {
-                _distanceIsObstructed = true;
-                _currentDistance = Mathf.Lerp(_currentDistance, closestHit.distance, 1 - Mathf.Exp(-ObstructionSharpness * deltaTime));
+                if(ignoredColliders[j] == obstructions[i].collider)
+                {
+                    isIgnored = true;
+                    break;
+                }
             }
-            // If no obstruction
-            else
+
+            if(!isIgnored && obstructions[i].distance < closestHit.distance && obstructions[i].distance > 0)
             {
-                _distanceIsObstructed = false;
-                _currentDistance = Mathf.Lerp(_currentDistance, TargetDistance, 1 - Mathf.Exp(-DistanceMovementSharpness * deltaTime));
-            }
-            
-
-            // Find the smoothed camera orbit position
-            Vector3 targetPosition = _currentFollowPosition - (targetRotation * Vector3.forward * _currentDistance);
-
-            // Handle framing
-            targetPosition += FollowCameraTransform.right * FollowPointFraming.x;
-            targetPosition += FollowCameraTransform.up * FollowPointFraming.y;
-
-            // Apply position
-
-            FollowCameraTransform.position = targetPosition;
-
-            lockOnFramingTransposer.m_CameraDistance = TargetDistance;
-
-            if(PlayerController.Instance.LockedOn && !GetComponentInChildren<CinemachineStateDrivenCamera>().IsBlending)
-            {
-                FollowCameraTransform.SetPositionAndRotation(Camera.main.transform.position, Camera.main.transform.rotation);
+                closestHit = obstructions[i];
             }
         }
+
+        // If obstructions detecter
+        if(closestHit.distance < Mathf.Infinity)
+        {
+            distanceIsObstructed = true;
+            currentDistance = Mathf.Lerp(currentDistance, closestHit.distance, 1 - Mathf.Exp(-obstructionSharpness * deltaTime));
+        }
+        // If no obstruction
+        else
+        {
+            distanceIsObstructed = false;
+            currentDistance = Mathf.Lerp(currentDistance, targetDistance, 1 - Mathf.Exp(-distanceMovementSharpness * deltaTime));
+        }
+        
+
+        // Find the smoothed camera orbit position
+        Vector3 targetPosition = currentFollowPosition - (targetRotation * Vector3.forward * currentDistance);
+
+        // Handle framing
+        targetPosition += DefaultCameraTransform.right * currentFollowPointFraming.x;
+        targetPosition += DefaultCameraTransform.up * currentFollowPointFraming.y;
+
+        // Apply position
+        DefaultCameraTransform.position = targetPosition;
+
+        //lockOnFramingTransposer.m_CameraDistance = TargetDistance;
+
+        // if(PlayerController.Instance.LockedOn && !GetComponentInChildren<CinemachineStateDrivenCamera>().IsBlending)
+        // {
+        //     DefaultCameraTransform.SetPositionAndRotation(Camera.main.transform.position, Camera.main.transform.rotation);
+        // }
     }
 
     public void FlipCameraPerspective()
     {
-        if(TargetDistance == 0f)
-        {
-            TargetDistance = DefaultDistance;
-        }
+        if(targetDistance == 0f)
+            targetDistance = defaultCameraDistance;
         else
-        {
-            TargetDistance = 0f;
-        }
-    }
-
-    public void CheckIfFirstPerson()
-    {
-        PlayerCharacterController character = PlayerController.Instance.Character;
-
-        bool lastFrameFirstPersonState = inFirstPerson;
-
-        if(TargetDistance == 0f)
-        {
-            inFirstPerson = true;
-            character.ChangeOrientationMethod(OrientationMethod.TowardsCamera);
-            character.MeshRoot.gameObject.SetActive(false);
-
-            if(lastFrameFirstPersonState != inFirstPerson) OnEnterFirstPerson?.Invoke();
-        }
-        else
-        {
-            inFirstPerson = false;
-            character.ChangeOrientationMethod(OrientationMethod.TowardsMovement);
-            character.MeshRoot.gameObject.SetActive(true);
-            
-            if(lastFrameFirstPersonState != inFirstPerson) OnExitFirstPerson?.Invoke();
-        }
+            targetDistance = 0f;
     }
 
     public void FlipCameraAlignment()
     {
-        if(inFirstPerson) return;
+        if(InFirstPerson) return;
 
-        rightAligned = !rightAligned;
+        RightAligned = !RightAligned;
 
-        if(PlayerController.Instance.BuildModeEnabled)
-            TweenToBuildModeFollowPointFraming(flipAlignmentTweenDuration);
-        else
-            TweenToDefaultFollowPointFraming(flipAlignmentTweenDuration);
-
+        // if(PlayerController.Instance.BuildModeEnabled)
+        //     TweenToBuildModeFollowPointFraming(flipAlignmentTweenDuration);
+        // else
+        TweenToDefaultFollowPointFraming(flipAlignmentTweenDuration);
     }
 
-    private void EnterFirstPerson()
+    private void CheckIfFirstPerson()
     {
-        if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 1f)
-            DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 0f, 0f), 0.5f);
+        bool lastFrameFirstPersonState = InFirstPerson;
 
-        TweenToZeroFollowPointFraming(buildModeCameraTweenDuration);
+        InFirstPerson = targetDistance == 0f;
+
+        if(lastFrameFirstPersonState != InFirstPerson)
+        {
+            OnToggleFirstPerson?.Invoke(InFirstPerson);
+
+            if(InFirstPerson)
+                SwitchToFirstPersonCamera();
+            else
+                SwitchToThirdPersonCamera();
+        }
     }
 
-    private void ExitFirstPerson()
+    private void SwitchToFirstPersonCamera()
     {
-        if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 0f)
-            DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 1f, 0f), 0.5f);
+        // if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 1f)
+        //     DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 0f, 0f), 0.5f);
 
-        if(PlayerController.Instance.BuildModeEnabled)
-            TweenToBuildModeFollowPointFraming(buildModeCameraTweenDuration);
-        else
-            TweenToDefaultFollowPointFraming(buildModeCameraTweenDuration);
-
+        TweenToZeroFollowPointFraming(switchPerspectiveTweenDuration);
     }
 
-    public void TweenToDefaultFollowPointFraming() => TweenToDefaultFollowPointFraming(buildModeCameraTweenDuration);
-    public void TweenToBuildModeFollowPointFraming() => TweenToBuildModeFollowPointFraming(buildModeCameraTweenDuration);
-
-    private void TweenToDefaultFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(DefaultFollowPointFraming), duration).SetEase(Ease.Linear);
-    private void TweenToBuildModeFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(BuildModeFollowPointFraming), duration).SetEase(Ease.Linear);
-
-    private void TweenToZeroFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, new Vector2(0f, 0f), duration).SetEase(Ease.Linear);
-    private Vector2 FlipFollowPointFramingAlignment(Vector2 followPointFraming)
+    private void SwitchToThirdPersonCamera()
     {
-        if(rightAligned)
+        // if(PlayerController.Instance.LockedOn || lockOnFramingTransposer.m_TrackedObjectOffset.y == 0f)
+        //     DOTween.To(() => lockOnFramingTransposer.m_TrackedObjectOffset, x => lockOnFramingTransposer.m_TrackedObjectOffset = x, new Vector3(0f, 1f, 0f), 0.5f);
+
+        // if(PlayerController.Instance.BuildModeEnabled)
+        //     TweenToBuildModeFollowPointFraming(buildModeCameraTweenDuration);
+        // else
+        TweenToDefaultFollowPointFraming(switchPerspectiveTweenDuration);
+    }
+
+    private void TweenToZeroFollowPointFraming(float duration) => DOTween.To(() => currentFollowPointFraming, x => currentFollowPointFraming = x, new Vector2(0f, 0f), duration).SetEase(Ease.Linear);
+    private void TweenToDefaultFollowPointFraming(float duration) => DOTween.To(() => currentFollowPointFraming, x => currentFollowPointFraming = x, GetFollowPointFramingAlignment(defaultFollowPointFraming), duration).SetEase(Ease.Linear);
+
+    private Vector2 GetFollowPointFramingAlignment(Vector2 followPointFraming)
+    {
+        if(RightAligned)
             return new Vector2(Mathf.Abs(followPointFraming.x), followPointFraming.y);
         else
             return new Vector2(-followPointFraming.x, followPointFraming.y);        
     }
+
+    //public void TweenToDefaultFollowPointFraming() => TweenToDefaultFollowPointFraming(buildModeCameraTweenDuration);
+    //public void TweenToBuildModeFollowPointFraming() => TweenToBuildModeFollowPointFraming(buildModeCameraTweenDuration); 
+    //private void TweenToBuildModeFollowPointFraming(float duration) => DOTween.To(() => FollowPointFraming, x => FollowPointFraming = x, FlipFollowPointFramingAlignment(BuildModeFollowPointFraming), duration).SetEase(Ease.Linear);
 }

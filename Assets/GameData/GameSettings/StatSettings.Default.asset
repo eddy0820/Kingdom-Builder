@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 657a79f3b2b65ff4988f97dc2c1ac975, type: 3}
   m_Name: StatSettings.Default
   m_EditorClassIdentifier: 
-  categoryName: Misc
   settings:
     statsRoundingType: 0
+    playerConsumesStamina: 0
+    showPlayerDamagePopups: 1
+    showPlayerHealthAndStaminaTexts: 1
     showNonPlayerDamagePopups: 1
     showNonPlayerHealthAndStaminaTexts: 1
     enableHealthDebugMessages: 0

@@ -27,8 +27,9 @@ public class UnderwearColorSubsectionInterface : ButtonInterface<UnderwearColorS
     public override void OnSelectButton(ButtonEntry buttonEntry)
     {
         DeselectAllButtons();
-        CharacterCreationManager.Instance.MaleModel.instancedMaterial.SetColor("_Color_Leather_Secondary", ((UnderwearColorButtonEntry) buttonEntry).Color);
-        CharacterCreationManager.Instance.FemaleModel.instancedMaterial.SetColor("_Color_Leather_Secondary", ((UnderwearColorButtonEntry) buttonEntry).Color);
+        CharacterCreationManager.Instance.MaleInstancedCharacterMaterial.SetColor("_Color_Leather_Secondary", ((UnderwearColorButtonEntry) buttonEntry).Color);
+        CharacterCreationManager.Instance.FemaleInstancedCharacterMaterial.SetColor("_Color_Leather_Secondary", ((UnderwearColorButtonEntry) buttonEntry).Color);
+        
         buttonEntry.Button.GetComponent<Image>().enabled = true;
         currentlySelectedButton = (UnderwearColorButtonEntry) buttonEntry;
         CharacterCreationManager.Instance.PlayerInfoHolder.SetUnderwearColor(((UnderwearColorButtonEntry) buttonEntry).Color);

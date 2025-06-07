@@ -6,17 +6,13 @@ public class RelaxEquippedWeaponState : EquippedWeaponState
 {
     public override void OnEnterState(EquippedWeaponState fromState)
     {
+        base.OnEnterState(fromState);
         if(fromState == null) return;
 
         if(AnimationController.IsMovingAnimator)
             SwitchWeapon();
 
         AnimationController.SetSheath();
-    }
-
-    public override void OnExitState(EquippedWeaponState toState)
-    {
-        
     }
 
     public override void SwitchWeapon()

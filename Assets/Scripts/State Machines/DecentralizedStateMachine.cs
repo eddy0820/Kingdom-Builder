@@ -21,14 +21,5 @@ public abstract class DecentralizedStateMachine<T> : StateMachine<T> where T : D
         currentState?.OnEnterState(previousState);
     }
 
-    public abstract class DecentralizedState : State
-    {
-        protected new DecentralizedStateMachine<T> stateMachine;
-
-        public override void Initialize(StateMachine<T> stateMachine)
-        {
-            base.Initialize(stateMachine);
-            this.stateMachine = stateMachine as DecentralizedStateMachine<T>;
-        }
-    }
+    public abstract class DecentralizedState : State {}
 }

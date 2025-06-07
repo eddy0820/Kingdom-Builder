@@ -12,7 +12,7 @@ public class BuildHotbarInterface : ButtonInterface<BuildHotbarInterface.BuildHo
 
     protected override void OnAwake()
     {
-        InputManager.Instance.OnNumberKeyPressed.AddListener(OnNumberKeyPressedCallback);
+        InputManagerOLD.Instance.OnNumberKeyPressed.AddListener(OnNumberKeyPressedCallback);
     }
 
     protected override void Initialize()

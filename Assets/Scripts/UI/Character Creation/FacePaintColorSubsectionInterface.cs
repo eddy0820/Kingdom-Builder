@@ -17,8 +17,8 @@ public class FacePaintColorSubsectionInterface : MonoBehaviour
 
     public void SwitchColor()
     {
-        CharacterCreationManager.Instance.MaleModel.instancedMaterial.SetColor("_Color_BodyArt", colorPicker.color);
-        CharacterCreationManager.Instance.FemaleModel.instancedMaterial.SetColor("_Color_BodyArt", colorPicker.color);
+        CharacterCreationManager.Instance.MaleInstancedCharacterMaterial.SetColor("_Color_BodyArt", colorPicker.color);
+        CharacterCreationManager.Instance.FemaleInstancedCharacterMaterial.SetColor("_Color_BodyArt", colorPicker.color);
 
         CharacterCreationManager.Instance.PlayerInfoHolder.SetFacePaintColor(colorPicker.color);
     }

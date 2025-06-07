@@ -15,3 +15,5 @@ MonoBehaviour:
   settingsCategories:
   - {fileID: 11400000, guid: 3271f2ea08c95ca44beeaee8e57c0aa2, type: 2}
   - {fileID: 11400000, guid: 23973c25fe0e6724c94dfe4bbe172e87, type: 2}
+  - {fileID: 11400000, guid: b9c28e286db0d44469bace564cc595ca, type: 2}
+  - {fileID: 11400000, guid: 58ecb31baac533f49b93920d759cb076, type: 2}

@@ -9,7 +9,7 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
 {
     [Header("State Machine")]
     [SerializeField] bool statesAreChildGameObjects = true;
-    [SerializeField, HideIf("statesAreChildGameObjects")] List<T> states;
+    [SerializeField, HideIf("statesAreChildGameObjects")] protected List<T> states;
     [SerializeField] protected T startingState;
 
     [Space(5)]
@@ -39,10 +39,7 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
             states = new List<T>(GetComponentsInChildren<T>()); 
         }
 
-        states.ForEach(x => x.Initialize(this));
-
         initialized = true;
-
         OnStateMachineInitialized?.Invoke();
     }
 
@@ -72,10 +69,10 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
         currentState?.OnFixedUpdateState();
     }
 
-    protected abstract void OnAwake();
-    protected abstract void OnStart();
-    protected abstract void OnUpdate();
-    protected abstract void OnFixedUpdate();
+    protected virtual void OnAwake() {}
+    protected virtual void OnStart() {}
+    protected virtual void OnUpdate() {}
+    protected virtual void OnFixedUpdate() {}
 
     public bool GetState<F>(out F t) where F : T
     {
@@ -92,21 +89,14 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>.
 
     public abstract class State : MonoBehaviour
     {
-        protected StateMachine<T> stateMachine;
-
-        public virtual void Initialize(StateMachine<T> stateMachine)
-        {
-            this.stateMachine = stateMachine;
-        }
-
-        public abstract void OnAwake();
-        public abstract void OnStart();
-        public abstract void OnEnterState(T fromState);
-        public abstract void OnExitState(T toState);
-        public abstract void OnUpdate();
-        public abstract void OnUpdateState();
-        public abstract void OnFixedUpdate();
-        public abstract void OnFixedUpdateState();
+        public virtual void OnAwake() {}
+        public virtual void OnStart() {}
+        public virtual void OnEnterState(T fromState) {}
+        public virtual void OnExitState(T toState) {}
+        public virtual void OnUpdate() {}
+        public virtual void OnUpdateState() {}
+        public virtual void OnFixedUpdate() {}
+        public virtual void OnFixedUpdateState() {}
 
         public Action<T> OnEnterStateEvent;
         public Action<T> OnExitStateEvent;

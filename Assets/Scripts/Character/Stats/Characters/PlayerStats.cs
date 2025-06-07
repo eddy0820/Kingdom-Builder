@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using EddyLib.Stats;
+using EddyLib.GameSettingsSystem;
 
 [Serializable]
 public class PlayerStats : StaminaDamageableCharacterStats
@@ -10,12 +11,14 @@ public class PlayerStats : StaminaDamageableCharacterStats
     PlayerCharacterStateMachine StateMachine => PlayerController.StateMachine;
     PlayerCharacterController.MovementAttributes MovementAttributes => PlayerCharacterController.Attributes;
 
+    bool PlayerConsumesStamina => GameSettings.GetSettings<StatsSettings>().PlayerConsumesStamina;
+
     protected new void Start()
     {
         base.Start();
 
-        StateMachine.OnGroundedMovementSprinting += DoStaminaReductionSprinting;
-        StateMachine.OnGroundedMovementCrouching += DoStaminaReductionCrouch;
+        GroundedCharacterState.OnGroundedMovementSprinting += DoStaminaReductionSprinting;
+        GroundedCharacterState.OnGroundedMovementCrouching += DoStaminaReductionCrouch;
 
         statModifier = new StatModifier(1, StatModifierTypes.Flat);
     }
@@ -63,7 +66,7 @@ public class PlayerStats : StaminaDamageableCharacterStats
 
     private void DoStaminaReductionSprinting()
     {
-        if(!PlayerSpawner.Instance.PlayerConsumesStamina) return;
+        if(!PlayerConsumesStamina) return;
 
         float amountToReduce = MovementAttributes.SprintingStaminaCostPerSecond * Time.deltaTime;
 
@@ -78,7 +81,7 @@ public class PlayerStats : StaminaDamageableCharacterStats
 
     private void DoStaminaReductionCrouch()
     {
-        if(!PlayerSpawner.Instance.PlayerConsumesStamina) return;
+        if(!PlayerConsumesStamina) return;
         
         float amountToReduce = MovementAttributes.CrouchingStaminaCostPerSecond * Time.deltaTime;
 

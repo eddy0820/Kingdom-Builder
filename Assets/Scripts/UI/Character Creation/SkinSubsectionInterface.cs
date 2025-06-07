@@ -32,14 +32,15 @@ public class SkinSubsectionInterface : ButtonInterface<SkinSubsectionInterface.S
     {
         DeselectAllButtons();
 
-        Color stubbleColor = new Color(((SkinColorButtonEntry) buttonEntry).Color.r - stubbleColorSubtractionValue, ((SkinColorButtonEntry) buttonEntry).Color.g - stubbleColorSubtractionValue, ((SkinColorButtonEntry) buttonEntry).Color.b - stubbleColorSubtractionValue, 255);
-        Color scarColor = new Color(((SkinColorButtonEntry) buttonEntry).Color.r - scarIntensitySubsectionInterface.ScarColorSubtractionValue, ((SkinColorButtonEntry) buttonEntry).Color.g - scarIntensitySubsectionInterface.ScarColorSubtractionValue, ((SkinColorButtonEntry) buttonEntry).Color.b - scarIntensitySubsectionInterface.ScarColorSubtractionValue, 255);
+        Color stubbleColor = new(((SkinColorButtonEntry) buttonEntry).Color.r - stubbleColorSubtractionValue, ((SkinColorButtonEntry) buttonEntry).Color.g - stubbleColorSubtractionValue, ((SkinColorButtonEntry) buttonEntry).Color.b - stubbleColorSubtractionValue, 255);
+        Color scarColor = new(((SkinColorButtonEntry) buttonEntry).Color.r - scarIntensitySubsectionInterface.ScarColorSubtractionValue, ((SkinColorButtonEntry) buttonEntry).Color.g - scarIntensitySubsectionInterface.ScarColorSubtractionValue, ((SkinColorButtonEntry) buttonEntry).Color.b - scarIntensitySubsectionInterface.ScarColorSubtractionValue, 255);
 
-        CharacterCreationManager.Instance.MaleModel.instancedMaterial.SetColor("_Color_Skin", ((SkinColorButtonEntry) buttonEntry).Color);
-        CharacterCreationManager.Instance.MaleModel.instancedMaterial.SetColor("_Color_Stubble", stubbleColor);
-        CharacterCreationManager.Instance.MaleModel.instancedMaterial.SetColor("_Color_Scar", scarColor);
-        CharacterCreationManager.Instance.FemaleModel.instancedMaterial.SetColor("_Color_Skin", ((SkinColorButtonEntry) buttonEntry).Color);
-        CharacterCreationManager.Instance.FemaleModel.instancedMaterial.SetColor("_Color_Scar", scarColor);
+        CharacterCreationManager.Instance.MaleInstancedCharacterMaterial.SetColor("_Color_Skin", ((SkinColorButtonEntry) buttonEntry).Color);
+        CharacterCreationManager.Instance.MaleInstancedCharacterMaterial.SetColor("_Color_Stubble", stubbleColor);
+        CharacterCreationManager.Instance.MaleInstancedCharacterMaterial.SetColor("_Color_Scar", scarColor);
+
+        CharacterCreationManager.Instance.FemaleInstancedCharacterMaterial.SetColor("_Color_Skin", ((SkinColorButtonEntry) buttonEntry).Color);
+        CharacterCreationManager.Instance.FemaleInstancedCharacterMaterial.SetColor("_Color_Scar", scarColor);
 
         if(CharacterCreationManager.Instance.PlayerInfoHolder.PlayerSex == PlayerInfoHolder.Sex.Male)
         {
@@ -47,7 +48,7 @@ public class SkinSubsectionInterface : ButtonInterface<SkinSubsectionInterface.S
         }
         else
         {
-            CharacterCreationManager.Instance.PlayerInfoHolder.PlayerSkinColors.SetSkinColors(((SkinColorButtonEntry) buttonEntry).Color, CharacterCreationManager.Instance.FemaleModel.instancedMaterial.GetColor("_Color_Stubble"), scarColor);
+            CharacterCreationManager.Instance.PlayerInfoHolder.PlayerSkinColors.SetSkinColors(((SkinColorButtonEntry) buttonEntry).Color, CharacterCreationManager.Instance.FemaleInstancedCharacterMaterial.GetColor("_Color_Stubble"), scarColor);
         }
         
 

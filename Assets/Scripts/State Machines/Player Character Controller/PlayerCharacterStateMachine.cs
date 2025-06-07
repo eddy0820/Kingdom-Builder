@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class PlayerCharacterStateMachine : DecentralizedStateMachine<PlayerCharacterControllerState>
+public class PlayerCharacterStateMachine : DecentralizedStateMachine<PlayerCharacterState>
 {
-    public Action OnGroundedMovementSprinting;
-    public Action OnGroundedMovementNotSprinting;
-    public Action OnGroundedMovementCrouching;
-    public Action OnGroundedMovementNotCrouching;
-
-    protected override void OnAwake() {}
+    public void SetCharacterController(PlayerCharacterController playerCharacterController)
+    {
+        states.ForEach(x => x.SetCharacterController(playerCharacterController));
+    }
 
     protected override void OnStart() 
     {

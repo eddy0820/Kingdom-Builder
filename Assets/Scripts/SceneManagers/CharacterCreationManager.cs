@@ -8,6 +8,10 @@ public class CharacterCreationManager : MonoBehaviour
     public static CharacterCreationManager Instance {get; private set; } = null;
 
     [SerializeField] Material characterMaterial;
+    Material maleCharacterMaterial;
+    public Material MaleInstancedCharacterMaterial => maleCharacterMaterial;
+    Material femaleCharacterMaterial;
+    public Material FemaleInstancedCharacterMaterial => femaleCharacterMaterial;
     [SerializeField] ModularCharacterManager maleModel;
     public ModularCharacterManager MaleModel => maleModel;
     [SerializeField] ModularCharacterManager femaleModel;
@@ -16,8 +20,9 @@ public class CharacterCreationManager : MonoBehaviour
     [Space(10)]
 
     [SerializeField] PlayerInfoHolder playerInfoHolder;
-
     public PlayerInfoHolder PlayerInfoHolder => playerInfoHolder;
+
+    
 
     private void Awake()
     {
@@ -26,10 +31,9 @@ public class CharacterCreationManager : MonoBehaviour
             Instance = this;
         }
         
-        Material instancedCharacterMaterial = Instantiate<Material>(characterMaterial);
-        maleModel.instancedMaterial = instancedCharacterMaterial;
-        maleModel.SetAllPartsMaterial(maleModel.instancedMaterial);
-        femaleModel.instancedMaterial = instancedCharacterMaterial;
-        femaleModel.SetAllPartsMaterial(femaleModel.instancedMaterial);
+        maleCharacterMaterial = Instantiate(characterMaterial);
+        femaleCharacterMaterial = Instantiate(characterMaterial);
+        maleModel.SetAllPartsMaterial(maleCharacterMaterial);
+        femaleModel.SetAllPartsMaterial(femaleCharacterMaterial);
     }
 }

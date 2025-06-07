@@ -19,7 +19,7 @@ public class BuildingTypeRowInterface : ButtonInterface<BuildingTypeRowInterface
 
     protected override void OnAwake() 
     {
-        InputManager.Instance.OnNumberKeyPressed.AddListener(OnNumberKeyPressedCallback);
+        InputManagerOLD.Instance.OnNumberKeyPressed.AddListener(OnNumberKeyPressedCallback);
     }
 
     public void Init(SubBuildingTypes _subBuildingType, List<PlaceableGridObjectSO> _placeableObjects)

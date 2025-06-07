@@ -11,7 +11,7 @@ public class BuildingCategoryScreen : MonoBehaviour
     {
         GameObject buildingTypeGridHolder = Instantiate(buildingTypeGridHolderPrefab, buildingTypeGridHolderPrefab.transform.localPosition, buildingTypeGridHolderPrefab.transform.rotation, transform);
         buildingTypeGridHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(25, 0);
-        buildingTypeGridHolder.GetComponent<BuildingTypesInterface>().Init(placeableObjects, subScreensParent);
+//        buildingTypeGridHolder.GetComponent<BuildingTypesInterface>().Init(placeableObjects, subScreensParent);
     }
 
     public void PropInit(List<PlaceableLooseObjectSO> loosePlaceableObjects)

@@ -16,10 +16,10 @@ public class ScarIntensitySubsectionInterface : MonoBehaviour
     public void UpdateScarIntensity()
     {
         scarColorSubtractionValue = slider.value;
-        Color scarColor = new Color(skinSubsectionInterface.CurrentlySelectedButton.Color.r - scarColorSubtractionValue, skinSubsectionInterface.CurrentlySelectedButton.Color.g - scarColorSubtractionValue, skinSubsectionInterface.CurrentlySelectedButton.Color.b - scarColorSubtractionValue, 255);
+        Color scarColor = new(skinSubsectionInterface.CurrentlySelectedButton.Color.r - scarColorSubtractionValue, skinSubsectionInterface.CurrentlySelectedButton.Color.g - scarColorSubtractionValue, skinSubsectionInterface.CurrentlySelectedButton.Color.b - scarColorSubtractionValue, 255);
 
-        CharacterCreationManager.Instance.MaleModel.instancedMaterial.SetColor("_Color_Scar", scarColor);
-        CharacterCreationManager.Instance.FemaleModel.instancedMaterial.SetColor("_Color_Scar", scarColor);
+        CharacterCreationManager.Instance.MaleInstancedCharacterMaterial.SetColor("_Color_Scar", scarColor);
+        CharacterCreationManager.Instance.FemaleInstancedCharacterMaterial.SetColor("_Color_Scar", scarColor);
 
         CharacterCreationManager.Instance.PlayerInfoHolder.PlayerSkinColors.SetScarColor(scarColor);
     }

@@ -39,7 +39,7 @@ public class BuildingTypesInterface : ButtonInterface<BuildingTypesInterface.Sel
         hoveredScaleFactorStatic = hoveredScaleFactor;
         scaleLengthStatic = scaleLength;
 
-        foreach(BuildingTypesSO buildingTypeSO in PlayerSpawner.Instance.GridBuildingInfo.BuildingTypesDatabase.BuildingTypes)
+        foreach(BuildingTypesSO buildingTypeSO in PlayerSpawnerOLD.Instance.GridBuildingInfo.BuildingTypesDatabase.BuildingTypes)
         {
             GameObject button = Instantiate(buildingTypeButtonPrefab, buildingTypeButtonPrefab.transform.position, buildingTypeButtonPrefab.transform.rotation, transform);
             GameObject screen = Instantiate(buildingTypeScreenPrefab, subScreensParent.position, buildingTypeScreenPrefab.transform.rotation, subScreensParent);

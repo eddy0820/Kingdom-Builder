@@ -72,7 +72,7 @@ public class PlayerCanvas : MonoBehaviour
             InteractionTypeSO interactionType = interactionTypes[i].InteractionType;
             InteractionEntry interactionEntry = interactionEntries[i];
 
-            interactionEntry.SetInteraction(InputManager.Instance.GetEffectiveBindingPathForInteractionIndex(i), interactionType.Name, () => interactionType.Interact(interactionTypes[i]));
+            interactionEntry.SetInteraction(InputManagerOLD.Instance.GetEffectiveBindingPathForInteractionIndex(i), interactionType.Name, () => interactionType.Interact(interactionTypes[i]));
         }
     }
 
